@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FF5B2E">
+<title>الحساب كام</title>
+<meta name="description" content="اطلبوا سوا، وكل واحد يعرف عليه كام في ثانية.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}/* Layout: one phone-width column of receipt-paper cards; on desktop the host screens open into a two-column dashboard. Single deliberate warm-paper look. */
+:root{
+  --ink:#17120E; --ink2:#2A231D; --paper:#FFF7EA; --card:#FFFFFF; --sand:#F6EFE3; --sand2:#F1E8DA;
+  --orange:#FF5B2E; --orange-soft:#FFE4D9; --mint:#12B886; --mint-ink:#0B7A59; --mint-soft:#DCF5EC;
+  --yellow:#FFD43B; --muted:#7A6F64; --faint:#B3A99D; --line:#EDE3D3; --red:#E5484D; --red-soft:#FDE7E7; --on-ink:#CFC5B8;
+  --display:'Lalezar','Readex Pro',system-ui,sans-serif;
+  --body:'Readex Pro','Segoe UI',Tahoma,system-ui,sans-serif;
+  --r-sm:12px; --r:18px; --r-lg:26px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-inline:16px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2.5px solid var(--orange);outline-offset:2px}
+.app{max-width:480px;margin-inline:auto;padding-block:12px 140px;display:flex;flex-direction:column;gap:16px;min-height:100%}
+.app.wide{max-width:1180px}
+h1,h2,h3,.big{font-family:var(--display);font-weight:400;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:0}
+h1{font-size:clamp(32px,8vw,44px)} h2{font-size:30px} h3{font-size:22px}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:13px} .center{text-align:center}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.row{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:12px}
+.row>*{min-width:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.wrap{display:flex;flex-wrap:wrap;gap:8px}
+.topbar{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:10px;min-height:48px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:24px}
+.mark{width:26px;height:31px;flex:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:var(--r);padding:16px 20px;font-weight:600;font-size:17px;min-height:56px;width:100%;transition:transform .12s ease,filter .12s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.primary{background:var(--orange);color:#fff}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.mint{background:var(--mint);color:#fff}
+.btn.white{background:var(--card);border:1.2px solid var(--line)}
+.btn.ghost{border:1.2px solid var(--line)}
+.btn.soft{background:var(--orange-soft);color:var(--orange)}
+.btn.red{background:var(--red);color:#fff}
+.btn.red-soft{background:var(--red-soft);color:var(--red)}
+.btn.sm{min-height:0;padding:9px 14px;font-size:14px;border-radius:999px;width:auto}
+.btn.xs{min-height:0;padding:7px 12px;font-size:13px;border-radius:12px;width:auto}
+.icon-btn{width:44px;height:44px;border-radius:50%;background:var(--card);color:var(--ink);border:1px solid var(--line);display:grid;place-items:center;font-size:19px;flex:none}
+.icon-btn.sm{width:32px;height:32px;font-size:14px;border:0;background:var(--sand)}
+.icon-btn.del{background:var(--red-soft);color:var(--red)}
+.dashed{border:1.5px dashed var(--orange);color:var(--orange);background:transparent;border-radius:16px;padding:12px;font-weight:600;width:100%}
+
+/* surfaces */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.card.lg{border-radius:var(--r-lg);padding:20px}
+.card.hl{border:1.5px solid var(--orange)}
+.ink{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ink .muted{color:var(--on-ink)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:500;white-space:nowrap;background:var(--sand)}
+.pill.orange{background:var(--orange-soft);color:var(--orange)} .pill.mint{background:var(--mint-soft);color:var(--mint-ink)}
+.pill.yellow{background:var(--yellow);color:var(--ink)} .pill.red{background:var(--red-soft);color:var(--red)} .pill.white{background:#fff;color:var(--ink)}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:20px;color:#fff;flex:none;line-height:1;padding-top:3px}
+.avatar.lg{width:64px;height:64px;font-size:32px}
+.receipt{background:var(--card);border-radius:22px 22px 0 0;padding:22px 20px 18px;position:relative;margin-bottom:12px}
+.receipt::after{content:"";position:absolute;inset-inline:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--card) 0) 0 0/14px 10px repeat-x,linear-gradient(45deg,transparent 7px,var(--card) 0) 0 0/14px 10px repeat-x}
+.receipt.paper{background:var(--paper)} .receipt.paper::after{background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px repeat-x,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px repeat-x}
+.rule{border:0;border-top:1.5px dashed var(--line);margin:4px 0}
+.line{display:flex;flex-direction:row-reverse;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+.line .v{white-space:nowrap}
+
+/* forms */
+label.f{display:flex;flex-direction:column;gap:8px}
+label.f>span{font-size:14px;font-weight:500;color:var(--muted)}
+.input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-size:17px;outline:none;min-width:0}
+.input:focus{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.input::placeholder{color:var(--faint)}
+textarea.input{resize:vertical;min-height:84px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:999px;padding:10px 18px;background:var(--card);border:1px solid var(--line);font-weight:500;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
+.seg{display:flex;flex-direction:row-reverse;background:var(--sand2);border-radius:16px;padding:4px;gap:4px}
+.seg button{flex:1;border-radius:12px;padding:9px 10px;color:var(--muted);font-weight:500;font-size:14px}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(23,18,14,.06)}
+.stepper{display:inline-flex;flex-direction:row-reverse;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.stepper button{width:32px;height:32px;border-radius:50%;background:var(--sand);font-size:18px;font-weight:600;display:grid;place-items:center}
+.stepper button.plus{background:var(--orange);color:#fff}
+.stepper output{min-width:22px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.stepper.big{gap:28px;padding:6px}.stepper.big button{width:46px;height:46px;font-size:22px}.stepper.big output{font-family:var(--display);font-size:32px;min-width:36px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.item .top{display:flex;gap:8px;align-items:center}
+.item .top input{flex:1;background:var(--sand);border:0;border-radius:12px;padding:11px 12px;font-size:16px;font-weight:500;min-width:0;outline:none}
+.item .top input:focus{background:#fff;box-shadow:0 0 0 1.5px var(--ink)}
+.price{display:flex;align-items:center;gap:6px;background:var(--sand);border-radius:12px;padding:6px 12px}
+.price input{width:76px;border:0;background:transparent;font-weight:600;font-size:17px;outline:none;text-align:left;font-variant-numeric:tabular-nums}
+.price span{color:var(--muted);font-size:14px}
+
+/* bottom bar + sheets */
+.bottom{position:fixed;inset-inline:0;bottom:0;padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--paper) 78%,transparent);z-index:5}
+.bottom .in{max-width:480px;margin-inline:auto;display:flex;flex-direction:column;gap:10px}
+.cart{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:10px;background:var(--ink);color:#fff;border-radius:22px;padding:10px 10px 10px 18px}
+.cart .btn{width:auto;min-height:0;padding:14px 18px;border-radius:16px}
+.overlay{position:fixed;inset:0;background:rgba(23,18,14,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center;animation:fade .18s ease}
+.sheet{background:var(--paper);width:100%;max-width:520px;border-radius:30px 30px 0 0;padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow:auto;animation:up .22s ease}
+.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 4px}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));inset-inline:16px;max-width:448px;margin-inline:auto;background:var(--mint-soft);color:var(--mint-ink);border-radius:16px;padding:12px 16px;font-weight:600;z-index:30;box-shadow:0 8px 24px rgba(23,18,14,.12);animation:fade .2s ease}
+@keyframes fade{from{opacity:0}}@keyframes up{from{transform:translateY(40px)}}
+
+/* home hero */
+.hero{position:relative;height:210px;border-radius:28px;background:var(--orange);overflow:hidden}
+.hero .tk{position:absolute;white-space:nowrap;border-radius:18px;padding:12px 16px;display:flex;flex-direction:column}
+.hero .tk b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1}
+.hero .cap{position:absolute;bottom:14px;inset-inline-start:18px;color:#fff;font-size:13px;font-weight:500}
+.choice{display:flex;flex-direction:column;gap:8px;text-align:start;border-radius:26px;padding:20px;background:var(--card);border:1px solid var(--line);width:100%}
+.choice[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.choice[aria-pressed="true"] .muted{color:var(--on-ink)}
+.timer{font-variant-numeric:tabular-nums}
+.progress{height:10px;border-radius:5px;background:rgba(255,255,255,.14);overflow:hidden;display:flex;justify-content:flex-start}
+.progress i{display:block;height:100%;background:var(--mint);border-radius:5px;transition:width .4s ease}
+.dots{display:flex;gap:4px}.dots i{height:6px;width:12px;border-radius:3px;background:var(--line)}.dots i.done{background:var(--mint)}.dots i.cur{width:26px;background:var(--orange)}
+.empty{border:1.5px dashed var(--line);border-radius:28px;padding:32px 22px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;background:var(--card)}
+.emoji{font-size:52px;line-height:1}
+.qr{width:168px;height:168px;background:#fff;border-radius:14px;padding:8px;display:grid;place-items:center}
+.qr svg{width:100%;height:100%}
+.code{font-family:var(--display);font-size:40px;line-height:1;letter-spacing:.02em}
+.big-amount{font-family:var(--display);font-size:clamp(72px,24vw,104px);line-height:1}
+.screen-yellow{--paper:#FFD43B}
+.screen-mint{--paper:#12B886;color:#fff}
+.screen-ink{--paper:#17120E;color:#fff}
+.screen-orange{--paper:#FF5B2E;color:#fff}
+.screen-ink .muted,.screen-orange .muted,.screen-mint .muted{color:rgba(255,255,255,.78)}
+.screen-ink :is(.receipt,.card:not(.ink),.choice:not([aria-pressed="true"])) .muted,.screen-orange :is(.receipt,.card:not(.ink)) .muted,.screen-mint :is(.receipt,.card:not(.ink)) .muted,.screen-yellow :is(.receipt,.card:not(.ink)) .muted{color:var(--muted)}
+.receipt,.card:not(.ink){color:var(--ink)}
+.mode-note{font-size:12px;color:var(--muted);text-align:center}
+
+/* desktop dashboard */
+@media (min-width:960px){
+  .dash{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start}
+  .dash.two{grid-template-columns:minmax(0,1fr) 400px}
+  .dash.two>.hero-col{order:2}
+  .dash .side{position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+  .grid-orders{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .app.wide .bottom .in{max-width:1180px;flex-direction:row;justify-content:flex-end}
+  .app.wide .bottom .btn{width:auto;min-width:240px}
+}
+@media (max-width:959px){.dash{display:flex;flex-direction:column;gap:16px}.grid-orders{display:flex;flex-direction:column;gap:12px}.only-wide{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root" dir="rtl" lang="ar"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>/* ===== الحساب كام — core: formatting, ids, bill math ===== */
+const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
+const nf = new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 2 });
+
+function toAr(v) { return String(v).replace(/\d/g, d => AR_DIGITS[d]); }
+function money(v) { return nf.format(Math.round((Number(v) || 0) * 100) / 100); }
+function egp(v) { return money(v) + ' ج'; }
+/** Parse a number typed with Arabic or Latin digits ("١٢٫٥", "12.5", "١٬٢٠٠"). */
+function num(v) {
+  if (typeof v === 'number') return isFinite(v) ? v : 0;
+  const s = String(v ?? '')
+    .replace(/[٠-٩]/g, d => AR_DIGITS.indexOf(d))
+    .replace(/[٫,]/g, '.')
+    .replace(/[٬\s]/g, '')
+    .replace(/[^\d.\-]/g, '');
+  const n = parseFloat(s);
+  return isFinite(n) ? n : 0;
+}
+function uid(n = 10) {
+  const a = 'abcdefghijkmnpqrstuvwxyz23456789';
+  let s = ''; const r = crypto.getRandomValues(new Uint8Array(n));
+  for (const x of r) s += a[x % a.length];
+  return s;
+}
+function newCode() { return String(1000 + (crypto.getRandomValues(new Uint16Array(1))[0] % 9000)); }
+function codeLabel(code) { return 'كام-' + toAr(code); }
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+const ORDINALS = ['الأول', 'التاني', 'التالت', 'الرابع', 'الخامس', 'السادس', 'السابع', 'التامن', 'التاسع', 'العاشر'];
+function ordinal(i) { return ORDINALS[i] || ('رقم ' + toAr(i + 1)); }
+
+function itemsTotal(items) { return (items || []).reduce((a, it) => a + num(it.p) * Math.max(0, Math.round(num(it.q))), 0); }
+function cleanItems(items) { return (items || []).filter(it => String(it.n || '').trim() && num(it.q) > 0).map(it => ({ n: String(it.n).trim(), p: num(it.p), q: Math.round(num(it.q)) })); }
+
+/**
+ * Split the bill.
+ * bill: { tax %, service % (on food), delivery (flat, equal), discount (flat, equal), extras:[{name, amount}] (flat, equal), split: 'prop'|'equal' }
+ * proportional: share_i = food_i × (1 + service + tax) + (delivery + extras − discount) / n
+ * equal:        share_i = total / n
+ * Shares are rounded to 0.01 and the rounding remainder goes to the largest share so the sum equals the total exactly.
+ */
+function computeBill(orders, bill) {
+  const active = (orders || []).filter(o => o.status === 'active');
+  const n = active.length;
+  const b = bill || {};
+  const s = num(b.service) / 100, t = num(b.tax) / 100;
+  const extras = (b.extras || []).reduce((a, e) => a + num(e.amount), 0);
+  const flat = num(b.delivery) + extras - num(b.discount);
+  const food = active.reduce((a, o) => a + itemsTotal(o.items), 0);
+  const serviceAmt = food * s, taxAmt = food * t;
+  const total = Math.max(0, food + serviceAmt + taxAmt + flat);
+  const r2 = x => Math.round(x * 100) / 100;
+  const rows = active.map(o => {
+    const f = itemsTotal(o.items);
+    let share, sv, tx, fl;
+    if (b.split === 'equal') { share = n ? total / n : 0; sv = n ? serviceAmt / n : 0; tx = n ? taxAmt / n : 0; fl = n ? flat / n : 0; }
+    else { sv = f * s; tx = f * t; fl = n ? flat / n : 0; share = f + sv + tx + fl; }
+    return { order: o, food: f, service: sv, tax: tx, flat: fl, share: r2(Math.max(0, share)) };
+  });
+  const sum = rows.reduce((a, r) => a + r.share, 0);
+  const diff = r2(r2(total) - sum);
+  if (rows.length && diff !== 0) { const big = rows.reduce((m, r) => (r.share > m.share ? r : m), rows[0]); big.share = r2(big.share + diff); }
+  const paid = rows.filter(r => r.order.paid);
+  return { food, serviceAmt, taxAmt, extras, flat, total: r2(total), rows, n, paidCount: paid.length, paidAmount: r2(paid.reduce((a, r) => a + r.share, 0)) };
+}
+
+/** Group every active item across orders by its (normalised) name — the order you read to the restaurant. */
+function aggregate(orders) {
+  const map = new Map();
+  for (const o of orders.filter(o => o.status === 'active')) for (const it of o.items || []) {
+    const key = String(it.n).trim().replace(/\s+/g, ' ').replace(/[أإآ]/g, 'ا').replace(/ة$/, 'ه');
+    const cur = map.get(key) || { n: String(it.n).trim(), q: 0, total: 0 };
+    cur.q += num(it.q); cur.total += num(it.p) * num(it.q); map.set(key, cur);
+  }
+  return [...map.values()].sort((a, b) => b.q - a.q);
+}
+
+if (typeof module !== 'undefined') module.exports = { computeBill, aggregate, num, money, egp, toAr, itemsTotal, cleanItems };
+
+;
+/* ===== Storage adapters =====
+ * Every adapter exposes the same async API so the UI never knows where data lives:
+ *   kind                         'local' | 'artifact' | 'supabase'
+ *   getSession(code)             -> session | null
+ *   saveSession(session)         full write (create / replace)
+ *   patchSession(code, patch)    shallow merge
+ *   watch(code, cb)              cb({session, orders}) on every change; returns unsubscribe
+ *   saveOrder(code, order)       create / replace one order
+ *   deleteOrder(code, id)
+ */
+
+/* ---------- Local: this browser only (localStorage + live sync between tabs) ---------- */
+function LocalStore() {
+  const mem = {};
+  const K = code => 'hk_s_' + code;
+  const read = code => { try { const v = localStorage.getItem(K(code)); return v ? JSON.parse(v) : (mem[code] || null); } catch { return mem[code] || null; } };
+  const write = (code, val) => { mem[code] = val; try { localStorage.setItem(K(code), JSON.stringify(val)); } catch {} ping(code); };
+  let bc = null; try { bc = new BroadcastChannel('hesab-kam'); } catch {}
+  const subs = new Set();
+  function ping(code) { for (const s of subs) if (s.code === code) s.fire(); try { bc && bc.postMessage(code); } catch {} }
+  if (bc) bc.onmessage = e => { for (const s of subs) if (s.code === e.data) s.fire(); };
+  window.addEventListener('storage', e => { if (e.key && e.key.startsWith('hk_s_')) { const code = e.key.slice(5); for (const s of subs) if (s.code === code) s.fire(); } });
+  return {
+    kind: 'local',
+    async getSession(code) { const v = read(code); return v ? v.session : null; },
+    async saveSession(session) { const v = read(session.code) || { orders: {} }; v.session = session; write(session.code, v); },
+    async patchSession(code, patch) { const v = read(code); if (!v) return; v.session = { ...v.session, ...patch }; write(code, v); },
+    async saveOrder(code, order) { const v = read(code); if (!v) return; v.orders[order.id] = order; write(code, v); },
+    async deleteOrder(code, id) { const v = read(code); if (!v) return; delete v.orders[id]; write(code, v); },
+    watch(code, cb) {
+      const s = { code, fire: () => { const v = read(code); cb({ session: v ? v.session : null, orders: v ? Object.values(v.orders) : [] }); } };
+      subs.add(s); setTimeout(s.fire, 0); return () => subs.delete(s);
+    }
+  };
+}
+
+/* ---------- Artifact db: shared between everyone who can open this artifact ---------- */
+function ArtifactStore(db) {
+  const sdoc = code => db.doc('s/' + code);
+  const ocol = code => db.collection('s/' + code + '/o');
+  const clone = o => JSON.parse(JSON.stringify(o));
+  return {
+    kind: 'artifact',
+    async getSession(code) { const s = await sdoc(code).get(); return s.exists ? s.data() : null; },
+    async saveSession(session) { await sdoc(session.code).set(clone(session)); },
+    async patchSession(code, patch) { await sdoc(code).update(clone(patch)); },
+    async saveOrder(code, order) { await ocol(code).doc(order.id).set(clone(order)); },
+    async deleteOrder(code, id) { await ocol(code).doc(id).delete(); },
+    watch(code, cb) {
+      let session = null, orders = [], gotS = false, gotO = false;
+      const emit = () => { if (gotS && gotO) cb({ session, orders }); };
+      const u1 = sdoc(code).onSnapshot(s => { session = s.exists ? s.data() : null; gotS = true; emit(); }, () => {});
+      const u2 = ocol(code).onSnapshot(q => { orders = q.docs.map(d => d.data()); gotO = true; emit(); }, () => {});
+      return () => { u1(); u2(); };
+    }
+  };
+}
+
+/* ---------- Supabase: the public, deployable version (see supabase/schema.sql) ---------- */
+function SupabaseStore(sb) {
+  const row = s => ({ code: s.code, data: s });
+  return {
+    kind: 'supabase',
+    async getSession(code) { const { data } = await sb.from('sessions').select('data').eq('code', code).maybeSingle(); return data ? data.data : null; },
+    async saveSession(session) { const { error } = await sb.from('sessions').upsert(row(session)); if (error) throw error; },
+    async patchSession(code, patch) { const cur = await this.getSession(code); if (!cur) return; const { error } = await sb.from('sessions').update({ data: { ...cur, ...patch } }).eq('code', code); if (error) throw error; },
+    async saveOrder(code, order) { const { error } = await sb.from('orders').upsert({ id: order.id, code, data: order }); if (error) throw error; },
+    async deleteOrder(code, id) { await sb.from('orders').delete().eq('id', id); },
+    watch(code, cb) {
+      let alive = true;
+      const load = async () => {
+        const [{ data: s }, { data: os }] = await Promise.all([
+          sb.from('sessions').select('data').eq('code', code).maybeSingle(),
+          sb.from('orders').select('data').eq('code', code)
+        ]);
+        if (alive) cb({ session: s ? s.data : null, orders: (os || []).map(r => r.data) });
+      };
+      const ch = sb.channel('s-' + code)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'sessions', filter: 'code=eq.' + code }, load)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: 'code=eq.' + code }, load)
+        .subscribe();
+      load();
+      return () => { alive = false; sb.removeChannel(ch); };
+    }
+  };
+}
+
+;
+/* ===== الحساب كام — app (vanilla, one file of screens) ===== */
+(function () {
+'use strict';
+const root = document.getElementById('root');
+const CFG = window.HK_CONFIG || {};
+
+/* ---------- device identity & local memory (per browser) ---------- */
+function lsGet(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+// "#m1234" opens the session as a separate guest identity in this tab only (to try host + member on one device)
+const FORCE_MEMBER = /^#m\d{4}$/.test(location.hash || '');
+function ssGet(k) { try { const v = sessionStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } }
+const me = (FORCE_MEMBER ? ssGet('hk_me_m') : lsGet('hk_me', null)) || { device: uid(12), name: '', sessions: {} };
+const saveMe = () => { if (FORCE_MEMBER) { try { sessionStorage.setItem('hk_me_m', JSON.stringify(me)); } catch {} } else lsSet('hk_me', me); };
+saveMe();
+
+/* ---------- storage selection ---------- */
+let storeKind = 'pending';
+const storeP = (async () => {
+  try {
+    if (CFG.supabaseUrl && window.supabase) { storeKind = 'supabase'; return SupabaseStore(window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey)); }
+    if (window.claude && typeof window.claude.use === 'function') {
+      const db = await window.claude.use('db');
+      if (db) {
+        const user = await window.claude.use('user');
+        let ok = true; try { if (user) ok = (await user.can('data.write')) !== false; } catch {}
+        if (ok) { storeKind = 'artifact'; return ArtifactStore(db); }
+      }
+    }
+  } catch (e) { console.warn('store fallback', e); }
+  storeKind = 'local'; return LocalStore();
+})();
+storeP.then(() => { if (S.route.name === 'home') render(); });
+
+/* ---------- app state ---------- */
+const COLORS = ['#FF5B2E', '#FFD43B', '#12B886', '#17120E', '#8E7CFF', '#FFE4D9', '#4CC3F0', '#F27BB4'];
+const darkText = c => ['#FFD43B', '#FFE4D9', '#4CC3F0'].includes(c);
+const S = {
+  route: { name: 'home', p: {} },
+  code: null, session: null, orders: [], unsub: null, loaded: false,
+  sheet: null, toast: null,
+  draft: {},
+  view: { tab: 'person', filter: 'all' }
+};
+function go(name, p = {}) { S.route = { name, p }; S.sheet = null; render(); window.scrollTo(0, 0); }
+function toast(msg) { S.toast = msg; render(); clearTimeout(toast.t); toast.t = setTimeout(() => { S.toast = null; render(); }, 2600); }
+function color(i) { return COLORS[i % COLORS.length]; }
+function initial(name) { const t = String(name || '؟').trim(); return t ? t[0] : '؟'; }
+function avatar(name, i, cls = '') { const c = color(i); return `<span class="avatar ${cls}" style="background:${c};color:${darkText(c) ? 'var(--ink)' : '#fff'}">${esc(initial(name))}</span>`; }
+function role() { return S.code && me.sessions[S.code] ? me.sessions[S.code].role : null; }
+function myOrder() { const id = S.code && me.sessions[S.code] && me.sessions[S.code].orderId; return S.orders.find(o => o.id === id) || null; }
+function orderedOrders() { return [...S.orders].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)); }
+function orderIndex(o) { return orderedOrders().indexOf(o); }
+function remember(code, data) { me.sessions[code] = { ...(me.sessions[code] || {}), ...data, at: Date.now() }; saveMe(); }
+
+/* ---------- live session subscription ---------- */
+async function openSession(code) {
+  const store = await storeP;
+  if (S.unsub && S.code === code) return;
+  if (S.unsub) S.unsub();
+  S.code = code; S.loaded = false; S.session = null; S.orders = [];
+  S.unsub = store.watch(code, ({ session, orders }) => {
+    S.session = session; S.orders = orders; S.loaded = true;
+    if (!isTyping()) render(); else S.dirty = true;
+  });
+}
+function isTyping() { const a = document.activeElement; return a && root.contains(a) && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA') && !a.dataset.live; }
+document.addEventListener('focusout', () => setTimeout(() => { if (S.dirty && !isTyping()) { S.dirty = false; render(); } }, 60));
+
+/* ---------- small view helpers ---------- */
+const mark = (h = 31) => `<svg class="mark" style="height:${h}px;width:${h * .84}px" viewBox="0 0 40 47" aria-hidden="true"><path d="M3 0h34a3 3 0 0 1 3 3v38l-4 6-4-6-4 6-4-6-4 6-4-6-4 6-4-6-4 6-4-6V3a3 3 0 0 1 3-3z" fill="#FF5B2E"/><text x="20" y="31" text-anchor="middle" font-family="Lalezar,sans-serif" font-size="30" fill="#fff">؟</text></svg>`;
+const back = (to = 'back') => `<button class="icon-btn" data-act="${to}" aria-label="رجوع">→</button>`;
+function stepper(id, val, big = false) { return `<div class="stepper ${big ? 'big' : ''}" data-step="${id}"><button type="button" data-d="-1" aria-label="قلل">−</button><output class="num">${toAr(val)}</output><button type="button" class="plus" data-d="1" aria-label="زوّد">+</button></div>`; }
+function chips(name, opts, cur) { return `<div class="chips" role="group">${opts.map(([v, l]) => `<button type="button" class="chip" data-chip="${name}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${l}</button>`).join('')}</div>`; }
+function bottom(html) { return `<div class="bottom"><div class="in">${html}</div></div>`; }
+function remaining() { if (!S.session || !S.session.deadline) return null; return Math.max(0, S.session.deadline - Date.now()); }
+function fmtClock(ms) { const s = Math.ceil(ms / 1000); return toAr(String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')); }
+function timerPill() {
+  if (!S.session || S.session.status !== 'open') return '';
+  if (!S.session.deadline) return `<span class="pill">بدون وقت</span>`;
+  const r = remaining();
+  return r > 0 ? `<span class="pill orange">⏱ <span class="timer" data-deadline="${S.session.deadline}">${fmtClock(r)}</span> فاضل</span>` : `<span class="pill red">⏱ الوقت خلص</span>`;
+}
+setInterval(() => {
+  const els = root.querySelectorAll('.timer[data-deadline]');
+  let expired = false;
+  els.forEach(el => { const r = Math.max(0, +el.dataset.deadline - Date.now()); el.textContent = fmtClock(r); if (r === 0) expired = true; });
+  if (expired && !isTyping() && !S.expiredShown) { S.expiredShown = true; render(); }
+}, 1000);
+function shareUrl(code) { const base = CFG.shareBase || (location.origin + location.pathname); return base.replace(/#.*$/, '') + '#' + code; }
+function waLink(text) { return 'https://wa.me/?text=' + encodeURIComponent(text); }
+function qrSvg(text) { try { if (!window.qrcode) return ''; const q = window.qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); } catch { return ''; } }
+async function copy(text, okMsg = 'اتنسخ ✓') { try { await navigator.clipboard.writeText(text); toast(okMsg); } catch { S.sheet = { type: 'copy', text }; render(); } }
+
+/* ---------- items editor (shared by member, host manual, self mode) ---------- */
+function blankItem() { return { n: '', p: '', q: 1 }; }
+function itemsEditor(key, items, opts = {}) {
+  return `<div class="stack" data-items="${key}">${items.map((it, i) => `
+    <div class="item">
+      <div class="top"><input id="${key}-n-${i}" data-f="n" data-i="${i}" value="${esc(it.n)}" placeholder="${i === 0 ? (opts.ph || 'مثلاً: نص فرخة شيش') : 'صنف تاني'}" autocomplete="off" aria-label="اسم الصنف">
+        ${items.length > 1 ? `<button type="button" class="icon-btn sm" data-rm="${i}" aria-label="شيل الصنف">×</button>` : ''}</div>
+      <div class="row">
+        <label class="price"><input id="${key}-p-${i}" data-f="p" data-i="${i}" inputmode="decimal" value="${esc(it.p === '' ? '' : toAr(it.p))}" placeholder="٠" aria-label="السعر"><span>ج</span></label>
+        ${stepper(key + ':' + i, it.q)}
+      </div>
+    </div>`).join('')}
+    <button type="button" class="dashed" data-additem="${key}">+ ${opts.addLabel || 'ضيف صنف تاني'}</button></div>`;
+}
+function draftItems(key) { if (!S.draft[key]) S.draft[key] = [blankItem()]; return S.draft[key]; }
+
+/* =====================================================================
+   SCREENS
+   ===================================================================== */
+const V = {};
+
+/* ---------- Home ---------- */
+V.home = () => {
+  const recent = Object.entries(me.sessions).sort((a, b) => b[1].at - a[1].at).slice(0, 4);
+  const syncNote = storeKind === 'artifact' ? 'القعدات متزامنة مع كل اللي معاهم اللينك ده' : storeKind === 'supabase' ? '' : storeKind === 'local' ? 'نسخة تجريبية: القعدات محفوظة على الجهاز ده (افتح تابين وجرّب هوست وعضو)' : '';
+  return `
+  <div class="topbar"><span></span><span class="brand">الحساب كام ${mark()}</span></div>
+  <h1>اطلبوا سوا،<br>وسيبوا الحسبة علينا.</h1>
+  <div class="hero" aria-hidden="true">
+    <div class="tk" style="background:var(--yellow);left:12px;top:92px;transform:rotate(7deg)"><span class="small">نانسي</span><b>${egp(257)}</b></div>
+    <div class="tk" style="background:var(--mint);color:#fff;right:12px;top:104px;transform:rotate(-7deg)"><span class="small">أمجد</span><b>${egp(225.5)}</b></div>
+    <div class="tk" style="background:#fff;left:50%;top:20px;transform:translateX(-50%) rotate(-2deg);z-index:1"><span class="small">ماريو</span><b>عليك ${egp(244.4)}</b></div>
+    <span class="cap">٦ أصحاب · فاتورة واحدة · صفر خناق</span>
+  </div>
+  ${recent.length ? `<div class="stack"><h3 style="font-family:var(--body);font-weight:600;font-size:16px">آخر القعدات</h3>
+    ${recent.map(([code, r], i) => `<button class="card row" data-open="${code}" style="text-align:start">
+      <span class="pill ${r.role === 'host' ? 'orange' : 'mint'}">${r.role === 'host' ? 'هوست' : 'عضو'}</span>
+      <span class="row" style="gap:12px;justify-content:flex-end"><span class="stack" style="gap:0;text-align:right"><b>${esc(r.place || 'قعدة')}</b><span class="muted small">${codeLabel(code)}</span></span>${avatar(r.place || 'ق', i)}</span>
+    </button>`).join('')}</div>` : ''}
+  ${syncNote ? `<p class="mode-note">${syncNote}</p>` : ''}
+  ${bottom(`<button class="btn primary" data-go="method">+ ابدأ قعدة جديدة</button><button class="btn white" data-go="join">معايا كود قعدة</button>`)}`;
+};
+
+/* ---------- Join by code ---------- */
+V.join = () => {
+  const d = S.draft.join || (S.draft.join = { code: '' });
+  return `<div class="topbar"><span></span>${back('home')}</div>
+  <div class="stack" style="gap:6px"><h1>اكتب كود القعدة</h1><p class="muted">الكود في الرسالة اللي الهوست بعتها، زي «كام-٤٧٢٩».</p></div>
+  <label class="f"><span>الكود (٤ أرقام)</span><input class="input num" id="join-code" data-bind="join.code" inputmode="numeric" maxlength="9" value="${esc(toAr(d.code))}" placeholder="٤٧٢٩" style="font-family:var(--display);font-size:36px;text-align:center;letter-spacing:.2em"></label>
+  ${S.route.p.err ? `<div class="card" style="background:var(--red-soft);border-color:var(--red-soft);color:var(--red)">${S.route.p.err}</div>` : ''}
+  ${bottom(`<button class="btn dark" data-act="join">ادخل القعدة ←</button>`)}`;
+};
+
+/* ---------- Host: method ---------- */
+V.method = () => {
+  const m = S.draft.method || 'link';
+  return `<div class="topbar"><span class="muted small">١ من ٢</span>${back('home')}</div>
+  <div class="stack" style="gap:6px"><h1>هتجمع الطلبات إزاي؟</h1><p class="muted">تقدر برضه تضيف طلبات ناس بنفسك في أي وقت.</p></div>
+  <button class="choice" data-pick-method="link" aria-pressed="${m === 'link'}"><span class="row"><span class="pill yellow">موصى بيه</span><span style="font-size:30px">🔗</span></span><h2>ابعت لينك للشلة</h2><span class="muted">كل واحد يفتح اللينك من موبايله ويكتب طلبه وسعره بنفسه، وانت تتابع.</span></button>
+  <button class="choice" data-pick-method="self" aria-pressed="${m === 'self'}"><span class="row"><span></span><span style="font-size:30px">✍️</span></span><h2>هكتب طلبات الكل بنفسي</h2><span class="muted">قاعدين سوا؟ اسأل كل واحد عايز ايه واكتبه انت في ثواني.</span></button>
+  ${bottom(`<button class="btn dark" data-act="method-next">كمّل ←</button>`)}`;
+};
+
+/* ---------- Host: link-mode details ---------- */
+function hostDraft() { return S.draft.host || (S.draft.host = { hostName: me.name || '', place: '', pay: 'both', instapay: '', menu: '', minutes: 15, note: '' }); }
+V.hostForm = () => {
+  const d = hostDraft();
+  return `<div class="topbar"><span class="muted small">٢ من ٢</span>${back('method')}</div>
+  <div class="stack" style="gap:6px"><h1>قعدة جديدة</h1><p class="muted">دقيقة واحدة وتبعت اللينك للشلة.</p></div>
+  <label class="f"><span>اسمك</span><input class="input" id="h-name" data-bind="host.hostName" value="${esc(d.hostName)}" placeholder="مثلاً: ماريو" autocomplete="given-name"></label>
+  <label class="f"><span>طالبين منين؟ (اختياري)</span><input class="input" id="h-place" data-bind="host.place" value="${esc(d.place)}" placeholder="مثلاً: أبو يوسف السوري"></label>
+  <div class="f stack" style="gap:8px"><span class="muted small" style="font-weight:500;font-size:14px">هتستلم الفلوس إزاي؟</span>${chips('host.pay', [['both', 'الاتنين'], ['instapay', 'إنستاباي'], ['cash', 'كاش']], d.pay)}</div>
+  ${d.pay !== 'cash' ? `<label class="f"><span>رقم إنستاباي</span><input class="input num" id="h-ip" data-bind="host.instapay" inputmode="tel" value="${esc(d.instapay)}" placeholder="٠١٠٠١٢٣٤٥٦٧"></label>` : ''}
+  <div class="f stack" style="gap:8px"><span class="muted small" style="font-weight:500;font-size:14px">الطلبات تقفل بعد</span>${chips('host.minutes', [[10, '١٠ د'], [15, '١٥ د'], [30, '٣٠ د'], [0, 'بدون']], d.minutes)}</div>
+  <label class="f"><span>لينك المنيو أو صفحة المطعم (اختياري)</span><input class="input" id="h-menu" data-bind="host.menu" inputmode="url" value="${esc(d.menu)}" placeholder="الصق اللينك هنا" dir="auto"></label>
+  <label class="f"><span>كلمة للشلة (اختياري)</span><textarea class="input" id="h-note" data-bind="host.note" placeholder="اللي مش هيكتب في ربع ساعة هيتغدى طحينة 😂">${esc(d.note)}</textarea></label>
+  ${bottom(`<button class="btn dark" data-act="host-preview">شوف شكل الدعوة ←</button>`)}`;
+};
+function inviteCard(s) {
+  const pay = s.pay || {};
+  return `<div class="receipt stack" style="--card:#FFF7EA;color:var(--ink);gap:12px;align-items:center;text-align:center">
+    ${avatar(s.hostName, 0, 'lg')}
+    <p class="muted">${esc(s.hostName)} عازمك على</p>
+    <h2>${esc(s.place || 'قعدة أكل')}</h2>
+    ${s.note ? `<div class="card" style="width:100%;background:#fff">${esc(s.note)}</div>` : ''}
+    <div class="stack" style="gap:6px;width:100%">
+      ${s.menu ? `<a class="card row" href="${esc(/^https?:/.test(s.menu) ? s.menu : 'https://' + s.menu)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;padding:10px 12px"><span class="muted small">افتح ↗</span><b>📖 المنيو</b></a>` : ''}
+      ${pay.instapay ? `<div class="card row" style="padding:10px 12px"><span class="num muted small" dir="ltr">${esc(toAr(pay.instapay))}</span><b>💳 إنستاباي</b></div>` : ''}
+      ${pay.cash ? `<div class="card row" style="padding:10px 12px"><span class="muted small">متاح</span><b>💵 كاش</b></div>` : ''}
+    </div>
+    ${s.deadline ? `<span class="pill orange">⏱ بتقفل بعد ${toAr(Math.max(0, Math.round((s.deadline - Date.now()) / 60000)))} دقيقة</span>` : ''}
+  </div>`;
+}
+function draftSession() { const d = hostDraft(); return { hostName: d.hostName.trim(), place: d.place.trim(), note: d.note.trim(), menu: d.menu.trim(), pay: { cash: d.pay !== 'instapay', instapay: d.pay !== 'cash' ? d.instapay.trim() : '' }, deadline: d.minutes ? Date.now() + d.minutes * 60000 : null }; }
+V.preview = () => `<div class="topbar"><span class="muted small">قبل ما تبعت</span>${back('hostForm')}</div>
+  <div class="stack" style="gap:6px"><h1>ده اللي الشلة هتشوفه</h1><p class="muted">راجع، ولو فيه حاجة غلط ارجع عدّل.</p></div>
+  ${inviteCard(draftSession())}
+  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" data-go="hostForm" style="max-width:120px">تعديل</button><button class="btn primary" data-act="create-link">ابعت الدعوة ←</button></div>`)}`;
+
+/* ---------- Host: share ---------- */
+V.share = () => {
+  const s = S.session; if (!s) return loading();
+  const url = shareUrl(s.code);
+  const msg = `${s.hostName} عازمك على ${s.place || 'قعدة أكل'} 🍽️\nاكتب طلبك من هنا: ${url}\nأو ادخل بالكود: ${codeLabel(s.code)}`;
+  document.body.className = 'screen-orange';
+  return `<div class="topbar"><span class="pill white">جاهزة ✓</span>${back('live')}</div>
+  <div class="stack" style="gap:6px"><h1>القعدة جاهزة!</h1><p class="muted">ابعت اللينك وكل واحد يكتب طلبه بنفسه.</p></div>
+  <div class="receipt stack" style="gap:12px;align-items:center;color:var(--ink);text-align:center">
+    <span class="muted small">قعدة</span><h2>${esc(s.place || 'قعدة أكل')}</h2>
+    ${qrSvg(url) ? `<div class="qr">${qrSvg(url)}</div>` : ''}
+    <span class="code">${codeLabel(s.code)}</span>
+    <span class="muted small" dir="ltr" style="word-break:break-all">${esc(url)}</span>
+    <div class="wrap" style="justify-content:center">${timerPill()}<span class="pill">أي حد معاه اللينك يطلب</span></div>
+    <a class="small" href="${esc(shareUrl('m' + s.code))}" target="_blank" rel="noopener" style="color:var(--orange);font-weight:600">جرّب كعضو في تاب جديدة ↗</a>
+  </div>
+  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" data-copy="${esc(msg)}" style="color:var(--ink)">انسخ الدعوة</button><a class="btn mint" href="${waLink(msg)}" target="_blank" rel="noopener" style="text-decoration:none">واتساب</a></div><button class="btn dark" data-go="live">ادخل على القعدة ←</button>`)}`;
+};
+
+/* ---------- Host: live ---------- */
+function orderCard(o, opts = {}) {
+  const i = orderIndex(o); const total = itemsTotal(o.items);
+  const isHostMe = o.device === S.session.hostDevice && o.by === 'host' && o.name === S.session.hostName;
+  return `<div class="card stack ${opts.hl ? 'hl' : ''}" style="gap:10px">
+    <div class="row">
+      <span class="row" style="gap:6px;justify-content:flex-start">${opts.actions === false ? '' : `<button class="icon-btn sm del" data-del="${o.id}" aria-label="احذف طلب ${esc(o.name)}">🗑</button><button class="icon-btn sm" data-edit="${o.id}" aria-label="عدّل طلب ${esc(o.name)}">✎</button>`}<b class="num">${egp(total)}</b></span>
+      <span class="row" style="gap:10px;justify-content:flex-end"><span class="stack" style="gap:0;text-align:right"><b>${esc(o.name)}${isHostMe ? ' (انت)' : ''}</b><span class="muted small">${o.by === 'host' ? 'كتبه الهوست' : 'كتبه بنفسه'} · الطلب ${ordinal(i)}</span></span>${avatar(o.name, i)}</span>
+    </div>
+    <div class="wrap">${(o.items || []).map(it => `<span class="pill">${it.q > 1 ? toAr(it.q) + '× ' : ''}${esc(it.n)} · ${toAr(money(it.p))}</span>`).join('')}</div>
+  </div>`;
+}
+V.live = () => {
+  const s = S.session; if (!s) return loading();
+  if (s.status !== 'open') { setTimeout(() => go(s.status === 'billed' ? 'result' : 'summary'), 0); return loading(); }
+  const active = orderedOrders().filter(o => o.status === 'active');
+  const pending = orderedOrders().filter(o => o.status === 'pending');
+  const food = active.reduce((a, o) => a + itemsTotal(o.items), 0);
+  const r = remaining(); const ended = s.deadline && r === 0;
+  const url = shareUrl(s.code);
+  const msg = `${s.hostName} عازمك على ${s.place || 'قعدة أكل'} 🍽️\nاكتب طلبك من هنا: ${url}\nأو ادخل بالكود: ${codeLabel(s.code)}`;
+  const banners = pending.map(o => `<div class="card ink stack" style="gap:12px">
+      <div class="row"><span class="pill yellow">عايز يطلب تاني</span><span class="row" style="gap:10px;justify-content:flex-end"><span class="stack" style="gap:0;text-align:right"><b>${esc(o.name)}</b><span class="muted small">${esc((o.items || []).map(i => i.n).join(' + '))} · ${egp(itemsTotal(o.items))}</span></span>${avatar(o.name, orderIndex(o))}</span></div>
+      <div class="row" style="gap:8px"><button class="btn sm" style="flex:1;background:rgba(255,255,255,.12);color:#fff;border-radius:14px" data-reject="${o.id}">رفض</button><button class="btn sm mint" style="flex:1;border-radius:14px" data-approve="${o.id}">موافقة</button></div></div>`).join('');
+  const endedBanner = ended ? `<div class="card stack" style="background:var(--orange-soft);border-color:var(--orange-soft);gap:10px">
+      <div class="row"><span style="font-size:26px">⏰</span><span class="stack" style="gap:2px;text-align:right"><b style="color:var(--orange)">الوقت خلص!</b><span class="small">محدش يقدر يطلب دلوقتي. لو حد لسه مكتبش زوّد الوقت.</span></span></div>
+      <div class="row" style="gap:8px"><button class="btn sm white" style="flex:1;border-radius:14px" data-extend="5">+ ٥ دقايق</button><button class="btn sm white" style="flex:1;border-radius:14px" data-extend="10">+ ١٠ دقايق</button></div></div>` : '';
+  const empty = `<div class="empty"><span class="emoji">🍽️</span><h3>لسه محدش طلب</h3><p class="muted">أول ما حد يكتب طلبه هيظهر هنا على طول. فكّر الشلة لو اتأخروا.</p>
+      <div class="row" style="gap:8px"><button class="btn sm white" data-copy="${esc(msg)}">انسخ الدعوة</button><a class="btn sm mint" href="${waLink(msg)}" target="_blank" rel="noopener" style="text-decoration:none">ابعت تاني واتساب</a></div></div>`;
+  const side = `<div class="card lg stack side" style="background:var(--orange);border-color:var(--orange);color:#fff;align-items:center;text-align:center;gap:12px">
+      ${timerPill() || '<span class="pill white">مفتوحة</span>'}
+      <h3>ابعت اللينك</h3>${qrSvg(url) ? `<div class="qr">${qrSvg(url)}</div>` : ''}<span class="code" style="font-size:30px">${codeLabel(s.code)}</span>
+      <button class="btn white" style="color:var(--ink);min-height:48px" data-copy="${esc(msg)}">انسخ الدعوة</button>
+      <a class="btn dark" style="min-height:48px;text-decoration:none" href="${waLink(msg)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`;
+  return `<div class="topbar"><span class="row" style="gap:8px;justify-content:flex-start"><button class="btn sm red-soft" data-act="end">إنهاء</button>${timerPill()}</span>${back('home')}</div>
+  <div class="row" style="align-items:flex-end"><button class="btn sm white" data-go="share">اللينك والكود</button><div class="stack" style="gap:2px;text-align:right"><span class="muted small">قعدة · ${toAr(active.length)} طلبات</span><h2>${esc(s.place || 'قعدة أكل')}</h2></div></div>
+  <div class="dash">
+    <div class="only-wide">${side}</div>
+    <div class="stack">
+      ${endedBanner}${banners}
+      <div class="card ink row" style="border-radius:24px;padding:18px 20px"><span class="muted small">${active.length ? 'الأكل لحد دلوقتي' : ''}</span><span class="stack" style="gap:0;text-align:right"><span class="big num" style="font-size:30px;color:var(--yellow)">${egp(food)}</span><span class="muted small">${toAr(active.length)} طلبات</span></span></div>
+      ${active.length ? `<div class="grid-orders">${active.map(o => orderCard(o)).join('')}</div>` : empty}
+    </div>
+  </div>
+  ${bottom(`<button class="btn white" data-act="manual">+ ضيف طلب لحد بنفسك</button><button class="btn dark" data-act="end" ${active.length ? '' : 'disabled'}>اقفل الطلبات وروح للحساب ←</button>`)}`;
+};
+
+/* ---------- Self mode (host writes everyone's order) ---------- */
+V.selfSetup = () => {
+  const d = S.draft.self || (S.draft.self = { hostName: me.name || '', place: '', count: 4 });
+  return `<div class="topbar"><span class="muted small">٢ من ٢</span>${back('method')}</div>
+  <div class="stack" style="gap:6px"><h1>هتكتب الطلبات بنفسك</h1><p class="muted">اسأل كل واحد عايز ايه واكتبه، والحسبة علينا.</p></div>
+  <label class="f"><span>اسمك</span><input class="input" id="s-name" data-bind="self.hostName" value="${esc(d.hostName)}" placeholder="مثلاً: ماريو"></label>
+  <label class="f"><span>طالبين منين؟ (اختياري)</span><input class="input" id="s-place" data-bind="self.place" value="${esc(d.place)}" placeholder="مثلاً: أبو يوسف السوري"></label>
+  <div class="card lg stack" style="align-items:center;gap:10px"><span class="muted small">كام واحد هيطلب؟ (معاك)</span>${stepper('self-count', d.count, true)}<span class="muted small">مش متأكد؟ تقدر تزوّد بعدين</span></div>
+  ${bottom(`<button class="btn dark" data-act="create-self">يلا نبدأ نكتب ←</button>`)}`;
+};
+V.selfEntry = () => {
+  const s = S.session; if (!s) return loading();
+  const list = orderedOrders().filter(o => o.status === 'active');
+  const idx = S.route.p.idx ?? list.length;
+  const total = Math.max(s.expected || 1, idx + 1);
+  const editing = list[idx];
+  const key = 'self-' + idx;
+  if (!S.draft[key]) S.draft[key] = editing ? { name: editing.name, items: editing.items.map(x => ({ ...x })) } : { name: idx === 0 ? s.hostName : '', items: [blankItem()] };
+  const d = S.draft[key];
+  const last = idx + 1 >= total;
+  const dots = Array.from({ length: Math.min(total, 12) }, (_, i) => `<i class="${i < idx ? 'done' : i === idx ? 'cur' : ''}"></i>`).join('');
+  const prevOk = S.route.p.ok;
+  return `<div class="topbar"><button class="btn sm white" data-act="self-all">كل الطلبات (${toAr(list.length)})</button>${back('home')}</div>
+  ${prevOk ? `<div class="card" style="background:var(--mint-soft);border-color:var(--mint-soft);color:var(--mint-ink);font-weight:600">✓ ${esc(prevOk)}</div>` : ''}
+  <div class="row"><div class="dots">${dots}</div><span class="${last ? 'pill yellow' : 'muted small'}">${last ? 'الأخير 🏁' : 'الطلب ' + toAr(idx + 1) + ' من ' + toAr(total)}</span></div>
+  <h1>${idx === 0 ? 'مين أول واحد؟' : last ? 'وآخر واحد…' : 'الطلب ' + ordinal(idx)}</h1>
+  <label class="f"><span>اسمه</span><input class="input" id="${key}-name" data-bind="${key}.name" value="${esc(d.name)}" placeholder="اسم صاحب الطلب"></label>
+  ${itemsEditor(key + '.items', d.items, { addLabel: 'صنف تاني' + (d.name ? ' لـ' + esc(d.name) : '') })}
+  ${bottom(`<div class="cart"><button class="btn ${last ? 'primary' : 'primary'}" data-act="self-next" data-idx="${idx}">${last ? 'خلصنا الحمدلله' : 'اللي بعده'} ←</button><span class="stack" style="gap:0;text-align:right"><span class="big num" style="font-size:24px">${egp(itemsTotal(d.items))}</span><span class="small" style="color:var(--on-ink)">طلب ${esc(d.name || '…')}</span></span></div>
+    <div class="row" style="gap:10px"><button class="btn sm white" style="flex:1;min-height:44px;border-radius:14px" data-act="self-more">زوّد ناس</button>${list.length ? `<button class="btn sm white" style="flex:1;min-height:44px;border-radius:14px" data-act="self-finish">كفاية كده، روح للحساب</button>` : ''}</div>`)}`;
+};
+
+/* ---------- Summary (grouped order for the restaurant) ---------- */
+V.summary = () => {
+  const s = S.session; if (!s) return loading();
+  const agg = aggregate(S.orders); const food = agg.reduce((a, x) => a + x.total, 0);
+  const text = `طلب ${s.place || 'القعدة'}:\n` + agg.map(a => `${toAr(a.q)} × ${a.n}`).join('\n');
+  return `<div class="topbar"><span class="pill mint">الطلبات اتقفلت ✓</span>${back('reopen')}</div>
+  <div class="stack" style="gap:6px"><h1>الطلب المجمّع</h1><p class="muted">جمّعنا اللي اتكتب، اقرا منه وانت بتطلب.</p></div>
+  <div class="receipt stack" style="gap:12px">
+    <div class="line"><span class="muted small">${codeLabel(s.code)}</span><b>${esc(s.place || 'القعدة')} · ${toAr(S.orders.filter(o => o.status === 'active').length)} أفراد</b></div><hr class="rule">
+    ${agg.map(a => `<div class="line"><span class="muted v">${money(a.total)}</span><span class="row" style="gap:10px;justify-content:flex-end"><span>${esc(a.n)}</span><span class="pill" style="background:var(--ink);color:#fff;border-radius:8px">×${toAr(a.q)}</span></span></div>`).join('')}
+    <hr class="rule"><div class="line"><span class="big">${egp(food)}</span><b>إجمالي الأكل</b></div>
+  </div>
+  ${bottom(`<button class="btn white" data-copy="${esc(text)}">انسخ الطلب للواتساب ⧉</button><button class="btn primary" data-go="bill">الأكل وصل؟ يلا نحسب ←</button>`)}`;
+};
+
+/* ---------- Bill extras ---------- */
+function billDraft() { const s = S.session; return S.draft.bill || (S.draft.bill = JSON.parse(JSON.stringify(s.bill || { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }))); }
+V.bill = () => {
+  const s = S.session; if (!s) return loading();
+  const b = billDraft(); const calc = computeBill(S.orders, b);
+  const fieldRow = (label, sub, key, unit) => `<label class="card row" style="padding:10px 12px 10px 16px"><span class="price" style="background:#fff;border:1px solid var(--line)"><input id="b-${key}" data-bind="bill.${key}" data-live="1" inputmode="decimal" value="${esc(b[key] ? toAr(b[key]) : '')}" placeholder="٠"><span>${unit}</span></span><span class="stack" style="gap:0;text-align:right"><b>${label}</b><span class="muted small">${sub}</span></span></label>`;
+  return `<div class="topbar"><span></span>${back('summary')}</div>
+  <div class="stack" style="gap:6px"><h1>اللحظة المهمة</h1><p class="muted">اكتب أي زيادة في الفاتورة، واللي مش موجود سيبه فاضي.</p></div>
+  <div class="card row" style="background:var(--sand);border-color:var(--sand)"><b class="num">${egp(calc.food)}</b><span class="stack" style="gap:0;text-align:right"><b>الأكل</b><span class="muted small">محسوب من الطلبات</span></span></div>
+  ${fieldRow('الضريبة', 'نسبة من الأكل', 'tax', '٪')}
+  ${fieldRow('الخدمة', 'نسبة من الأكل', 'service', '٪')}
+  ${fieldRow('الديليفري', 'بيتقسم بالتساوي', 'delivery', 'ج')}
+  ${fieldRow('خصم أو كوبون', 'بيتقسم بالتساوي', 'discount', 'ج')}
+  ${(b.extras || []).map((e, i) => `<div class="card row hl" style="padding:10px 12px"><span class="row" style="gap:6px;justify-content:flex-start"><button class="icon-btn sm" data-rmextra="${i}" aria-label="شيل">×</button><span class="price"><input id="bx-a-${i}" data-extra="${i}" data-f="amount" data-live="1" inputmode="decimal" value="${esc(e.amount ? toAr(e.amount) : '')}" placeholder="٠"><span>ج</span></span></span><input class="input" id="bx-n-${i}" data-extra="${i}" data-f="name" value="${esc(e.name)}" placeholder="مثلاً: مية وسلطات" style="max-width:170px;padding:10px 12px;font-size:15px"></div>`).join('')}
+  <button class="dashed" data-act="add-extra">+ ضيف قيمة تانية (مية، سلطات، تيك…)</button>
+  <div class="stack" style="gap:8px"><span class="muted small" style="font-weight:500">نقسم إزاي؟</span><div class="seg"><button data-split="equal" aria-pressed="${b.split === 'equal'}">بالتساوي</button><button data-split="prop" aria-pressed="${b.split !== 'equal'}">كل واحد حسب طلبه</button></div></div>
+  ${bottom(`<div class="cart"><button class="btn primary" data-act="bill-done">احسب لكل فرد ←</button><span class="stack" style="gap:0;text-align:right"><span class="big num" id="bill-total" style="font-size:24px;color:var(--yellow)">${egp(calc.total)}</span><span class="small" style="color:var(--on-ink)">الإجمالي بعد الزيادات</span></span></div>`)}`;
+};
+
+/* ---------- Result (host) ---------- */
+V.result = () => {
+  const s = S.session; if (!s) return loading();
+  const calc = computeBill(S.orders, s.bill);
+  if (calc.n && calc.paidCount === calc.n && !S.route.p.stay) return V.allPaid(calc);
+  const tab = S.view.tab, filter = S.view.filter;
+  const rows = calc.rows.filter(r => filter === 'all' || (filter === 'paid' ? r.order.paid : !r.order.paid));
+  const pct = calc.total ? Math.round(calc.paidAmount / calc.total * 100) : 0;
+  const unpaidN = calc.n - calc.paidCount;
+  const methodName = m => m === 'cash' ? 'كاش' : m === 'instapay' ? 'إنستاباي' : '';
+  const personRow = r => { const o = r.order, i = orderIndex(o);
+    const claim = !o.paid && o.claim ? `<span class="pill yellow">قال دفع ${methodName(o.claim)}</span>` : '';
+    return `<div class="card row" style="padding:10px 12px 10px 14px">
+      <span class="row" style="gap:6px;justify-content:flex-start;flex-wrap:wrap">${o.paid ? `<button class="pill mint" data-unpay="${o.id}">${methodName(o.method) || 'دفع'} ✓</button>` : `<button class="btn xs" style="background:var(--mint-soft);color:var(--mint-ink)" data-pay="${o.id}">دفع ✓</button><a class="btn xs soft" style="text-decoration:none" href="${waLink(remindText(o, r))}" target="_blank" rel="noopener">فكّره</a>`}${claim}</span>
+      <button class="row" style="gap:10px;justify-content:flex-end;text-align:right" data-person="${o.id}"><span class="stack" style="gap:0"><b>${esc(o.name)}</b><span class="big num" style="font-size:22px;${o.paid ? 'color:var(--muted)' : ''}">${egp(r.share)}</span></span>${avatar(o.name, i, '')}</button></div>`; };
+  const detailCard = r => { const o = r.order; return `<div class="card stack" style="gap:8px">
+      <div class="row"><span class="pill">الطلب ${ordinal(orderIndex(o))}</span><span class="row" style="gap:8px;justify-content:flex-end"><b>${esc(o.name)}</b>${avatar(o.name, orderIndex(o))}</span></div>
+      ${(o.items || []).map(it => `<div class="line small"><span class="muted v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
+      <hr class="rule"><div class="line small muted"><span class="v num">${money(r.share - r.food)}</span><span>ضريبة + خدمة + زيادات</span></div>
+      <div class="line"><span class="big num" style="font-size:22px;color:var(--orange)">${egp(r.share)}</span><b>المطلوب منه</b></div></div>`; };
+  const hero = `<div class="card ink stack side" style="border-radius:24px;padding:18px;gap:10px">
+      <div class="row"><span class="pill white">${s.bill && s.bill.split === 'equal' ? 'بالتساوي' : 'كل واحد حسب طلبه'}</span><span class="muted small">الحساب كام؟</span></div>
+      <div class="big num" style="font-size:44px;text-align:right">${egp(calc.total)}</div>
+      <div class="progress" aria-label="نسبة اللي اتدفع"><i style="width:${pct}%"></i></div>
+      <div class="row"><span class="muted small">${unpaidN ? 'فاضل ' + egp(calc.total - calc.paidAmount) : ''}</span><b style="color:var(--mint)">${calc.paidCount ? toAr(calc.paidCount) + ' من ' + toAr(calc.n) + ' دفعوا' : 'لسه محدش دفع'}</b></div>
+      <div class="stack small muted" style="gap:4px;border-top:1px solid rgba(255,255,255,.12);padding-top:10px">
+        <div class="line"><span class="v">${money(calc.food)}</span><span>الأكل</span></div>
+        ${calc.taxAmt ? `<div class="line"><span class="v">${money(calc.taxAmt)}</span><span>ضريبة ${toAr(s.bill.tax)}٪</span></div>` : ''}
+        ${calc.serviceAmt ? `<div class="line"><span class="v">${money(calc.serviceAmt)}</span><span>خدمة ${toAr(s.bill.service)}٪</span></div>` : ''}
+        ${calc.flat ? `<div class="line"><span class="v">${money(calc.flat)}</span><span>ديليفري وزيادات وخصم</span></div>` : ''}
+      </div></div>`;
+  return `<div class="topbar"><button class="btn sm white" data-go="bill">تعديل الحساب</button>${back('home')}</div>
+  <div class="row" style="align-items:flex-end"><button class="btn sm white" data-go="receipt">الفاتورة ⤴</button><div class="stack" style="gap:2px;text-align:right"><span class="muted small">${codeLabel(s.code)}</span><h2>${esc(s.place || 'القعدة')}</h2></div></div>
+  <div class="dash two">
+    <div class="hero-col">${hero}</div>
+    <div class="stack">
+      <div class="seg"><button data-tab="detail" aria-pressed="${tab === 'detail'}">تفصيلي</button><button data-tab="person" aria-pressed="${tab === 'person'}">على الشخص</button></div>
+      ${tab === 'person' ? `<div class="seg"><button data-filter="paid" aria-pressed="${filter === 'paid'}">مين دفع (${toAr(calc.paidCount)})</button><button data-filter="unpaid" aria-pressed="${filter === 'unpaid'}">مين لسه (${toAr(unpaidN)})</button><button data-filter="all" aria-pressed="${filter === 'all'}">الكل</button></div>` : ''}
+      ${tab === 'person' ? (rows.length ? rows.map(personRow).join('') : `<div class="empty"><span class="emoji">${filter === 'paid' ? '🙃' : '🎉'}</span><b>${filter === 'paid' ? 'لسه محدش دفع' : 'كله دفع'}</b></div>`) : calc.rows.map(detailCard).join('')}
+      ${tab === 'person' && filter !== 'paid' && unpaidN ? `<p class="muted small center">«فكّره» بيفتح واتساب برسالة فيها حسابه وطريقة الدفع.</p>` : ''}
+    </div>
+  </div>
+  ${bottom(`<button class="btn primary" data-go="receipt">ابعت الفاتورة للشلة ⤴</button>`)}`;
+};
+function payLine() { const p = (S.session && S.session.pay) || {}; return [p.instapay ? 'إنستاباي: ' + toAr(p.instapay) : '', p.cash ? 'أو كاش' : ''].filter(Boolean).join(' '); }
+function remindText(o, r) { const s = S.session; return `يا ${o.name} 👋 حسابك في ${s.place || 'القعدة'} ${egp(r.share)}\n${payLine()}\nتفاصيلك: ${shareUrl(s.code)}`; }
+V.allPaid = calc => { document.body.className = 'screen-mint'; return `
+  <div class="topbar"><span></span>${back('home')}</div>
+  <div class="stack" style="align-items:center;text-align:center;gap:14px;padding-top:30px">
+    <span style="font-size:64px">🎉</span><h1 style="font-size:60px">كله دفع<br>الحمدلله!</h1>
+    <p style="font-size:17px">${toAr(calc.n)} من ${toAr(calc.n)} · ${egp(calc.total)} رجعوا لجيبك</p>
+    <div class="row" style="justify-content:center;gap:0">${calc.rows.map((r, i) => `<span style="margin-inline:-5px;border:3px solid #fff;border-radius:50%">${avatar(r.order.name, i)}</span>`).join('')}</div>
+  </div>
+  ${bottom(`<button class="btn white" style="color:var(--ink)" data-go="receipt">شارك الفاتورة ⤴</button><button class="btn dark" data-act="stay-result">شوف التفاصيل</button><button class="btn dark" data-go="method">+ قعدة جديدة</button>`)}`; };
+
+/* ---------- Person page (host) ---------- */
+V.person = () => {
+  const s = S.session; if (!s) return loading();
+  const calc = computeBill(S.orders, s.bill); const r = calc.rows.find(x => x.order.id === S.route.p.id); if (!r) return V.result();
+  const o = r.order; const m = o.method === 'cash' ? 'كاش' : o.method === 'instapay' ? 'إنستاباي' : '';
+  return `<div class="topbar">${o.paid ? `<span class="pill mint">دفع ${m} ✓</span>` : o.claim ? `<span class="pill yellow">قال دفع ${o.claim === 'cash' ? 'كاش' : 'إنستاباي'}</span>` : `<span class="pill orange">لسه مدفعش</span>`}${back('result')}</div>
+  <div class="stack" style="align-items:center;text-align:center;gap:6px">${avatar(o.name, orderIndex(o), 'lg')}<h1>${esc(o.name)}</h1></div>
+  ${breakdown(r, s)}
+  ${bottom(`<div class="row" style="gap:10px">${o.paid ? `<button class="btn white" data-unpay="${o.id}">رجّعه «لسه»</button>` : `<button class="btn mint" data-pay="${o.id}">دفع ✓</button>`}<a class="btn dark" style="text-decoration:none" href="${waLink(remindText(o, r))}" target="_blank" rel="noopener">ابعتله حسابه</a></div>`)}`;
+};
+function breakdown(r, s) {
+  const b = s.bill || {}; const o = r.order;
+  return `<div class="receipt stack" style="gap:9px;color:var(--ink)">
+    ${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
+    <hr class="rule">
+    ${b.split === 'equal' ? `<div class="line muted"><span class="v num">${money(r.share - r.food)}</span><span>فرق القسمة بالتساوي والزيادات</span></div>` : `
+    ${r.service ? `<div class="line muted"><span class="v num">${money(r.service)}</span><span>خدمة ${toAr(b.service)}٪</span></div>` : ''}
+    ${r.tax ? `<div class="line muted"><span class="v num">${money(r.tax)}</span><span>ضريبة ${toAr(b.tax)}٪</span></div>` : ''}
+    ${r.flat ? `<div class="line muted"><span class="v num">${money(r.flat)}</span><span>نصيبه من الديليفري والزيادات</span></div>` : ''}`}
+    <hr class="rule"><div class="line"><span class="big num" style="font-size:26px">${egp(r.share)}</span><b>الإجمالي</b></div></div>`;
+}
+
+/* ---------- Receipt (shareable text) ---------- */
+V.receipt = () => {
+  const s = S.session; if (!s) return loading();
+  const calc = computeBill(S.orders, s.bill); const b = s.bill || {};
+  const text = `🧾 ${s.place || 'القعدة'} — الحساب كام\n` + calc.rows.map(r => `${r.order.paid ? '✓' : '○'} ${r.order.name}: ${egp(r.share)}`).join('\n') + `\nالإجمالي: ${egp(calc.total)}\n${payLine()}`;
+  document.body.className = 'screen-orange';
+  return `<div class="topbar"><span></span>${back('result')}</div>
+  <div class="receipt paper stack" style="gap:10px;color:var(--ink);margin-top:10px">
+    <div class="line"><span class="muted small">${new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}</span><span class="brand" style="font-size:20px">الحساب كام ${mark(22)}</span></div>
+    <h2>${esc(s.place || 'القعدة')}</h2><span class="muted small">${toAr(calc.n)} أفراد · ${b.split === 'equal' ? 'بالتساوي' : 'كل واحد حسب طلبه'}</span><hr class="rule">
+    ${calc.rows.map(r => `<div class="line"><span class="v num"><span style="color:${r.order.paid ? 'var(--mint)' : 'var(--faint)'}">${r.order.paid ? '✓' : '○'}</span> ${money(r.share)}</span><span>${esc(r.order.name)}</span></div>`).join('')}
+    <hr class="rule"><div class="line"><span class="big num" style="font-size:30px">${egp(calc.total)}</span><b>الإجمالي</b></div>
+    ${payLine() ? `<div class="card ink center small" style="padding:10px">حوّلوا على ${esc(payLine())}</div>` : ''}
+  </div>
+  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" style="color:var(--ink)" data-copy="${esc(text)}">انسخ</button><a class="btn dark" style="text-decoration:none" href="${waLink(text)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`)}`;
+};
+
+/* ---------- Member: join + order + status ---------- */
+V.member = () => {
+  const s = S.session;
+  if (!S.loaded) return loading();
+  if (!s) return `<div class="topbar"><span></span>${back('join')}</div><div class="stack" style="align-items:center;text-align:center;gap:10px;padding-top:50px"><span class="emoji">🔍</span><h1>مفيش قعدة بالكود ده</h1><p class="muted">اتأكد من الكود «${codeLabel(S.code)}» أو اطلب اللينك تاني من الهوست.</p></div>${bottom(`<button class="btn dark" data-go="join">جرّب كود تاني</button>`)}`;
+  const mine = myOrder();
+  const reg = me.sessions[S.code] || {};
+  if (reg.role === 'host') return (setTimeout(() => go(s.status === 'open' ? 'live' : s.status === 'billed' ? 'result' : 'summary'), 0), loading());
+  if (!mine) {
+    if (s.status !== 'open' || (s.deadline && remaining() === 0)) return memberClosed(s);
+    if (!reg.name) return memberInvite(s);
+    return memberOrder(s);
+  }
+  if (S.route.p.edit && s.status === 'open' && mine.status !== 'deleted') return memberOrder(s, mine);
+  if (s.status === 'billed') return memberBill(s, mine);
+  if (mine.status === 'deleted') return memberDeleted(s, mine);
+  if (mine.status === 'pending') return memberPending(s, mine);
+  if (s.status === 'open') return memberSent(s, mine);
+  return memberWaiting(s, mine);
+};
+function memberHeader(s, extra = '') { return `<div class="topbar">${extra || timerPill() || '<span></span>'}<span class="row" style="gap:8px;justify-content:flex-end"><b class="small">${esc(s.place || 'قعدة')}</b>${avatar(s.hostName, 0)}</span></div>`; }
+function memberInvite(s) {
+  document.body.className = 'screen-ink';
+  const d = S.draft.mname || (S.draft.mname = { name: me.name || '' });
+  return `<div class="topbar"><span></span><span class="brand" style="font-size:22px">الحساب كام ${mark(26)}</span></div>
+  <div style="color:var(--ink)">${inviteCard(s)}</div>
+  <label class="f"><span style="color:var(--on-ink)">اسمك ايه؟</span><input class="input" id="m-name" data-bind="mname.name" value="${esc(d.name)}" placeholder="اكتب اسمك" style="color:var(--ink)" autocomplete="given-name"></label>
+  ${bottom(`<button class="btn primary" data-act="member-name">ادخل واطلب ←</button><p class="center small" style="color:var(--on-ink)">مش محتاج تعمل حساب</p>`)}`;
+}
+function memberOrder(s, existing) {
+  const key = 'mitems';
+  if (!S.draft[key]) S.draft[key] = existing ? existing.items.map(x => ({ ...x })) : [blankItem()];
+  const items = S.draft[key]; const name = (me.sessions[S.code] || {}).name || me.name;
+  return `${memberHeader(s)}
+  <div class="stack" style="gap:6px"><h1>اكتب طلبك يا ${esc(name)}</h1><p class="muted">اكتب الصنف وسعره زي ما هو في المنيو.${s.menu ? ` <a href="${esc(/^https?:/.test(s.menu) ? s.menu : 'https://' + s.menu)}" target="_blank" rel="noopener" style="color:var(--orange);font-weight:600">افتح المنيو ↗</a>` : ''}</p></div>
+  ${itemsEditor(key, items)}
+  ${suggestions(key)}
+  ${bottom(`<div class="cart"><button class="btn primary" data-act="member-send">${existing ? 'احفظ التعديل' : 'ابعت طلبي'} ←</button><span class="stack" style="gap:0;text-align:right"><span class="big num" style="font-size:24px">${egp(itemsTotal(items))}</span><span class="small" style="color:var(--on-ink)">قبل الخدمة والديليفري</span></span></div>`)}`;
+}
+function suggestions(key) {
+  const seen = new Map();
+  for (const o of S.orders) if (o.status === 'active') for (const it of o.items || []) if (!seen.has(it.n)) seen.set(it.n, it.p);
+  const list = [...seen.entries()].slice(0, 6); if (!list.length) return '';
+  return `<div class="stack" style="gap:8px"><span class="muted small">من طلبات الشلة:</span><div class="wrap">${list.map(([n, p]) => `<button type="button" class="pill" style="background:#fff;border:1px solid var(--line);padding:7px 12px" data-suggest="${key}" data-n="${esc(n)}" data-p="${p}">+ ${esc(n)} · ${toAr(money(p))}</button>`).join('')}</div></div>`;
+}
+function myOrderCard(o, pill) { return `<div class="card stack" style="gap:9px"><div class="row">${pill}<b>طلبك</b></div>${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}<hr class="rule"><div class="line"><span class="big num" style="font-size:22px">${egp(itemsTotal(o.items))}</span><span class="muted small">قبل الخدمة والديليفري</span></div></div>`; }
+function hero(emoji, title, sub) { return `<div class="stack" style="align-items:center;text-align:center;gap:8px;padding-top:10px"><span class="emoji">${emoji}</span><h1>${title}</h1><p class="muted" style="max-width:320px">${sub}</p></div>`; }
+function memberSent(s, o) { return `${memberHeader(s)}${hero('🎉', 'طلبك وصل!', `هتعرف حسابك أول ما ${esc(s.hostName)} يقفل الطلبات ويكتب الفاتورة.`)}${myOrderCard(o, '<span class="pill mint">اتبعت ✓</span>')}
+  ${bottom(`<button class="btn white" data-act="member-edit">✎ عدّل طلبي</button><p class="center small muted">تقدر تعدّل لحد ما الطلبات تتقفل</p>`)}`; }
+function memberDeleted(s, o) { return `${memberHeader(s)}${hero('🫥', `${esc(s.hostName)} شال طلبك`, 'ممكن يكون غلط أو اتكرر. تقدر تبعته تاني وهو يوافق عليه.')}<div style="opacity:.6">${myOrderCard(o, '<span class="pill red">اتشال</span>')}</div>
+  ${bottom(s.status === 'open' ? `<button class="btn primary" data-act="member-resend">↻ ابعته تاني</button>` : `<p class="center muted">الطلبات اتقفلت. كلّم ${esc(s.hostName)} لو عايز تتضاف.</p>`)}`; }
+function memberPending(s, o) { return `${memberHeader(s)}${hero('✋', `طلبك راح لـ${esc(s.hostName)} تاني`, 'مستنيين يوافق. الصفحة دي هتتحدث لوحدها أول ما يرد.')}${myOrderCard(o, '<span class="pill yellow">مستني الموافقة</span>')}
+  ${bottom(`<button class="btn white" data-act="member-cancel">إلغي الطلب</button>`)}`; }
+function memberClosed(s) { return `${memberHeader(s, '<span class="pill red">مقفولة</span>')}${hero('🔒', 'القعدة اتقفلت', `${esc(s.hostName)} قفل الطلبات. لو لسه عايز تطلب، كلّمه يزوّد الوقت أو يضيفك بنفسه.`)}
+  ${bottom(`<button class="btn white" data-go="join">جرّب كود تاني</button>`)}`; }
+function memberWaiting(s, o) { document.body.className = 'screen-ink';
+  const step = (t, st) => `<div class="line"><span style="color:${st === 'done' ? 'var(--mint)' : st === 'now' ? 'var(--yellow)' : '#6F655C'}">${st === 'done' ? '✓' : st === 'now' ? '●' : '○'}</span><span style="${st === 'next' ? 'color:#8A8076' : st === 'now' ? 'font-weight:600' : ''}">${t}</span></div>`;
+  return `<div class="topbar"><span class="pill white">الطلبات اتقفلت</span><b class="small">${esc(s.place || 'قعدة')}</b></div>${hero('⏳', 'مستنيين الفاتورة…', `أول ما ${esc(s.hostName)} يكتب الضريبة والخدمة والديليفري هيوصلك حسابك بالظبط.`)}
+  <div class="card stack" style="background:rgba(255,255,255,.06);border-color:transparent;gap:12px;color:#fff">${step('طلبك اتبعت', 'done')}${step(esc(s.hostName) + ' قفل الطلبات', 'done')}${step(esc(s.hostName) + ' بيكتب الفاتورة', 'now')}${step('حسابك يوصلك', 'next')}</div>`; }
+function memberBill(s, o) {
+  const calc = computeBill(S.orders, s.bill); const r = calc.rows.find(x => x.order.id === o.id);
+  if (!r) return memberDeleted(s, o);
+  const pay = s.pay || {};
+  if (o.paid) { document.body.className = 'screen-mint'; return `<div class="topbar"><span class="pill white">خلصت ✓</span><b class="small">${esc(s.place || '')}</b></div>${hero('✅', `تمام يا ${esc(o.name)}!`, `${esc(s.hostName)} أكد إنه استلم ${egp(r.share)}${o.method === 'cash' ? ' كاش' : o.method === 'instapay' ? ' على إنستاباي' : ''}. شكراً إنك مخلّتهوش يفكّرك 😄`)}<div style="color:var(--ink)">${breakdown(r, s)}</div>`; }
+  if (o.claim) { return `${memberHeader(s, '<span class="pill yellow">مستني التأكيد</span>')}${hero(o.claim === 'cash' ? '💵' : '💳', o.claim === 'cash' ? `خلّي ${egp(r.share)} جاهزين` : 'تمام، قلناله!', o.claim === 'cash' ? `قلنا لـ${esc(s.hostName)} إنك هتدفع كاش. أول ما يستلم هيعلّم عليك.` : `قلنا لـ${esc(s.hostName)} إنك حوّلت. هو هيأكد لما يشوفها.`)}${breakdown(r, s)}
+    ${bottom(`<button class="btn white" data-act="claim-undo">غيّر طريقة الدفع</button>`)}`; }
+  document.body.className = 'screen-yellow';
+  const sel = S.draft.claim || (pay.instapay ? 'instapay' : 'cash');
+  return `<div class="topbar"><span class="pill white">الحساب جه!</span><b class="small">${esc(s.place || 'قعدة')}</b></div>
+  <div class="stack" style="align-items:center;text-align:center;gap:0"><p style="font-size:18px;font-weight:500">يا ${esc(o.name)}، عليك</p><div class="big-amount num">${egp(r.share)}</div><p class="small">لـ${esc(s.hostName)}</p></div>
+  ${breakdown(r, s)}
+  <b>هتدفع إزاي؟</b>
+  ${pay.instapay ? `<button class="choice" data-claimsel="instapay" aria-pressed="${sel === 'instapay'}"><span class="row"><span style="font-size:28px">💳</span><span class="stack" style="gap:0;text-align:right"><b>أونلاين · إنستاباي</b><span class="muted small num" dir="ltr">${esc(toAr(pay.instapay))}</span></span></span></button>` : ''}
+  ${pay.cash ? `<button class="choice" data-claimsel="cash" aria-pressed="${sel === 'cash'}"><span class="row"><span style="font-size:28px">💵</span><span class="stack" style="gap:0;text-align:right"><b>كاش</b><span class="muted small">هتديها لـ${esc(s.hostName)} إيد بإيد</span></span></span></button>` : ''}
+  ${bottom(sel === 'instapay' && pay.instapay ? `<button class="btn white" data-copy="${esc(pay.instapay)}">انسخ رقم إنستاباي</button><button class="btn dark" data-act="claim">حوّلت ✓</button>` : `<button class="btn dark" data-act="claim">هدفع كاش ✓</button>`)}`;
+}
+function loading() { return `<div class="stack" style="align-items:center;padding-top:120px;gap:10px">${mark(40)}<p class="muted">لحظة…</p></div>`; }
+
+/* =====================================================================
+   SHEETS
+   ===================================================================== */
+function sheetHtml() {
+  const sh = S.sheet; if (!sh) return '';
+  let body = '';
+  if (sh.type === 'order') {
+    const key = 'sheet-items'; const items = draftItems(key); const nm = S.draft.sheetName || '';
+    body = `<h2>${sh.id ? 'تعديل طلب ' + esc(nm) : 'ضيف طلب لحد'}</h2>${sh.id ? '' : '<p class="muted small">لحد مش معاه نت أو مكسّل يفتح اللينك 😄</p>'}
+      <label class="f"><span>اسمه</span><input class="input" id="sheet-name" data-bind="sheetName" value="${esc(nm)}" placeholder="مثلاً: إيفان"></label>
+      ${itemsEditor(key, items, { addLabel: 'صنف تاني' })}
+      <div class="line"><span class="big num" style="font-size:24px">${egp(itemsTotal(items))}</span><b>الطلب</b></div>
+      <button class="btn dark" data-act="sheet-save">${sh.id ? 'احفظ التعديل' : 'ضيف الطلب'}</button>`;
+  } else if (sh.type === 'del') {
+    const o = S.orders.find(x => x.id === sh.id);
+    body = `<div class="stack" style="align-items:center;text-align:center;gap:8px"><span class="icon-btn del" style="width:64px;height:64px;font-size:28px;border:0">🗑</span><h2>تحذف طلب ${esc(o ? o.name : '')}؟</h2><p class="muted small">${o && o.by === 'member' ? 'هيوصله إن طلبه اتشال، ويقدر يطلب تاني وانت توافق.' : 'هيتشال من الحساب.'}</p></div>
+      <div class="row" style="gap:10px"><button class="btn white" data-act="sheet-close">لا، سيبه</button><button class="btn red" data-act="del-confirm">أيوه احذف</button></div>`;
+  } else if (sh.type === 'pay') {
+    const calc = computeBill(S.orders, S.session.bill); const r = calc.rows.find(x => x.order.id === sh.id); const o = r.order; const m = sh.method || o.claim || 'cash';
+    body = `<div class="stack" style="align-items:center;text-align:center;gap:6px">${avatar(o.name, orderIndex(o), 'lg')}<p class="muted">${esc(o.name)} دفع</p><div class="big num" style="font-size:44px">${egp(r.share)}</div></div>
+      <span class="muted small">دفع إزاي؟</span><div class="row" style="gap:8px"><button class="chip" style="flex:1" data-paym="instapay" aria-pressed="${m === 'instapay'}">💳 إنستاباي</button><button class="chip" style="flex:1" data-paym="cash" aria-pressed="${m === 'cash'}">💵 كاش</button></div>
+      <div class="card small" style="background:var(--mint-soft);border-color:var(--mint-soft);color:var(--mint-ink)">لما تأكد، هيتعلّم إنه دفع وهيشوف ده عنده.</div>
+      <button class="btn mint" data-act="pay-confirm">أيوه دفع ✓</button>`;
+  } else if (sh.type === 'self-all') {
+    const list = orderedOrders().filter(o => o.status === 'active'); const food = list.reduce((a, o) => a + itemsTotal(o.items), 0);
+    body = `<div class="line"><b class="num">${egp(food)}</b><h2>كل الطلبات لحد دلوقتي</h2></div>
+      ${list.length ? list.map((o, i) => `<div class="card row" style="padding:10px 12px"><span class="row" style="gap:6px;justify-content:flex-start"><button class="icon-btn sm del" data-del="${o.id}" aria-label="احذف">🗑</button><button class="icon-btn sm" data-selfedit="${i}" aria-label="عدّل">✎</button></span><span class="row" style="gap:10px;justify-content:flex-end"><span class="stack" style="gap:0;text-align:right"><b>${esc(o.name)} · ${egp(itemsTotal(o.items))}</b><span class="muted small">${esc(o.items.map(x => x.n).join(' · '))}</span></span>${avatar(o.name, i)}</span></div>`).join('') : '<p class="muted center">لسه مفيش طلبات</p>'}
+      <button class="btn dark" data-act="sheet-close">كمّل</button>`;
+  } else if (sh.type === 'more') {
+    const n = sh.n || 1;
+    body = `<div class="stack" style="align-items:center;text-align:center;gap:10px"><h2>ناس جت متأخر؟</h2><p class="muted">زوّد العدد وهنكمّل معاهم عادي.</p>${stepper('more', n, true)}<b style="color:var(--orange)">العدد هيبقى ${toAr((S.session.expected || 1) + n)}</b></div><button class="btn dark" data-act="more-confirm">تمام، زوّد</button>`;
+  } else if (sh.type === 'end') {
+    const n = S.orders.filter(o => o.status === 'active').length;
+    body = `<div class="stack" style="align-items:center;text-align:center;gap:8px"><span class="emoji">🔒</span><h2>تقفل الطلبات؟</h2><p class="muted">${toAr(n)} طلبات. محدش هيقدر يطلب بعد كده، وتقدر تفتحها تاني من الطلب المجمّع.</p></div>
+      <div class="row" style="gap:10px"><button class="btn white" data-act="sheet-close">لسه</button><button class="btn dark" data-act="end-confirm">اقفل</button></div>`;
+  } else if (sh.type === 'copy') {
+    body = `<h2>انسخ من هنا</h2><textarea class="input" id="copy-box" readonly style="min-height:140px">${esc(sh.text)}</textarea><button class="btn dark" data-act="sheet-close">تمام</button>`;
+  }
+  return `<div class="overlay"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${body}</div></div>`;
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function render() {
+  const fe = document.activeElement; const fid = fe && root.contains(fe) ? fe.id : null; const sel = fid && fe.selectionStart != null ? [fe.selectionStart, fe.selectionEnd] : null;
+  document.body.className = '';
+  const fn = V[S.route.name] || V.home;
+  const wide = ['live', 'result'].includes(S.route.name);
+  root.innerHTML = `<main class="app ${wide ? 'wide' : ''}">${fn()}</main>${sheetHtml()}${S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : ''}`;
+  fitBottom();
+  if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); try { sel && el.setSelectionRange(sel[0], sel[1]); } catch {} } }
+  if (S.sheet && S.sheet.type === 'copy') { const t = document.getElementById('copy-box'); if (t) { t.focus(); t.select(); } }
+}
+
+// keep the last content clear of the fixed bottom bar, whatever its height
+function fitBottom() { const main = root.querySelector('main.app'); const b = root.querySelector('.bottom'); if (main) main.style.paddingBottom = (b ? b.offsetHeight + 24 : 40) + 'px'; }
+window.addEventListener('resize', fitBottom);
+
+/* =====================================================================
+   EVENTS
+   ===================================================================== */
+function setPath(path, val) { const parts = path.split('.'); let o = S.draft; for (let i = 0; i < parts.length - 1; i++) { o = o[parts[i]] = o[parts[i]] ?? {}; } o[parts[parts.length - 1]] = val; }
+function getPath(path) { return path.split('.').reduce((o, k) => (o == null ? o : o[k]), S.draft); }
+function itemsByKey(key) { return key.includes('.') ? getPath(key) : draftItems(key); }
+
+root.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.bind) {
+    const p = t.dataset.bind;
+    if (p.startsWith('bill.')) { billDraft()[p.slice(5)] = num(t.value); updateBillTotal(); return; }
+    setPath(p, p === 'join.code' ? String(num(t.value) || '').slice(0, 4) : t.value);
+    if (p.endsWith('.name') && S.route.name === 'selfEntry') return; return;
+  }
+  if (t.dataset.extra != null) { const b = billDraft(); const e2 = b.extras[+t.dataset.extra]; if (e2) { e2[t.dataset.f] = t.dataset.f === 'amount' ? num(t.value) : t.value; if (t.dataset.f === 'amount') updateBillTotal(); } return; }
+  const box = t.closest('[data-items]');
+  if (box && t.dataset.f) { const items = itemsByKey(box.dataset.items); const it = items[+t.dataset.i]; if (!it) return; it[t.dataset.f] = t.dataset.f === 'p' ? (t.value.trim() === '' ? '' : num(t.value)) : t.value; updateTotals(); }
+});
+function updateBillTotal() { const el = document.getElementById('bill-total'); if (el) el.textContent = egp(computeBill(S.orders, billDraft()).total); }
+function updateTotals() { // refresh the running totals without re-rendering inputs
+  root.querySelectorAll('.cart .big.num, .sheet .line .big.num').forEach(el => {
+    const key = S.sheet && S.sheet.type === 'order' ? 'sheet-items' : S.route.name === 'selfEntry' ? 'self-' + (S.route.p.idx ?? orderedOrders().filter(o => o.status === 'active').length) + '.items' : 'mitems';
+    const items = itemsByKey(key); if (items) el.textContent = egp(itemsTotal(items));
+  });
+}
+
+root.addEventListener('click', async e => {
+  const t = e.target.closest('button, a, .overlay'); if (!t) return;
+  const d = t.dataset;
+  if (t.classList.contains('overlay')) { if (e.target === t) { S.sheet = null; render(); } return; }
+  if (d.go) return go(d.go);
+  if (d.open) return resume(d.open);
+  if (d.copy != null) return copy(d.copy);
+  if (d.chip) { setPath(d.chip, isNaN(+d.v) ? d.v : +d.v); return render(); }
+  if (d.pickMethod) { S.draft.method = d.pickMethod; return render(); }
+  if (d.split) { billDraft().split = d.split; return render(); }
+  if (d.tab) { S.view.tab = d.tab; return render(); }
+  if (d.filter) { S.view.filter = d.filter; return render(); }
+  if (d.claimsel) { S.draft.claim = d.claimsel; return render(); }
+  if (d.paym) { S.sheet.method = d.paym; return render(); }
+  const stepEl = t.closest('[data-step]');
+  if (stepEl && d.d) return onStep(stepEl.dataset.step, +d.d);
+  if (d.additem) { itemsByKey(d.additem).push(blankItem()); render(); const k = d.additem; const n = itemsByKey(k).length - 1; const el = document.getElementById(k + '-n-' + n); el && el.focus(); return; }
+  if (d.rm != null) { const box = t.closest('[data-items]'); const items = itemsByKey(box.dataset.items); items.splice(+d.rm, 1); return render(); }
+  if (d.suggest) { const items = itemsByKey(d.suggest); const empty = items.find(x => !String(x.n).trim()); const it = { n: d.n, p: +d.p, q: 1 }; if (empty) Object.assign(empty, it); else items.push(it); return render(); }
+  if (d.rmextra != null) { billDraft().extras.splice(+d.rmextra, 1); return render(); }
+  if (d.del) { S.sheet = { type: 'del', id: d.del }; return render(); }
+  if (d.edit) { const o = S.orders.find(x => x.id === d.edit); S.draft['sheet-items'] = o.items.map(x => ({ ...x })); S.draft.sheetName = o.name; S.sheet = { type: 'order', id: o.id }; return render(); }
+  if (d.selfedit != null) { S.sheet = null; return go('selfEntry', { idx: +d.selfedit }); }
+  if (d.approve) return withStore(async st => { const o = S.orders.find(x => x.id === d.approve); await st.saveOrder(S.code, { ...o, status: 'active', updatedAt: Date.now() }); toast('اتضاف طلب ' + o.name); });
+  if (d.reject) return withStore(async st => { const o = S.orders.find(x => x.id === d.reject); await st.saveOrder(S.code, { ...o, status: 'deleted', updatedAt: Date.now() }); });
+  if (d.extend) return withStore(async st => { const base = Math.max(Date.now(), S.session.deadline || 0); S.expiredShown = false; await st.patchSession(S.code, { deadline: base + (+d.extend) * 60000 }); toast('زوّدنا ' + toAr(d.extend) + ' دقايق'); });
+  if (d.pay) { const o = S.orders.find(x => x.id === d.pay); S.sheet = { type: 'pay', id: d.pay, method: o.claim || (S.session.pay && S.session.pay.instapay ? 'instapay' : 'cash') }; return render(); }
+  if (d.unpay) return withStore(async st => { const o = S.orders.find(x => x.id === d.unpay); await st.saveOrder(S.code, { ...o, paid: false, method: null, claim: null }); });
+  if (d.person) return go('person', { id: d.person });
+  if (d.act) return act(d.act, t);
+});
+root.addEventListener('submit', e => e.preventDefault());
+root.addEventListener('keydown', e => { if (e.key === 'Escape' && S.sheet) { S.sheet = null; render(); } });
+
+function onStep(id, delta) {
+  if (id === 'self-count') { const d = S.draft.self; d.count = Math.max(1, Math.min(40, d.count + delta)); return render(); }
+  if (id === 'more') { S.sheet.n = Math.max(1, Math.min(20, (S.sheet.n || 1) + delta)); return render(); }
+  const [key, i] = id.split(':'); const items = itemsByKey(key); const it = items[+i]; if (!it) return;
+  it.q = Math.max(1, Math.min(99, Math.round(num(it.q)) + delta)); render();
+}
+async function withStore(fn) { try { const st = await storeP; await fn(st); } catch (err) { console.error(err); toast('حصلت مشكلة في الحفظ، جرّب تاني'); } }
+async function uniqueCode(st) { for (let i = 0; i < 8; i++) { const c = newCode(); if (!(await st.getSession(c))) return c; } return newCode() + String(Math.floor(Math.random() * 9)); }
+function resume(code) { const r = me.sessions[code]; openSession(code); if (r && r.role === 'host') { S.route = { name: 'live', p: {} }; waitAndRoute(); } else go('member'); }
+function waitAndRoute() { render(); const check = () => { if (!S.loaded) return setTimeout(check, 120); const s = S.session; if (!s) return go('home'); if (s.status === 'open') go(s.mode === 'self' ? 'selfEntry' : 'live'); else go(s.status === 'billed' ? 'result' : 'summary'); }; check(); }
+
+async function act(a, t) {
+  const s = S.session;
+  switch (a) {
+    case 'back': return go('home');
+    case 'overlay': case 'sheet-close': S.sheet = null; return render();
+    case 'join': { const c = String(S.draft.join && S.draft.join.code || ''); if (c.length !== 4) return go('join', { err: 'الكود ٤ أرقام، زي ٤٧٢٩.' }); remember(c, { role: (me.sessions[c] || {}).role || 'member' }); return resume(c); }
+    case 'method-next': return go(S.draft.method === 'self' ? 'selfSetup' : 'hostForm');
+    case 'host-preview': { const d = hostDraft(); if (!d.hostName.trim()) { toast('اكتب اسمك الأول'); return; } if (d.pay !== 'cash' && !d.instapay.trim()) { toast('اكتب رقم إنستاباي أو اختار كاش'); return; } return go('preview'); }
+    case 'create-link': return withStore(async st => {
+      const code = await uniqueCode(st); const base = draftSession();
+      const sess = { code, mode: 'link', ...base, hostDevice: me.device, status: 'open', expected: 0, bill: { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
+      me.name = base.hostName; remember(code, { role: 'host', place: base.place || 'قعدة', name: base.hostName });
+      await st.saveSession(sess); S.draft.host = null; await openSession(code); S.session = sess; go('share');
+    });
+    case 'create-self': return withStore(async st => {
+      const d = S.draft.self; if (!d.hostName.trim()) { toast('اكتب اسمك الأول'); return; }
+      const code = await uniqueCode(st);
+      const sess = { code, mode: 'self', hostName: d.hostName.trim(), place: d.place.trim(), note: '', menu: '', pay: { cash: true, instapay: '' }, deadline: null, hostDevice: me.device, status: 'open', expected: d.count, bill: { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
+      me.name = sess.hostName; remember(code, { role: 'host', place: sess.place || 'قعدة', name: sess.hostName });
+      await st.saveSession(sess); await openSession(code); S.session = sess; go('selfEntry', { idx: 0 });
+    });
+    case 'self-next': {
+      const idx = +t.dataset.idx; const key = 'self-' + idx; const d = S.draft[key]; const items = cleanItems(d.items);
+      if (!String(d.name || '').trim()) { toast('اكتب اسم صاحب الطلب'); return; }
+      if (!items.length) { toast('اكتب صنف واحد على الأقل بسعره'); return; }
+      return withStore(async st => {
+        const list = orderedOrders().filter(o => o.status === 'active'); const existing = list[idx];
+        const o = existing ? { ...existing, name: d.name.trim(), items, updatedAt: Date.now() } : { id: uid(), name: d.name.trim(), items, status: 'active', by: 'host', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
+        await st.saveOrder(S.code, o); delete S.draft[key];
+        const nowCount = existing ? list.length : list.length + 1;
+        if (idx + 1 >= Math.max(s.expected || 1, nowCount)) { await st.patchSession(S.code, { status: 'closed' }); return go('summary'); }
+        go('selfEntry', { idx: nowCount > idx + 1 && existing ? nowCount : idx + 1, ok: `اتسجّل طلب ${o.name} · ${egp(itemsTotal(o.items))}` });
+      });
+    }
+    case 'self-all': S.sheet = { type: 'self-all' }; return render();
+    case 'self-more': S.sheet = { type: 'more', n: 1 }; return render();
+    case 'more-confirm': return withStore(async st => { const nx = (s.expected || 1) + (S.sheet.n || 1); await st.patchSession(S.code, { expected: nx }); S.sheet = null; toast('العدد بقى ' + toAr(nx)); });
+    case 'self-finish': return withStore(async st => { await st.patchSession(S.code, { status: 'closed' }); go('summary'); });
+    case 'manual': S.draft['sheet-items'] = [blankItem()]; S.draft.sheetName = ''; S.sheet = { type: 'order' }; return render();
+    case 'sheet-save': {
+      const name = String(S.draft.sheetName || '').trim(); const items = cleanItems(S.draft['sheet-items']);
+      if (!name) { toast('اكتب اسمه'); return; } if (!items.length) { toast('اكتب صنف بسعره'); return; }
+      return withStore(async st => {
+        const old = S.sheet.id && S.orders.find(x => x.id === S.sheet.id);
+        const o = old ? { ...old, name, items, updatedAt: Date.now() } : { id: uid(), name, items, status: 'active', by: 'host', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
+        await st.saveOrder(S.code, o); S.sheet = null; toast(old ? 'اتعدّل ✓' : 'اتضاف طلب ' + name);
+      });
+    }
+    case 'del-confirm': return withStore(async st => {
+      const o = S.orders.find(x => x.id === S.sheet.id); S.sheet = null;
+      if (o.by === 'member') await st.saveOrder(S.code, { ...o, status: 'deleted', updatedAt: Date.now() }); else await st.deleteOrder(S.code, o.id);
+      toast('اتحذف طلب ' + o.name);
+    });
+    case 'end': S.sheet = { type: 'end' }; return render();
+    case 'end-confirm': return withStore(async st => { S.sheet = null; await st.patchSession(S.code, { status: 'closed' }); go('summary'); });
+    case 'reopen': return withStore(async st => { if (s && s.status === 'closed') { await st.patchSession(S.code, { status: 'open', deadline: s.mode === 'link' ? Date.now() + 10 * 60000 : null }); go(s.mode === 'self' ? 'selfEntry' : 'live'); } else go('home'); });
+    case 'add-extra': billDraft().extras.push({ name: '', amount: 0 }); render(); { const el = document.getElementById('bx-n-' + (billDraft().extras.length - 1)); el && el.focus(); } return;
+    case 'bill-done': return withStore(async st => { const b = billDraft(); b.extras = (b.extras || []).filter(x => num(x.amount)).map(x => ({ name: x.name || 'زيادة', amount: num(x.amount) })); await st.patchSession(S.code, { bill: b, status: 'billed' }); S.draft.bill = null; S.view = { tab: 'person', filter: 'all' }; go('result'); });
+    case 'pay-confirm': return withStore(async st => { const o = S.orders.find(x => x.id === S.sheet.id); const m = S.sheet.method; S.sheet = null; await st.saveOrder(S.code, { ...o, paid: true, method: m, claim: null, paidAt: Date.now() }); toast(o.name + ' دفع ✓'); });
+    case 'stay-result': S.route.p.stay = true; return render();
+    case 'member-name': { const n = String(S.draft.mname.name || '').trim(); if (!n) { toast('اكتب اسمك'); return; } me.name = n; remember(S.code, { role: 'member', name: n, place: s.place || 'قعدة' }); return render(); }
+    case 'member-send': {
+      const items = cleanItems(S.draft.mitems); if (!items.length) { toast('اكتب صنف واحد على الأقل بسعره'); return; }
+      return withStore(async st => {
+        const mine = myOrder(); const name = (me.sessions[S.code] || {}).name || me.name;
+        const o = mine ? { ...mine, items, updatedAt: Date.now() } : { id: uid(), name, items, status: 'active', by: 'member', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
+        await st.saveOrder(S.code, o); remember(S.code, { orderId: o.id }); delete S.draft.mitems; S.route.p.edit = false; render();
+      });
+    }
+    case 'member-edit': S.route.p.edit = true; S.draft.mitems = myOrder().items.map(x => ({ ...x })); return render();
+    case 'member-resend': return withStore(async st => { const o = myOrder(); await st.saveOrder(S.code, { ...o, status: 'pending', updatedAt: Date.now() }); });
+    case 'member-cancel': return withStore(async st => { const o = myOrder(); await st.saveOrder(S.code, { ...o, status: 'deleted', updatedAt: Date.now() }); });
+    case 'claim': return withStore(async st => { const o = myOrder(); const pay = s.pay || {}; const m = S.draft.claim || (pay.instapay ? 'instapay' : 'cash'); await st.saveOrder(S.code, { ...o, claim: m }); });
+    case 'claim-undo': return withStore(async st => { const o = myOrder(); await st.saveOrder(S.code, { ...o, claim: null }); });
+  }
+}
+
+/* ---------- boot ---------- */
+function boot() {
+  const m = (location.hash || '').match(/^#?m?(\d{4})$/);
+  if (m) { const c = m[1]; if (!me.sessions[c]) remember(c, { role: 'member' }); resume(c); }
+  else render();
+}
+window.addEventListener('hashchange', boot);
+boot();
+})();
+</script>
+</body>
+</html>
