@@ -396,7 +396,8 @@ document.addEventListener('focusout', () => setTimeout(() => { if (S.dirty && !i
 
 /* ---------- small view helpers ---------- */
 const mark = (h = 31) => `<svg class="mark" style="height:${h}px;width:${h * .84}px" viewBox="0 0 40 47" aria-hidden="true"><path d="M3 0h34a3 3 0 0 1 3 3v38l-4 6-4-6-4 6-4-6-4 6-4-6-4 6-4-6-4 6-4-6V3a3 3 0 0 1 3-3z" fill="#FF5B2E"/><text x="20" y="31" text-anchor="middle" font-family="Lalezar,sans-serif" font-size="30" fill="#fff">؟</text></svg>`;
-const back = (to = 'back') => `<button class="icon-btn" data-act="${to}" aria-label="رجوع">→</button>`;
+const back = (to = 'home') => to === 'reopen' ? `<button class="icon-btn" data-act="reopen" aria-label="رجوع">→</button>` : `<button class="icon-btn" data-go="${to}" aria-label="رجوع">→</button>`;
+function persons(n) { return n === 1 ? 'فرد واحد' : n === 2 ? 'فردين' : toAr(n) + ' أفراد'; }
 function stepper(id, val, big = false) { return `<div class="stepper ${big ? 'big' : ''}" data-step="${id}"><button type="button" data-d="-1" aria-label="قلل">−</button><output class="num">${toAr(val)}</output><button type="button" class="plus" data-d="1" aria-label="زوّد">+</button></div>`; }
 function chips(name, opts, cur) { return `<div class="chips" role="group">${opts.map(([v, l]) => `<button type="button" class="chip" data-chip="${name}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${l}</button>`).join('')}</div>`; }
 function bottom(html) { return `<div class="bottom"><div class="in">${html}</div></div>`; }
@@ -624,7 +625,7 @@ V.summary = () => {
   return `<div class="topbar"><span class="pill mint">الطلبات اتقفلت ✓</span>${back('reopen')}</div>
   <div class="stack" style="gap:6px"><h1>الطلب المجمّع</h1><p class="muted">جمّعنا اللي اتكتب، اقرا منه وانت بتطلب.</p></div>
   <div class="receipt stack" style="gap:12px">
-    <div class="line"><span class="muted small">${codeLabel(s.code)}</span><b>${esc(s.place || 'القعدة')} · ${toAr(S.orders.filter(o => o.status === 'active').length)} أفراد</b></div><hr class="rule">
+    <div class="line"><span class="muted small">${codeLabel(s.code)}</span><b>${esc(s.place || 'القعدة')} · ${persons(S.orders.filter(o => o.status === 'active').length)}</b></div><hr class="rule">
     ${agg.map(a => `<div class="line"><span class="muted v">${money(a.total)}</span><span class="row" style="gap:10px;justify-content:flex-end"><span>${esc(a.n)}</span><span class="pill" style="background:var(--ink);color:#fff;border-radius:8px">×${toAr(a.q)}</span></span></div>`).join('')}
     <hr class="rule"><div class="line"><span class="big">${egp(food)}</span><b>إجمالي الأكل</b></div>
   </div>
@@ -694,7 +695,7 @@ V.result = () => {
   </div>
   ${bottom(`<button class="btn primary" data-go="receipt">ابعت الفاتورة للشلة ⤴</button>`)}`;
 };
-function payLine() { const p = (S.session && S.session.pay) || {}; return [p.instapay ? 'إنستاباي: ' + toAr(p.instapay) : '', p.cash ? 'أو كاش' : ''].filter(Boolean).join(' '); }
+function payLine() { const s = S.session || {}; const p = s.pay || {}; const ip = p.instapay ? 'حوّلوا على إنستاباي ' + toAr(p.instapay) : ''; if (ip && p.cash) return ip + ' أو ادفعوا كاش'; if (ip) return ip; return p.cash ? 'الدفع كاش لـ' + (s.hostName || 'الهوست') : ''; }
 function remindText(o, r) { const s = S.session; return `يا ${o.name} 👋 حسابك في ${s.place || 'القعدة'} ${egp(r.share)}\n${payLine()}\nتفاصيلك: ${shareUrl(s.code)}`; }
 V.allPaid = calc => { document.body.className = 'screen-mint'; return `
   <div class="topbar"><span></span>${back('home')}</div>
@@ -734,12 +735,12 @@ V.receipt = () => {
   const text = `🧾 ${s.place || 'القعدة'} — الحساب كام\n` + calc.rows.map(r => `${r.order.paid ? '✓' : '○'} ${r.order.name}: ${egp(r.share)}`).join('\n') + `\nالإجمالي: ${egp(calc.total)}\n${payLine()}`;
   document.body.className = 'screen-orange';
   return `<div class="topbar"><span></span>${back('result')}</div>
-  <div class="receipt paper stack" style="gap:10px;color:var(--ink);margin-top:10px">
+  <div class="receipt stack" style="--card:#FFF7EA;gap:10px;color:var(--ink);margin-top:10px">
     <div class="line"><span class="muted small">${new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}</span><span class="brand" style="font-size:20px">الحساب كام ${mark(22)}</span></div>
-    <h2>${esc(s.place || 'القعدة')}</h2><span class="muted small">${toAr(calc.n)} أفراد · ${b.split === 'equal' ? 'بالتساوي' : 'كل واحد حسب طلبه'}</span><hr class="rule">
+    <h2>${esc(s.place || 'القعدة')}</h2><span class="muted small">${persons(calc.n)} · ${b.split === 'equal' ? 'بالتساوي' : 'كل واحد حسب طلبه'}</span><hr class="rule">
     ${calc.rows.map(r => `<div class="line"><span class="v num"><span style="color:${r.order.paid ? 'var(--mint)' : 'var(--faint)'}">${r.order.paid ? '✓' : '○'}</span> ${money(r.share)}</span><span>${esc(r.order.name)}</span></div>`).join('')}
     <hr class="rule"><div class="line"><span class="big num" style="font-size:30px">${egp(calc.total)}</span><b>الإجمالي</b></div>
-    ${payLine() ? `<div class="card ink center small" style="padding:10px">حوّلوا على ${esc(payLine())}</div>` : ''}
+    ${payLine() ? `<div class="card ink center small" style="padding:10px">${esc(payLine())}</div>` : ''}
   </div>
   ${bottom(`<div class="row" style="gap:10px"><button class="btn white" style="color:var(--ink)" data-copy="${esc(text)}">انسخ</button><a class="btn dark" style="text-decoration:none" href="${waLink(text)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`)}`;
 };
