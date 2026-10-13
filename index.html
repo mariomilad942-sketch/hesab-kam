@@ -155,6 +155,22 @@ textarea.input{resize:vertical;min-height:84px}
 }
 @media (max-width:959px){.dash{display:flex;flex-direction:column;gap:16px}.grid-orders{display:flex;flex-direction:column;gap:12px}.only-wide{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* bottom actions: sticker-style so they stand apart from the cards behind them */
+.bottom .btn{border:2px solid var(--ink);box-shadow:0 5px 0 var(--ink),0 14px 24px -10px rgba(23,18,14,.35)}
+.bottom .btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.bottom .cart .btn{border:0;box-shadow:none}
+.screen-ink .bottom .btn{border-color:transparent;box-shadow:0 5px 0 rgba(255,255,255,.16),0 14px 24px -10px rgba(0,0,0,.5)}
+.bottom{padding-top:22px}
+.bottom .in{gap:16px}
+
+/* item editor: labelled fields so people know where the price goes */
+.item .cap{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 2px 6px;text-align:right}
+.item .row{align-items:flex-end}
+.item .fld{display:flex;flex-direction:column}
+.item .price{background:#fff;border:1.5px solid var(--orange);min-height:48px}
+.item .price input{width:110px;font-size:18px}
+.item .price input::placeholder{color:var(--orange);opacity:.75;font-weight:500;font-size:15px}
+.item>.cap{margin-bottom:-6px}
 </style>
 </head>
 <body>
@@ -429,11 +445,11 @@ function blankItem() { return { n: '', p: '', q: 1 }; }
 function itemsEditor(key, items, opts = {}) {
   return `<div class="stack" data-items="${key}">${items.map((it, i) => `
     <div class="item">
-      <div class="top"><input id="${key}-n-${i}" data-f="n" data-i="${i}" value="${esc(it.n)}" placeholder="${i === 0 ? (opts.ph || 'مثلاً: نص فرخة شيش') : 'صنف تاني'}" autocomplete="off" aria-label="اسم الصنف">
+      <span class="cap">اسم الصنف</span><div class="top"><input id="${key}-n-${i}" data-f="n" data-i="${i}" value="${esc(it.n)}" placeholder="${i === 0 ? (opts.ph || 'مثلاً: نص فرخة شيش') : 'صنف تاني'}" autocomplete="off" aria-label="اسم الصنف">
         ${items.length > 1 ? `<button type="button" class="icon-btn sm" data-rm="${i}" aria-label="شيل الصنف">×</button>` : ''}</div>
       <div class="row">
-        <label class="price"><input id="${key}-p-${i}" data-f="p" data-i="${i}" inputmode="decimal" value="${esc(it.p === '' ? '' : toAr(it.p))}" placeholder="٠" aria-label="السعر"><span>ج</span></label>
-        ${stepper(key + ':' + i, it.q)}
+        <div class="fld"><span class="cap">سعره كام؟</span><label class="price"><input id="${key}-p-${i}" data-f="p" data-i="${i}" inputmode="decimal" value="${esc(it.p === '' ? '' : toAr(it.p))}" placeholder="اكتب السعر" aria-label="سعر الصنف"><span>ج</span></label></div>
+        <div class="fld"><span class="cap">العدد</span>${stepper(key + ':' + i, it.q)}</div>
       </div>
     </div>`).join('')}
     <button type="button" class="dashed" data-additem="${key}">+ ${opts.addLabel || 'ضيف صنف تاني'}</button></div>`;
@@ -637,7 +653,7 @@ V.summary = () => {
 };
 
 /* ---------- Bill extras ---------- */
-function billDraft() { const s = S.session; return S.draft.bill || (S.draft.bill = JSON.parse(JSON.stringify(s.bill || { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }))); }
+function billDraft() { const s = S.session; return S.draft.bill || (S.draft.bill = JSON.parse(JSON.stringify((s.status === 'billed' && s.bill) || { tax: 0, service: 0, delivery: 0, discount: 0, extras: [], split: (s.bill && s.bill.split) || 'prop' }))); }
 V.bill = () => {
   const s = S.session; if (!s) return loading();
   const b = billDraft(); const calc = computeBill(S.orders, b);
@@ -968,14 +984,14 @@ async function act(a, t) {
     case 'host-preview': { const d = hostDraft(); if (!d.hostName.trim()) { toast('اكتب اسمك الأول'); return; } if (d.pay !== 'cash' && !d.instapay.trim()) { toast('اكتب رقم إنستاباي أو اختار كاش'); return; } return go('preview'); }
     case 'create-link': return withStore(async st => {
       const code = await uniqueCode(st); const base = draftSession();
-      const sess = { code, mode: 'link', ...base, hostDevice: me.device, status: 'open', expected: 0, bill: { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
+      const sess = { code, mode: 'link', ...base, hostDevice: me.device, status: 'open', expected: 0, bill: { tax: 0, service: 0, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
       me.name = base.hostName; remember(code, { role: 'host', place: base.place || 'قعدة', name: base.hostName });
       await st.saveSession(sess); S.draft.host = null; await openSession(code); S.session = sess; go('share');
     });
     case 'create-self': return withStore(async st => {
       const d = S.draft.self; if (!d.hostName.trim()) { toast('اكتب اسمك الأول'); return; }
       const code = await uniqueCode(st);
-      const sess = { code, mode: 'self', hostName: d.hostName.trim(), place: d.place.trim(), note: '', menu: '', pay: { cash: true, instapay: '' }, deadline: null, hostDevice: me.device, status: 'open', expected: d.count, bill: { tax: 14, service: 12, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
+      const sess = { code, mode: 'self', hostName: d.hostName.trim(), place: d.place.trim(), note: '', menu: '', pay: { cash: true, instapay: '' }, deadline: null, hostDevice: me.device, status: 'open', expected: d.count, bill: { tax: 0, service: 0, delivery: 0, discount: 0, extras: [], split: 'prop' }, createdAt: Date.now() };
       me.name = sess.hostName; remember(code, { role: 'host', place: sess.place || 'قعدة', name: sess.hostName });
       await st.saveSession(sess); await openSession(code); S.session = sess; go('selfEntry', { idx: 0 });
     });
