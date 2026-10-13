@@ -178,6 +178,8 @@ textarea.input{resize:vertical;min-height:84px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>/* ===== الحساب كام — core: formatting, ids, bill math ===== */
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 const nf = new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 2 });
@@ -958,7 +960,13 @@ root.addEventListener('click', async e => {
   if (d.pay) { const o = S.orders.find(x => x.id === d.pay); S.sheet = { type: 'pay', id: d.pay, method: o.claim || (S.session.pay && S.session.pay.instapay ? 'instapay' : 'cash') }; return render(); }
   if (d.unpay) return withStore(async st => { const o = S.orders.find(x => x.id === d.unpay); await st.saveOrder(S.code, { ...o, paid: false, method: null, claim: null }); });
   if (d.person) return go('person', { id: d.person });
-  if (d.act) return act(d.act, t);
+  if (d.act) { // one action at a time: a double tap or a slow network must not create two sessions
+    if (busyAct) return; busyAct = true;
+    const label = t.innerHTML; t.disabled = true; t.setAttribute('aria-busy', 'true');
+    const slow = setTimeout(() => { if (t.isConnected) t.innerHTML = 'لحظة…'; }, 300);
+    try { return await act(d.act, t); }
+    finally { clearTimeout(slow); busyAct = false; if (t.isConnected) { t.disabled = false; t.removeAttribute('aria-busy'); t.innerHTML = label; } }
+  }
 });
 root.addEventListener('submit', e => e.preventDefault());
 root.addEventListener('keydown', e => { if (e.key === 'Escape' && S.sheet) { S.sheet = null; render(); } });
@@ -974,6 +982,7 @@ async function uniqueCode(st) { for (let i = 0; i < 8; i++) { const c = newCode(
 function resume(code) { const r = me.sessions[code]; openSession(code); if (r && r.role === 'host') { S.route = { name: 'live', p: {} }; waitAndRoute(); } else go('member'); }
 function waitAndRoute() { render(); const check = () => { if (!S.loaded) return setTimeout(check, 120); const s = S.session; if (!s) return go('home'); if (s.status === 'open') go(s.mode === 'self' ? 'selfEntry' : 'live'); else go(s.status === 'billed' ? 'result' : 'summary'); }; check(); }
 
+let busyAct = false;
 async function act(a, t) {
   const s = S.session;
   switch (a) {
