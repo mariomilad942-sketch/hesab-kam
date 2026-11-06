@@ -1346,6 +1346,12 @@ async function gSaveRow(g, patch) {
 /* jump into the round as soon as it starts on any phone that joined */
 function gameAuto() {
   const g = gGame();
+  // the game was stopped: whoever is still on the game screen goes back to the session
+  if (!g && S.route.name === 'game' && S.loaded && S.session) {
+    const reg = me.sessions[S.code] || {}; const s = S.session;
+    S.route = { name: reg.role === 'host' ? (s.status === 'open' ? (s.mode === 'self' ? 'selfEntry' : 'live') : s.status === 'billed' ? 'result' : 'summary') : 'member', p: {} };
+    return;
+  }
   if (!g || g.status !== 'play' || !gIsPlayer(g) || S.gAuto === g.id) return;
   S.gAuto = g.id; S.gShown = false;
   if (S.route.name !== 'game') S.route = { name: 'game', p: {} };
@@ -1401,7 +1407,7 @@ V.game = () => {
     ${starter ? `<p class="mode-note" style="color:var(--on-ink)">الدعوة ظهرت عند كل اللي في القعدة. لما يدوسوا «هلعب» هيظهروا هنا.</p>` : `<p class="mode-note" style="color:var(--on-ink)">مستنيين ${esc(g.byName)} يبدأ اللعبة…</p>`}
     ${bottom(starter
       ? `<button class="btn primary" data-game="start" ${ok ? '' : 'disabled'}>${ok ? `ابدأ (${toAr(joined.length)} لاعيبة) ←` : `محتاجين ${toAr(min)} على الأقل`}</button><button class="btn white" data-game="stop">إلغي اللعبة</button>`
-      : `<button class="btn white" data-game="unjoin">مش هلعب</button>`)}`;
+      : (gRow(g) && gRow(g).join ? `<button class="btn white" data-game="unjoin">مش هلعب</button>` : `<button class="btn primary" data-game="join">هلعب ←</button><button class="btn white" data-game="unjoin">مش دلوقتي</button>`))}`;
   }
   if (!gIsPlayer(g)) return `${gTop(g)}${hero('🎲', 'الشلة بتلعب دلوقتي', 'هتدخل معاهم الجولة الجاية.')}${bottom(`<button class="btn white" data-game="leave">ارجع للقعدة</button>`)}`;
   if (g.type === 'emoji') return eView(g, starter);
