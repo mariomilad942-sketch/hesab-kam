@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Readex+Pro:wght@400;500;600;700&display=swap">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}/* Layout: one phone-width column of receipt-paper cards; on desktop the host screens open into a two-column dashboard. Single deliberate warm-paper look. */
 :root{
-  --ink:#17120E; --ink2:#2A231D; --paper:#FFF7EA; --card:#FFFFFF; --sand:#F6EFE3; --sand2:#F1E8DA;
+  --text:#17120E; --ink:#17120E; --ink2:#2A231D; --paper:#FFF7EA; --card:#FFFFFF; --sand:#F6EFE3; --sand2:#F1E8DA;
   --orange:#FF5B2E; --orange-soft:#FFE4D9; --mint:#12B886; --mint-ink:#0B7A59; --mint-soft:#DCF5EC;
   --yellow:#FFD43B; --muted:#7A6F64; --faint:#B3A99D; --line:#EDE3D3; --red:#E5484D; --red-soft:#FDE7E7; --on-ink:#CFC5B8;
   --display:'Lalezar','Readex Pro',system-ui,sans-serif;
@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-inline:16px}
+body{background:var(--paper);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-inline:16px}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 :focus-visible{outline:2.5px solid var(--orange);outline-offset:2px}
@@ -56,7 +56,7 @@ p{margin:0}
 .btn.red-soft{background:var(--red-soft);color:var(--red)}
 .btn.sm{min-height:0;padding:9px 14px;font-size:14px;border-radius:999px;width:auto}
 .btn.xs{min-height:0;padding:7px 12px;font-size:13px;border-radius:12px;width:auto}
-.icon-btn{width:44px;height:44px;border-radius:50%;background:var(--card);color:var(--ink);border:1px solid var(--line);display:grid;place-items:center;font-size:19px;flex:none}
+.icon-btn{width:44px;height:44px;border-radius:50%;background:var(--card);color:var(--text);border:1px solid var(--line);display:grid;place-items:center;font-size:19px;flex:none}
 .icon-btn.sm{width:32px;height:32px;font-size:14px;border:0;background:var(--sand)}
 .icon-btn.del{background:var(--red-soft);color:var(--red)}
 .dashed{border:1.5px dashed var(--orange);color:var(--orange);background:transparent;border-radius:16px;padding:12px;font-weight:600;width:100%}
@@ -69,7 +69,7 @@ p{margin:0}
 .ink .muted{color:var(--on-ink)}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:500;white-space:nowrap;background:var(--sand)}
 .pill.orange{background:var(--orange-soft);color:var(--orange)} .pill.mint{background:var(--mint-soft);color:var(--mint-ink)}
-.pill.yellow{background:var(--yellow);color:var(--ink)} .pill.red{background:var(--red-soft);color:var(--red)} .pill.white{background:#fff;color:var(--ink)}
+.pill.yellow{background:var(--yellow);color:var(--text)} .pill.red{background:var(--red-soft);color:var(--red)} .pill.white{background:#fff;color:var(--text)}
 .avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:20px;color:#fff;flex:none;line-height:1;padding-top:3px}
 .avatar.lg{width:64px;height:64px;font-size:32px}
 .receipt{background:var(--card);border-radius:22px 22px 0 0;padding:22px 20px 18px;position:relative;margin-bottom:12px}
@@ -91,7 +91,7 @@ textarea.input{resize:vertical;min-height:84px}
 .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
 .seg{display:flex;flex-direction:row-reverse;background:var(--sand2);border-radius:16px;padding:4px;gap:4px}
 .seg button{flex:1;border-radius:12px;padding:9px 10px;color:var(--muted);font-weight:500;font-size:14px}
-.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(23,18,14,.06)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 2px rgba(23,18,14,.06)}
 .stepper{display:inline-flex;flex-direction:row-reverse;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
 .stepper button{width:32px;height:32px;border-radius:50%;background:var(--sand);font-size:18px;font-weight:600;display:grid;place-items:center}
 .stepper button.plus{background:var(--orange);color:#fff}
@@ -140,7 +140,7 @@ textarea.input{resize:vertical;min-height:84px}
 .screen-orange{--paper:#FF5B2E;color:#fff}
 .screen-ink .muted,.screen-orange .muted,.screen-mint .muted{color:rgba(255,255,255,.78)}
 .screen-ink :is(.receipt,.card:not(.ink),.choice:not([aria-pressed="true"])) .muted,.screen-orange :is(.receipt,.card:not(.ink)) .muted,.screen-mint :is(.receipt,.card:not(.ink)) .muted,.screen-yellow :is(.receipt,.card:not(.ink)) .muted{color:var(--muted)}
-.receipt,.card:not(.ink){color:var(--ink)}
+.receipt,.card:not(.ink){color:var(--text)}
 .mode-note{font-size:12px;color:var(--muted);text-align:center}
 
 /* desktop dashboard */
@@ -171,7 +171,97 @@ textarea.input{resize:vertical;min-height:84px}
 .item .price input{width:110px;font-size:18px}
 .item .price input::placeholder{color:var(--orange);opacity:.75;font-weight:500;font-size:15px}
 .item>.cap{margin-bottom:-6px}
+
+/* ===== Dark theme: same brand (orange / yellow / mint), warm near-black paper instead of cream ===== */
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --text:#FBF1E3; --ink:#2E251E; --ink2:#3A2F26;
+  --paper:#15110E; --card:#211B16; --sand:#2B231D; --sand2:#1B1612;
+  --orange-soft:#3B1F14; --mint-soft:#103429; --mint-ink:#5FD6AE;
+  --muted:#AB9E90; --faint:#6F645A; --line:#3A3129; --red:#FF6B6F; --red-soft:#3A1A1B; --on-ink:#C7BAAC;
+}
+:root[data-theme="dark"] .btn.dark{background:var(--text);color:#17120E}
+:root[data-theme="dark"] .ink{border-color:#45392F}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+:root[data-theme="dark"] .choice[aria-pressed="true"]{background:var(--ink);border:2px solid var(--orange);color:var(--text)}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{background:#3A3027;color:var(--text);box-shadow:none}
+:root[data-theme="dark"] .input:focus{border-color:var(--text);box-shadow:0 0 0 1px var(--text)}
+:root[data-theme="dark"] .item .top input:focus{background:var(--card);box-shadow:0 0 0 1.5px var(--text)}
+:root[data-theme="dark"] .item .price{background:var(--card)}
+:root[data-theme="dark"] .pill.yellow,:root[data-theme="dark"] .pill.white{color:#17120E}
+:root[data-theme="dark"] .hero .tk{color:#17120E}
+:root[data-theme="dark"] .hero .tk[style*="background:#fff"]{background:#FFF7EA!important}
+:root[data-theme="dark"] [style*="background:#fff"]:not(.tk){background:var(--sand)!important}
+:root[data-theme="dark"] [style*="--card:#FFF7EA"]{--card:#2A221B!important}
+:root[data-theme="dark"] [style*="border:3px solid #fff"]{border-color:var(--paper)!important}
+:root[data-theme="dark"] .bottom .btn{border-color:#0B0907;box-shadow:0 5px 0 #0B0907,0 14px 24px -10px rgba(0,0,0,.6)}
+:root[data-theme="dark"] .bottom .btn:active{box-shadow:0 2px 0 #0B0907}
+:root[data-theme="dark"] .screen-ink{--paper:#0E0B09}
+:root[data-theme="dark"] .screen-yellow{color:#17120E}
+:root[data-theme="dark"] .screen-yellow .muted{color:rgba(23,18,14,.72)}
+:root[data-theme="dark"] .screen-yellow :is(.receipt,.card:not(.ink)) .muted{color:var(--muted)}
+:root[data-theme="dark"] .screen-yellow :is(.choice,.btn.white,.btn.ghost,.chip,.input,.seg){color:var(--text)}
+:root[data-theme="dark"] .screen-yellow :is(.choice,.btn.white) .muted{color:var(--muted)}
+:root[data-theme="dark"] .screen-yellow .topbar .icon-btn{background:#17120E;color:#FFD43B;border-color:#17120E}
+
+
+/* ===== Pull rope: hangs from the top on every screen, grab the ball and pull ===== */
+.rope{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;overflow:visible}
+.rope path{fill:none;stroke:var(--rope);stroke-width:1.6;stroke-linecap:round}
+.rope circle{fill:var(--ball);filter:drop-shadow(0 0 6px var(--ball-glow))}
+:root{--rope:rgba(23,18,14,.55);--ball:#17120E;--ball-glow:rgba(23,18,14,.25)}
+:root[data-theme="dark"]{--rope:rgba(255,247,234,.55);--ball:#FFF7EA;--ball-glow:rgba(255,247,234,.55)}
+.screen-orange,.screen-mint{--rope:rgba(255,255,255,.7);--ball:#fff;--ball-glow:rgba(255,255,255,.5)}
+.rope-grab{position:fixed;z-index:41;width:48px;height:48px;margin:-24px 0 0 -24px;left:0;top:0;border:0;padding:0;border-radius:50%;
+  background:transparent;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
+.rope-grab:active{cursor:grabbing}
+.rope-grab:focus-visible{outline:2.5px solid var(--orange);outline-offset:-10px}
+
+/* the sky between themes: a tint and a soft blur over the page, the moon sets and the sun rises (or the other way) */
+.sky{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
+.sky .blur{position:absolute;inset:0;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0}
+.sky .tint{position:absolute;inset:0;opacity:0}
+.sky .dusk{background:linear-gradient(160deg,rgba(28,22,48,.78),rgba(70,52,84,.62) 60%,rgba(120,80,90,.5))}
+.sky .dawn{background:linear-gradient(160deg,rgba(236,228,250,.72),rgba(250,226,214,.66) 60%,rgba(255,214,190,.6))}
+.sky .orb{position:absolute;left:0;top:0;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%}
+.sky .sun{background:radial-gradient(circle at 38% 35%,#FFE7A3,#FFC24A 55%,#FF9F2E);box-shadow:0 0 60px 18px rgba(255,190,70,.45)}
+.sky .moon{background:transparent;box-shadow:-24px 12px 0 1px #FFF7EA;filter:drop-shadow(0 0 18px rgba(255,247,234,.6))}
+@media (prefers-reduced-motion:reduce){.sky{display:none}}
+.screen-ink{--rope:rgba(255,247,234,.55);--ball:#FFF7EA;--ball-glow:rgba(255,247,234,.55)}
+.screen-yellow{--rope:rgba(23,18,14,.6);--ball:#17120E;--ball-glow:rgba(23,18,14,.2)}
+
+/* ===== Impostor game ===== */
+.avatar.sm{width:28px;height:28px;font-size:15px}
+.g-invite{position:fixed;z-index:45;top:calc(12px + env(safe-area-inset-top,0px));inset-inline:16px;max-width:448px;margin-inline:auto;background:#17120E;color:#fff;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 14px 34px rgba(0,0,0,.35);border:1.5px solid #FF5B2E;animation:gdrop .35s cubic-bezier(.2,1.3,.4,1)}
+@keyframes gdrop{from{transform:translateY(-30px);opacity:0}}
+.g-entry{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:#17120E;color:#fff;border-radius:22px;padding:14px 16px;border:1.5px solid #3A3027}
+:root[data-theme="dark"] .g-entry{background:#2E251E;border-color:#45392F}
+.g-ico{width:42px;height:42px;border-radius:14px;background:#FF5B2E;color:#fff;display:grid;place-items:center;flex:none}
+.g-secret{width:100%;min-height:260px;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:22px;user-select:none;-webkit-user-select:none}
+.g-secret.hidden{background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.22);color:#fff}
+.g-secret.food{background:#FF5B2E;color:#fff;box-shadow:0 8px 0 #000;transform:rotate(-1.5deg)}
+.g-secret.imp{background:#FFF7EA;color:#17120E;box-shadow:0 8px 0 #000;transform:rotate(1.5deg)}
+.g-word{font-family:var(--display);font-size:54px;line-height:1.1}
+.g-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px 3px 4px;background:rgba(255,255,255,.1);color:#fff;font-size:14px}
+.g-chip .avatar{padding-top:2px}
+:is(.g-chip,.g-vote,.g-box,.g-invite) .avatar{box-shadow:0 0 0 1.5px rgba(255,255,255,.3)}
+.g-vote{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;width:100%;min-height:60px;padding:10px 14px;border-radius:18px;background:rgba(255,255,255,.07);color:#fff;border:1.5px solid rgba(255,255,255,.14)}
+.g-vote[aria-pressed="true"]{border-color:#FF5B2E;background:rgba(255,91,46,.18)}
+.g-box{background:rgba(255,255,255,.06);border-radius:20px;padding:14px 16px;color:#fff}
+.screen-ink .pill:not(.white):not(.orange):not(.mint):not(.yellow):not(.red){background:rgba(255,255,255,.12);color:#fff}
+.screen-ink .btn.white{color:var(--text)}
+.g-result{border-radius:26px;padding:22px 18px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;color:#fff}
+.g-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.g-dish{min-height:56px;border-radius:16px;background:rgba(255,255,255,.08);color:#fff;font-weight:600;font-size:16px;border:1.5px solid rgba(255,255,255,.16)}
+.g-dish:active{background:#FF5B2E}
+.screen-ink details summary::-webkit-details-marker{color:var(--on-ink)}
+.g-emoji{background:#FFF7EA;border-radius:26px;padding:26px 12px;display:flex;justify-content:center;font-size:54px;line-height:1.1;letter-spacing:6px;box-shadow:0 6px 0 #000}
+.g-ans{color:var(--text);flex:1;font-size:19px}
+.g-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:8px}
+.g-tile{background:rgba(255,255,255,.07);border-radius:14px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;min-width:0}
+.g-tile .small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 </style>
+<script>(function(){var t;try{t=localStorage.getItem("hk_theme")}catch(e){}if(t!=="dark"&&t!=="light")t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;})();</script>
 </head>
 <body>
 <div id="root" dir="rtl" lang="ar"></div>
@@ -395,7 +485,7 @@ function go(name, p = {}) { S.route = { name, p }; S.sheet = null; render(); win
 function toast(msg) { S.toast = msg; render(); clearTimeout(toast.t); toast.t = setTimeout(() => { S.toast = null; render(); }, 2600); }
 function color(i) { return COLORS[i % COLORS.length]; }
 function initial(name) { const t = String(name || '؟').trim(); return t ? t[0] : '؟'; }
-function avatar(name, i, cls = '') { const c = color(i); return `<span class="avatar ${cls}" style="background:${c};color:${darkText(c) ? 'var(--ink)' : '#fff'}">${esc(initial(name))}</span>`; }
+function avatar(name, i, cls = '') { const c = color(i); return `<span class="avatar ${cls}" style="background:${c};color:${darkText(c) ? '#17120E' : '#fff'}">${esc(initial(name))}</span>`; }
 function role() { return S.code && me.sessions[S.code] ? me.sessions[S.code].role : null; }
 function myOrder() { const id = S.code && me.sessions[S.code] && me.sessions[S.code].orderId; return S.orders.find(o => o.id === id) || null; }
 function orderedOrders() { return [...S.orders].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)); }
@@ -409,7 +499,7 @@ async function openSession(code) {
   if (S.unsub) S.unsub();
   S.code = code; S.loaded = false; S.session = null; S.orders = [];
   S.unsub = store.watch(code, ({ session, orders }) => {
-    S.session = session; S.orders = orders; S.loaded = true;
+    S.session = session; S.orders = orders.filter(o => !o.kind); S.gameRows = orders.filter(o => o.kind === 'game'); S.loaded = true;
     if (!isTyping()) render(); else S.dirty = true;
   });
 }
@@ -522,7 +612,7 @@ V.hostForm = () => {
 };
 function inviteCard(s) {
   const pay = s.pay || {};
-  return `<div class="receipt stack" style="--card:#FFF7EA;color:var(--ink);gap:12px;align-items:center;text-align:center">
+  return `<div class="receipt stack" style="--card:#FFF7EA;color:var(--text);gap:12px;align-items:center;text-align:center">
     ${avatar(s.hostName, 0, 'lg')}
     <p class="muted">${esc(s.hostName)} عازمك على</p>
     <h2>${esc(s.place || 'قعدة أكل')}</h2>
@@ -549,7 +639,7 @@ V.share = () => {
   document.body.className = 'screen-orange';
   return `<div class="topbar"><span class="pill white">جاهزة ✓</span>${back('live')}</div>
   <div class="stack" style="gap:6px"><h1>القعدة جاهزة!</h1><p class="muted">ابعت اللينك وكل واحد يكتب طلبه بنفسه.</p></div>
-  <div class="receipt stack" style="gap:12px;align-items:center;color:var(--ink);text-align:center">
+  <div class="receipt stack" style="gap:12px;align-items:center;color:var(--text);text-align:center">
     <span class="muted small">قعدة</span><h2>${esc(s.place || 'قعدة أكل')}</h2>
     ${qrSvg(url) ? `<div class="qr">${qrSvg(url)}</div>` : ''}
     <span class="code">${codeLabel(s.code)}</span>
@@ -557,7 +647,7 @@ V.share = () => {
     <div class="wrap" style="justify-content:center">${timerPill()}<span class="pill">أي حد معاه اللينك يطلب</span></div>
     <a class="small" href="${esc(shareUrl('m' + s.code))}" target="_blank" rel="noopener" style="color:var(--orange);font-weight:600">جرّب كعضو في تاب جديدة ↗</a>
   </div>
-  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" data-copy="${esc(msg)}" style="color:var(--ink)">انسخ الدعوة</button><a class="btn mint" href="${waLink(msg)}" target="_blank" rel="noopener" style="text-decoration:none">واتساب</a></div><button class="btn dark" data-go="live">ادخل على القعدة ←</button>`)}`;
+  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" data-copy="${esc(msg)}" style="color:var(--text)">انسخ الدعوة</button><a class="btn mint" href="${waLink(msg)}" target="_blank" rel="noopener" style="text-decoration:none">واتساب</a></div><button class="btn dark" data-go="live">ادخل على القعدة ←</button>`)}`;
 };
 
 /* ---------- Host: live ---------- */
@@ -592,14 +682,14 @@ V.live = () => {
   const side = `<div class="card lg stack side" style="background:var(--orange);border-color:var(--orange);color:#fff;align-items:center;text-align:center;gap:12px">
       ${timerPill() || '<span class="pill white">مفتوحة</span>'}
       <h3>ابعت اللينك</h3>${qrSvg(url) ? `<div class="qr">${qrSvg(url)}</div>` : ''}<span class="code" style="font-size:30px">${codeLabel(s.code)}</span>
-      <button class="btn white" style="color:var(--ink);min-height:48px" data-copy="${esc(msg)}">انسخ الدعوة</button>
+      <button class="btn white" style="color:var(--text);min-height:48px" data-copy="${esc(msg)}">انسخ الدعوة</button>
       <a class="btn dark" style="min-height:48px;text-decoration:none" href="${waLink(msg)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`;
   return `<div class="topbar"><span class="row" style="gap:8px;justify-content:flex-start"><button class="btn sm red-soft" data-act="end">إنهاء</button>${timerPill()}</span>${back('home')}</div>
   <div class="row" style="align-items:flex-end"><button class="btn sm white" data-go="share">اللينك والكود</button><div class="stack" style="gap:2px;text-align:right"><span class="muted small">قعدة · ${toAr(active.length)} طلبات</span><h2>${esc(s.place || 'قعدة أكل')}</h2></div></div>
   <div class="dash">
     <div class="only-wide">${side}</div>
     <div class="stack">
-      ${endedBanner}${banners}
+      ${endedBanner}${banners}${gameEntry()}
       <div class="card ink row" style="border-radius:24px;padding:18px 20px"><span class="muted small">${active.length ? 'الأكل لحد دلوقتي' : ''}</span><span class="stack" style="gap:0;text-align:right"><span class="big num" style="font-size:30px;color:var(--yellow)">${egp(food)}</span><span class="muted small">${toAr(active.length)} طلبات</span></span></div>
       ${active.length ? `<div class="grid-orders">${active.map(o => orderCard(o)).join('')}</div>` : empty}
     </div>
@@ -726,7 +816,7 @@ V.allPaid = calc => { document.body.className = 'screen-mint'; return `
     <p style="font-size:17px">${toAr(calc.n)} من ${toAr(calc.n)} · ${egp(calc.total)} رجعوا لجيبك</p>
     <div class="row" style="justify-content:center;gap:0">${calc.rows.map((r, i) => `<span style="margin-inline:-5px;border:3px solid #fff;border-radius:50%">${avatar(r.order.name, i)}</span>`).join('')}</div>
   </div>
-  ${bottom(`<button class="btn white" style="color:var(--ink)" data-go="receipt">شارك الفاتورة ⤴</button><button class="btn dark" data-act="stay-result">شوف التفاصيل</button><button class="btn dark" data-go="method">+ قعدة جديدة</button>`)}`; };
+  ${bottom(`<button class="btn white" style="color:var(--text)" data-go="receipt">شارك الفاتورة ⤴</button><button class="btn dark" data-act="stay-result">شوف التفاصيل</button><button class="btn dark" data-go="method">+ قعدة جديدة</button>`)}`; };
 
 /* ---------- Person page (host) ---------- */
 V.person = () => {
@@ -740,7 +830,7 @@ V.person = () => {
 };
 function breakdown(r, s) {
   const b = s.bill || {}; const o = r.order;
-  return `<div class="receipt stack" style="gap:9px;color:var(--ink)">
+  return `<div class="receipt stack" style="gap:9px;color:var(--text)">
     ${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
     <hr class="rule">
     ${b.split === 'equal' ? `<div class="line muted"><span class="v num">${money(r.share - r.food)}</span><span>فرق القسمة بالتساوي والزيادات</span></div>` : `
@@ -757,14 +847,14 @@ V.receipt = () => {
   const text = `🧾 ${s.place || 'القعدة'} — الحساب كام\n` + calc.rows.map(r => `${r.order.paid ? '✓' : '○'} ${r.order.name}: ${egp(r.share)}`).join('\n') + `\nالإجمالي: ${egp(calc.total)}\n${payLine()}`;
   document.body.className = 'screen-orange';
   return `<div class="topbar"><span></span>${back('result')}</div>
-  <div class="receipt stack" style="--card:#FFF7EA;gap:10px;color:var(--ink);margin-top:10px">
+  <div class="receipt stack" style="--card:#FFF7EA;gap:10px;color:var(--text);margin-top:10px">
     <div class="line"><span class="muted small">${new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}</span><span class="brand" style="font-size:20px">الحساب كام ${mark(22)}</span></div>
     <h2>${esc(s.place || 'القعدة')}</h2><span class="muted small">${persons(calc.n)} · ${b.split === 'equal' ? 'بالتساوي' : 'كل واحد حسب طلبه'}</span><hr class="rule">
     ${calc.rows.map(r => `<div class="line"><span class="v num"><span style="color:${r.order.paid ? 'var(--mint)' : 'var(--faint)'}">${r.order.paid ? '✓' : '○'}</span> ${money(r.share)}</span><span>${esc(r.order.name)}</span></div>`).join('')}
     <hr class="rule"><div class="line"><span class="big num" style="font-size:30px">${egp(calc.total)}</span><b>الإجمالي</b></div>
     ${payLine() ? `<div class="card ink center small" style="padding:10px">${esc(payLine())}</div>` : ''}
   </div>
-  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" style="color:var(--ink)" data-copy="${esc(text)}">انسخ</button><a class="btn dark" style="text-decoration:none" href="${waLink(text)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`)}`;
+  ${bottom(`<div class="row" style="gap:10px"><button class="btn white" style="color:var(--text)" data-copy="${esc(text)}">انسخ</button><a class="btn dark" style="text-decoration:none" href="${waLink(text)}" target="_blank" rel="noopener">ابعت واتساب</a></div>`)}`;
 };
 
 /* ---------- Member: join + order + status ---------- */
@@ -792,8 +882,8 @@ function memberInvite(s) {
   document.body.className = 'screen-ink';
   const d = S.draft.mname || (S.draft.mname = { name: me.name || '' });
   return `<div class="topbar"><span></span><span class="brand" style="font-size:22px">الحساب كام ${mark(32)}</span></div>
-  <div style="color:var(--ink)">${inviteCard(s)}</div>
-  <label class="f"><span style="color:var(--on-ink)">اسمك ايه؟</span><input class="input" id="m-name" data-bind="mname.name" value="${esc(d.name)}" placeholder="اكتب اسمك" style="color:var(--ink)" autocomplete="given-name"></label>
+  <div style="color:var(--text)">${inviteCard(s)}</div>
+  <label class="f"><span style="color:var(--on-ink)">اسمك ايه؟</span><input class="input" id="m-name" data-bind="mname.name" value="${esc(d.name)}" placeholder="اكتب اسمك" style="color:var(--text)" autocomplete="given-name"></label>
   ${bottom(`<button class="btn primary" data-act="member-name">ادخل واطلب ←</button><p class="center small" style="color:var(--on-ink)">مش محتاج تعمل حساب</p>`)}`;
 }
 function memberOrder(s, existing) {
@@ -814,7 +904,7 @@ function suggestions(key) {
 }
 function myOrderCard(o, pill) { return `<div class="card stack" style="gap:9px"><div class="row">${pill}<b>طلبك</b></div>${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}<hr class="rule"><div class="line"><span class="big num" style="font-size:22px">${egp(itemsTotal(o.items))}</span><span class="muted small">قبل الخدمة والديليفري</span></div></div>`; }
 function hero(emoji, title, sub) { return `<div class="stack" style="align-items:center;text-align:center;gap:8px;padding-top:10px"><span class="emoji">${emoji}</span><h1>${title}</h1><p class="muted" style="max-width:320px">${sub}</p></div>`; }
-function memberSent(s, o) { return `${memberHeader(s)}${hero('🎉', 'طلبك وصل!', `هتعرف حسابك أول ما ${esc(s.hostName)} يقفل الطلبات ويكتب الفاتورة.`)}${myOrderCard(o, '<span class="pill mint">اتبعت ✓</span>')}
+function memberSent(s, o) { return `${memberHeader(s)}${hero('🎉', 'طلبك وصل!', `هتعرف حسابك أول ما ${esc(s.hostName)} يقفل الطلبات ويكتب الفاتورة.`)}${myOrderCard(o, '<span class="pill mint">اتبعت ✓</span>')}${gameEntry()}
   ${bottom(`<button class="btn white" data-act="member-edit">✎ عدّل طلبي</button><p class="center small muted">تقدر تعدّل لحد ما الطلبات تتقفل</p>`)}`; }
 function memberDeleted(s, o) { return `${memberHeader(s)}${hero('🫥', `${esc(s.hostName)} شال طلبك`, 'ممكن يكون غلط أو اتكرر. تقدر تبعته تاني وهو يوافق عليه.')}<div style="opacity:.6">${myOrderCard(o, '<span class="pill red">اتشال</span>')}</div>
   ${bottom(s.status === 'open' ? `<button class="btn primary" data-act="member-resend">↻ ابعته تاني</button>` : `<p class="center muted">الطلبات اتقفلت. كلّم ${esc(s.hostName)} لو عايز تتضاف.</p>`)}`; }
@@ -825,12 +915,12 @@ function memberClosed(s) { return `${memberHeader(s, '<span class="pill red">م�
 function memberWaiting(s, o) { document.body.className = 'screen-ink';
   const step = (t, st) => `<div class="line"><span style="color:${st === 'done' ? 'var(--mint)' : st === 'now' ? 'var(--yellow)' : '#6F655C'}">${st === 'done' ? '✓' : st === 'now' ? '●' : '○'}</span><span style="${st === 'next' ? 'color:#8A8076' : st === 'now' ? 'font-weight:600' : ''}">${t}</span></div>`;
   return `<div class="topbar"><span class="pill white">الطلبات اتقفلت</span><b class="small">${esc(s.place || 'قعدة')}</b></div>${hero('⏳', 'مستنيين الفاتورة…', `أول ما ${esc(s.hostName)} يكتب الضريبة والخدمة والديليفري هيوصلك حسابك بالظبط.`)}
-  <div class="card stack" style="background:rgba(255,255,255,.06);border-color:transparent;gap:12px;color:#fff">${step('طلبك اتبعت', 'done')}${step(esc(s.hostName) + ' قفل الطلبات', 'done')}${step(esc(s.hostName) + ' بيكتب الفاتورة', 'now')}${step('حسابك يوصلك', 'next')}</div>`; }
+  <div class="card stack" style="background:rgba(255,255,255,.06);border-color:transparent;gap:12px;color:#fff">${step('طلبك اتبعت', 'done')}${step(esc(s.hostName) + ' قفل الطلبات', 'done')}${step(esc(s.hostName) + ' بيكتب الفاتورة', 'now')}${step('حسابك يوصلك', 'next')}</div>${gameEntry()}`; }
 function memberBill(s, o) {
   const calc = computeBill(S.orders, s.bill); const r = calc.rows.find(x => x.order.id === o.id);
   if (!r) return memberDeleted(s, o);
   const pay = s.pay || {};
-  if (o.paid) { document.body.className = 'screen-mint'; return `<div class="topbar"><span class="pill white">خلصت ✓</span><b class="small">${esc(s.place || '')}</b></div>${hero('✅', `تمام يا ${esc(o.name)}!`, `${esc(s.hostName)} أكد إنه استلم ${egp(r.share)}${o.method === 'cash' ? ' كاش' : o.method === 'instapay' ? ' على إنستاباي' : ''}. شكراً إنك مخلّتهوش يفكّرك 😄`)}<div style="color:var(--ink)">${breakdown(r, s)}</div>`; }
+  if (o.paid) { document.body.className = 'screen-mint'; return `<div class="topbar"><span class="pill white">خلصت ✓</span><b class="small">${esc(s.place || '')}</b></div>${hero('✅', `تمام يا ${esc(o.name)}!`, `${esc(s.hostName)} أكد إنه استلم ${egp(r.share)}${o.method === 'cash' ? ' كاش' : o.method === 'instapay' ? ' على إنستاباي' : ''}. شكراً إنك مخلّتهوش يفكّرك 😄`)}<div style="color:var(--text)">${breakdown(r, s)}</div>`; }
   if (o.claim) { return `${memberHeader(s, '<span class="pill yellow">مستني التأكيد</span>')}${hero(o.claim === 'cash' ? '💵' : '💳', o.claim === 'cash' ? `خلّي ${egp(r.share)} جاهزين` : 'تمام، قلناله!', o.claim === 'cash' ? `قلنا لـ${esc(s.hostName)} إنك هتدفع كاش. أول ما يستلم هيعلّم عليك.` : `قلنا لـ${esc(s.hostName)} إنك حوّلت. هو هيأكد لما يشوفها.`)}${breakdown(r, s)}
     ${bottom(`<button class="btn white" data-act="claim-undo">غيّر طريقة الدفع</button>`)}`; }
   document.body.className = 'screen-yellow';
@@ -892,9 +982,10 @@ function sheetHtml() {
 function render() {
   const fe = document.activeElement; const fid = fe && root.contains(fe) ? fe.id : null; const sel = fid && fe.selectionStart != null ? [fe.selectionStart, fe.selectionEnd] : null;
   document.body.className = '';
+  gameAuto();
   const fn = V[S.route.name] || V.home;
   const wide = ['live', 'result'].includes(S.route.name);
-  root.innerHTML = `<main class="app ${wide ? 'wide' : ''}">${fn()}</main>${sheetHtml()}${S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : ''}`;
+  root.innerHTML = `<main class="app ${wide ? 'wide' : ''}">${fn()}</main>${gameInvite()}${sheetHtml()}${S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : ''}`;
   fitBottom();
   if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); try { sel && el.setSelectionRange(sel[0], sel[1]); } catch {} } }
   if (S.sheet && S.sheet.type === 'copy') { const t = document.getElementById('copy-box'); if (t) { t.focus(); t.select(); } }
@@ -1060,6 +1151,356 @@ async function act(a, t) {
   }
 }
 
+/* =====================================================================
+   IMPOSTOR — a waiting game every phone plays on its own.
+   session.game  : the round (written only by whoever started it)
+   game rows     : one row per player per round in the orders table
+                   { kind:'game', game, device, name, join, vote, guess }
+   Everything else (phase, tally, winner) is worked out the same way on every phone.
+   ===================================================================== */
+const G_DISHES = ['كشري','ملوخية','محشي','فول','طعمية','شاورما','حواوشي','فتة','كبدة إسكندراني','مكرونة بشاميل','رز بلبن','بيتزا','برجر','سوشي','فرخة شيش','كفتة','سمك مشوي','جمبري','بطاطس محمرة','كنافة','بسبوسة','أم علي','قطايف','فطير مشلتت','حمص الشام','عدس','ممبار','رقاق باللحمة','سجق','مسقعة','بامية','شكشوكة','بان كيك','آيس كريم','فشار','تشيز كيك','مكرونة نجرسكو','كريب','صينية بطاطس','ورق عنب'];
+const G_TALK_MS = 2 * 60000, G_MIN = 3;
+const gShuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const gPick = a => a[crypto.getRandomValues(new Uint32Array(1))[0] % a.length];
+
+function gGame() { const s = S.session; return s && s.game && s.game.status !== 'off' ? s.game : null; }
+function gMyName() { const reg = me.sessions[S.code] || {}; if (reg.role === 'host') return S.session ? S.session.hostName : ''; return reg.name || ''; }
+function gRows(g) { return (S.gameRows || []).filter(r => r.game === g.id); }
+function gRow(g, dev = me.device) { return gRows(g).find(r => r.device === dev); }
+function gIsPlayer(g) { return !!(g.players && g.players.some(p => p.device === me.device)); }
+function gIdx(g, dev) { const i = (g.players || []).findIndex(p => p.device === dev); return i < 0 ? 0 : i; }
+function gName(g, dev) { const p = (g.players || []).find(p => p.device === dev); if (p) return p.name; const r = gRow(g, dev); return r ? r.name : '؟'; }
+function gIsStarter(g) { return g.by === me.device; }
+
+/** The whole round, worked out from the game and its rows. */
+function gCalc(g) {
+  if (g.status === 'lobby') return { phase: 'lobby' };
+  if (g.type === 'emoji') return eCalc(g);
+  const rows = gRows(g);
+  const votes = g.players.map(p => { const r = rows.find(x => x.device === p.device); return { from: p.device, to: r && r.vote || null }; });
+  const nVoted = votes.filter(v => v.to).length;
+  const tally = {}; votes.forEach(v => { if (v.to) tally[v.to] = (tally[v.to] || 0) + 1; });
+  const base = { votes, nVoted, tally };
+  if (nVoted < g.players.length && !g.closeVotes) {
+    const talking = !g.voteNow && g.talkEnds && Date.now() < g.talkEnds;
+    return { ...base, phase: talking ? 'talk' : 'vote' };
+  }
+  const max = Math.max(0, ...Object.values(tally));
+  const tops = Object.keys(tally).filter(k => tally[k] === max);
+  const accused = max > 0 && tops.length === 1 ? tops[0] : null;
+  if (accused !== g.imp) return { ...base, phase: 'over', accused, winner: 'impostor', reason: accused ? 'wrong' : 'tie' };
+  const ir = rows.find(x => x.device === g.imp);
+  if (!ir || !ir.guess) return { ...base, phase: 'guess', accused };
+  const got = ir.guess === g.dish;
+  return { ...base, phase: 'over', accused, guess: ir.guess, winner: got ? 'impostor' : 'group', reason: got ? 'guessed' : 'caught' };
+}
+function gScores(g, calc) {
+  const sc = { ...(g.scores || {}) };
+  if (calc && calc.phase === 'over') {
+    if (calc.winner === 'group') g.players.forEach(p => { if (p.device !== g.imp) sc[p.device] = (sc[p.device] || 0) + 1; });
+    else sc[g.imp] = (sc[g.imp] || 0) + 3;
+  }
+  return sc;
+}
+
+/* ---------- Emoji game: guess the dish, fastest right answer takes the point ---------- */
+const G_TITLES = { impostor: 'إمبوستر', emoji: 'إيموجي الأكلات' };
+const gTitle = g => G_TITLES[(g && g.type) || 'impostor'];
+const E_PUZZLES = [
+  ['🐔🔥🥙', 'شاورما فراخ', ['شاورما', 'شاورما فراخ', 'شاورمة']],
+  ['🐄🥙', 'شاورما لحمة', ['شاورما لحمة', 'شاورما لحم', 'شاورما']],
+  ['🍚🍝🧅🍅', 'كشري', ['كشري', 'كشرى']],
+  ['🫘🥙', 'ساندوتش فول', ['فول', 'ساندوتش فول', 'سندوتش فول']],
+  ['🟢🧆', 'طعمية', ['طعمية', 'طعميه', 'فلافل']],
+  ['🐟🔥', 'سمك مشوي', ['سمك مشوي', 'سمك']],
+  ['🦐🔥', 'جمبري مشوي', ['جمبري', 'جمبري مشوي', 'جمبرى']],
+  ['🍔🍟', 'برجر', ['برجر', 'بيرجر', 'همبرجر', 'هامبرجر']],
+  ['🍕', 'بيتزا', ['بيتزا', 'بيتزه']],
+  ['🥩🔥🍢', 'كفتة', ['كفتة', 'كفته', 'كباب', 'كباب وكفتة']],
+  ['🍆🫑🍅🍚', 'محشي', ['محشي', 'محشى']],
+  ['🥬🍲', 'ملوخية', ['ملوخية', 'ملوخيه']],
+  ['🍞🥩🔥', 'حواوشي', ['حواوشي', 'حواوشى']],
+  ['🍝🧀🔥', 'مكرونة بشاميل', ['مكرونة بشاميل', 'بشاميل', 'مكرونه بشاميل']],
+  ['🍚🥛🍯', 'رز بلبن', ['رز بلبن', 'ارز بلبن', 'رز باللبن']],
+  ['🧈🍯🥐', 'فطير مشلتت', ['فطير', 'فطير مشلتت', 'مشلتت']],
+  ['🍳🍅🌶️', 'شكشوكة', ['شكشوكة', 'شكشوكه']],
+  ['🍗🍟', 'بروستد', ['بروستد', 'فراخ مقلية', 'كنتاكي', 'بروستيد']],
+  ['🥔🔥🧂', 'بطاطس محمرة', ['بطاطس', 'بطاطس محمرة', 'بطاطس مقلية', 'فرايز']],
+  ['🍣', 'سوشي', ['سوشي', 'سوشى']],
+  ['🌭', 'هوت دوج', ['هوت دوج', 'هوتدوج', 'سجق']],
+  ['🍜🥢', 'إندومي', ['اندومي', 'اندومى', 'نودلز', 'رامن']],
+  ['🍰🧀', 'تشيز كيك', ['تشيز كيك', 'تشيزكيك']],
+  ['🥞🍯', 'بان كيك', ['بان كيك', 'بانكيك', 'بان كيكس']],
+  ['🍮', 'كريم كراميل', ['كريم كراميل', 'كراميل']],
+  ['🥭🥤', 'عصير مانجا', ['مانجا', 'عصير مانجا', 'مانجو']],
+  ['🍋🌿🥤', 'ليمون نعناع', ['ليمون نعناع', 'ليمون بالنعناع', 'ليمون']],
+  ['🍿🎬', 'فشار', ['فشار', 'بوب كورن', 'بوشار']],
+  ['🧇🍫', 'وافل', ['وافل', 'وافلز']],
+  ['🥟🔥', 'سمبوسك', ['سمبوسك', 'سمبوسة', 'سمبوسه']],
+  ['🍩', 'دونتس', ['دونتس', 'دونات', 'دوناتس']],
+  ['🍦🍫', 'آيس كريم شوكولاتة', ['ايس كريم', 'آيس كريم', 'جيلاتي', 'ايس كريم شوكولاتة']]
+];
+const E_N = 10, E_ANS = 20000, E_REVEAL = 4000;
+function eNorm(s) {
+  return String(s || '').trim().toLowerCase()
+    .replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
+    .replace(/[^؀-ۿa-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean).map(w => w.replace(/^ال(?=..)/, '')).join(' ');
+}
+function eJudge(p, text) {
+  const t = eNorm(text); if (!t) return 'no';
+  const answers = p[2].map(eNorm);
+  if (answers.includes(t)) return 'ok';
+  const tw = t.split(' ');
+  return answers.some(a => a.split(' ').some(w => w.length > 2 && tw.includes(w)) || (t.length > 2 && (a.includes(t) || t.includes(a)))) ? 'close' : 'no';
+}
+function eNewRound(players, scores, n) {
+  return { id: uid(8), type: 'emoji', by: me.device, byName: gMyName(), status: 'play', round: n, players, scores,
+    qs: gShuffle(E_PUZZLES.map((_, i) => i)).slice(0, E_N), startAt: Date.now() + 1500, createdAt: Date.now() };
+}
+/** Every question's timing and winner, worked out from the answers. A right answer ends the question right away. */
+function eCalc(g) {
+  const rows = gRows(g); const now = Date.now();
+  let t = g.startAt; const qs = [];
+  for (let k = 0; k < g.qs.length; k++) {
+    const hardEnd = t + E_ANS;
+    const right = rows.map(r => ({ dev: r.device, a: r.e && r.e[k] })).filter(x => x.a && x.a.ok && x.a.at >= t - 1500 && x.a.at <= hardEnd).sort((a, b) => a.a.at - b.a.at);
+    const end = right.length ? Math.min(hardEnd, right[0].a.at + 700) : hardEnd;
+    qs.push({ k, start: t, end, revealEnd: end + E_REVEAL, winner: right.length ? right[0].dev : null });
+    t = end + E_REVEAL;
+  }
+  const wins = {}; qs.forEach(q => { if (q.winner && now >= q.end) wins[q.winner] = (wins[q.winner] || 0) + 1; });
+  const cur = qs.find(q => now < q.revealEnd);
+  if (now < g.startAt) return { phase: 'ready', qs, wins, cur: null };
+  if (!cur) return { phase: 'over', qs, wins, cur: null };
+  return { phase: (now < cur.end ? 'ask' : 'reveal') + cur.k, stage: now < cur.end ? 'ask' : 'reveal', qs, wins, cur };
+}
+function eScores(g, c) { const sc = { ...(g.scores || {}) }; for (const d in c.wins) sc[d] = (sc[d] || 0) + c.wins[d]; return sc; }
+function eTiles(g, sc) {
+  const board = g.players.map(p => ({ ...p, s: sc[p.device] || 0 })).sort((a, b) => b.s - a.s);
+  return `<div class="g-tiles">${board.map((b, i) => `<div class="g-tile"><span class="big" style="font-size:26px;color:${i === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="small">${esc(b.name)}</span></div>`).join('')}</div>`;
+}
+function eView(g, starter) {
+  const c = eCalc(g); S.gPhase = g.id + c.phase;
+  const sc = eScores(g, c);
+  if (c.phase === 'ready') return `${gTop(g, '<span class="pill white">استعدوا</span>')}${hero('⏳', 'جاهزين؟', 'أول سؤال جاي حالاً. أسرع واحد يكتب الأكلة صح ياخد النقطة.')}`;
+  if (c.phase === 'over') {
+    const board = g.players.map(p => ({ ...p, s: sc[p.device] || 0 })).sort((a, b) => b.s - a.s);
+    const top = board[0];
+    return `${gTop(g, `<span class="pill white">جولة ${toAr(g.round || 1)}</span>`)}
+    <div class="g-result" style="background:var(--mint)"><span class="small">خلصت الأسئلة</span><h1>${top && top.s ? esc(top.name) + ' كسب!' : 'محدش جاب ولا واحدة!'}</h1><span>${toAr(Object.values(c.wins).reduce((a, b) => a + b, 0))} من ${toAr(g.qs.length)} اتعرفوا</span></div>
+    <div class="g-box stack" style="gap:8px"><span class="small muted">النقط</span>${eTiles(g, sc)}</div>
+    <div class="g-box stack" style="gap:6px"><span class="small muted">الإجابات</span>${c.qs.map(q => { const p = E_PUZZLES[g.qs[q.k]]; return `<div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">${p[0]}</span><b style="flex:1">${esc(p[1])}</b><span class="small" style="color:${q.winner ? 'var(--mint)' : 'var(--on-ink)'}">${q.winner ? esc(gName(g, q.winner)) : 'محدش'}</span></div>`; }).join('')}</div>
+    ${bottom(starter ? `<button class="btn primary" data-game="again">جولة جديدة ←</button><button class="btn white" data-game="stop">كفاية كده</button>`
+                     : `<p class="center small" style="color:var(--on-ink)">مستنيين ${esc(g.byName)} يبدأ جولة جديدة</p><button class="btn white" data-game="leave">ارجع للقعدة</button>`)}`;
+  }
+  const q = c.cur; const p = E_PUZZLES[g.qs[q.k]];
+  if (S.eQ !== g.id + q.k) { S.eQ = g.id + q.k; S.eDraft = ''; S.eMsg = null; }
+  const rows = gRows(g); const mine = gRow(g); const myA = mine && mine.e && mine.e[q.k];
+  const attempts = rows.filter(r => r.e && r.e[q.k] && r.device !== me.device).map(r => ({ name: r.name, a: r.e[q.k] })).sort((a, b) => b.a.at - a.a.at).slice(0, 4);
+  const head = `${gTop(g, `<span class="pill white">السؤال ${toAr(q.k + 1)} من ${toAr(g.qs.length)}</span>${c.stage === 'ask' ? `<span class="pill orange">⏱ <span id="g-clock">${toAr(Math.ceil((q.end - Date.now()) / 1000))}</span></span>` : ''}`)}`;
+  const emojiCard = `<div class="g-emoji" role="img" aria-label="لغز أكلة بالإيموجي">${p[0]}</div>`;
+  if (c.stage === 'reveal') {
+    const w = q.winner;
+    return `${head}<div class="stack" style="gap:4px"><h1>${w ? (w === me.device ? 'انت جبتها!' : esc(gName(g, w)) + ' جابها!') : 'محدش جابها'}</h1><p class="muted">السؤال اللي بعده جاي…</p></div>
+    ${emojiCard}<div class="g-result" style="background:${w ? 'var(--mint)' : 'rgba(255,255,255,.08)'};padding:16px"><span class="small">الإجابة</span><h2>${esc(p[1])}</h2></div>
+    <div class="g-box">${eTiles(g, sc)}</div>`;
+  }
+  const done = myA && myA.ok;
+  return `${head}
+  <div class="stack" style="gap:4px"><h1>الأكلة دي إيه؟</h1><p class="muted">أسرع واحد يكتبها صح ياخد النقطة.</p></div>
+  ${emojiCard}
+  ${done ? `<div class="g-result" style="background:var(--mint);padding:14px"><b>صح! مستنيين الباقيين…</b></div>`
+    : `<form class="stack" style="gap:8px" data-eform><label class="f"><span style="color:var(--on-ink)">اكتب إجابتك</span>
+      <div class="row" style="gap:8px"><button class="btn primary" data-game="ans" style="width:auto;min-height:52px;padding:0 18px;border-radius:16px">ابعت</button><input class="input g-ans" id="g-ans" data-live="1" value="${esc(S.eDraft || '')}" placeholder="مثلاً: كشري" autocomplete="off" enterkeyhint="send"></div></label>
+      ${S.eMsg ? `<span class="small" style="color:${S.eMsg === 'close' ? 'var(--yellow)' : 'var(--red)'}">${S.eMsg === 'close' ? 'قريبة! جرّب تاني' : 'لأ، جرّب تاني'}</span>` : ''}</form>`}
+  ${attempts.length ? `<div class="g-box stack" style="gap:6px">${attempts.map(x => `<div style="display:flex;justify-content:space-between;gap:8px;font-size:14px"><span><b>${esc(x.name)}</b> ${x.a.ok ? 'عرفها' : `كتب «${esc(x.a.t)}»`}</span><span style="color:${x.a.ok ? 'var(--mint)' : x.a.v === 'close' ? 'var(--yellow)' : 'var(--on-ink)'}">${x.a.ok ? '✓' : x.a.v === 'close' ? 'قريبة' : 'لأ'}</span></div>`).join('')}</div>` : ''}
+  <div class="g-box">${eTiles(g, sc)}</div>`;
+}
+async function eSubmit() {
+  const g = gGame(); if (!g || g.type !== 'emoji') return;
+  const c = eCalc(g); if (!c.cur || c.stage !== 'ask') return;
+  const text = String(S.eDraft || '').trim(); if (!text) return;
+  const p = E_PUZZLES[g.qs[c.cur.k]]; const v = eJudge(p, text);
+  const mine = gRow(g) || {}; const e = { ...(mine.e || {}) }; e[c.cur.k] = { t: text.slice(0, 40), at: Date.now(), ok: v === 'ok', v };
+  S.eMsg = v === 'ok' ? null : v; if (v !== 'ok') S.eDraft = '';
+  await withStore(() => gSaveRow(g, { e }));
+  render(); const el = document.getElementById('g-ans'); if (el) el.focus();
+}
+root.addEventListener('input', e => { if (e.target.id === 'g-ans') S.eDraft = e.target.value; });
+root.addEventListener('submit', e => { if (e.target.matches('[data-eform]')) { e.preventDefault(); eSubmit(); } });
+
+function gNewRound(players, scores, n) {
+  const dish = gPick(G_DISHES);
+  const order = gShuffle(players.map(p => p.device));
+  return {
+    id: uid(8), by: me.device, byName: gMyName(), status: 'play', round: n, players, scores,
+    dish, imp: gPick(players).device, order, options: gShuffle([dish, ...gShuffle(G_DISHES.filter(d => d !== dish)).slice(0, 5)]),
+    talkEnds: Date.now() + G_TALK_MS, voteNow: false, closeVotes: false, createdAt: Date.now()
+  };
+}
+async function gSaveRow(g, patch) {
+  const st = await storeP; const cur = gRow(g) || {};
+  await st.saveOrder(S.code, { ...cur, id: 'g_' + g.id + '_' + me.device, kind: 'game', game: g.id, device: me.device, name: gMyName(), at: Date.now(), ...patch });
+}
+
+/* jump into the round as soon as it starts on any phone that joined */
+function gameAuto() {
+  const g = gGame();
+  if (!g || g.status !== 'play' || !gIsPlayer(g) || S.gAuto === g.id) return;
+  S.gAuto = g.id; S.gShown = false;
+  if (S.route.name !== 'game') S.route = { name: 'game', p: {} };
+}
+
+/* the invite that pops up on every phone in the session */
+function gameInvite() {
+  const g = gGame();
+  if (!g || g.status !== 'lobby' || S.route.name === 'game' || !gMyName() || gRow(g) || S.gDismiss === g.id) return '';
+  return `<div class="g-invite" role="dialog" aria-label="دعوة للعب">
+    <div class="row" style="justify-content:flex-start;gap:10px">${avatar(g.byName, 0)}<span class="stack" style="gap:0;text-align:right"><b>${esc(g.byName)}: يلا يا جماعة نلعب ${gTitle(g)}!</b><span class="small" style="color:var(--on-ink)">لعبة لحد ما الأكل يوصل · ${toAr(gRows(g).filter(r => r.join).length)} داخلين</span></span></div>
+    <div class="row" style="gap:8px"><button class="btn sm" style="flex:1;border-radius:14px;background:rgba(255,255,255,.12);color:#fff" data-game="decline">مش دلوقتي</button><button class="btn sm primary" style="flex:2;border-radius:14px" data-game="join">هلعب</button></div>
+  </div>`;
+}
+
+/* a small card on the session screens to start (or get back to) a game */
+function gameEntry() {
+  if (!S.session || !gMyName()) return '';
+  const g = gGame();
+  if (g && (g.status === 'lobby' && gRow(g) || g.status === 'play' && gIsPlayer(g)))
+    return `<button class="g-entry" data-game="open"><span class="g-ico">${gIcon()}</span><span class="stack" style="gap:0;text-align:right;flex:1"><b>${gTitle(g)} شغالة</b><span class="small" style="color:var(--on-ink)">ارجع للعبة</span></span><span aria-hidden="true">←</span></button>`;
+  if (g && g.status === 'play') return `<div class="g-entry" style="opacity:.85"><span class="g-ico">${gIcon()}</span><span class="stack" style="gap:0;text-align:right;flex:1"><b>الشلة بتلعب ${gTitle(g)}</b><span class="small" style="color:var(--on-ink)">${gRow(g) && gRow(g).join ? 'هتدخل معاهم الجولة الجاية' : 'ادخل معاهم من الجولة الجاية'}</span></span>${gRow(g) && gRow(g).join ? '' : `<button class="btn xs primary" data-game="late">هلعب</button>`}</div>`;
+  return `<div class="g-entry" style="flex-direction:column;align-items:stretch;gap:12px"><div style="display:flex;align-items:center;gap:12px"><span class="g-ico">${gIcon()}</span><span class="stack" style="gap:0;text-align:right;flex:1"><b>مستنيين الأكل؟ العبوا لعبة</b><span class="small" style="color:var(--on-ink)">الدعوة هتظهر على موبايل كل الشلة</span></span></div>
+    <div style="display:flex;gap:8px"><button class="btn sm primary" style="flex:1;border-radius:14px" data-game="new" data-gtype="impostor">إمبوستر</button><button class="btn sm" style="flex:1;border-radius:14px;background:#12B886;color:#fff" data-game="new" data-gtype="emoji">إيموجي الأكلات</button></div></div>`;
+}
+function gIcon() { return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0v7a1 1 0 0 1-1.6.8l-1.4-1-1.6 1.2a1 1 0 0 1-1.2 0L12 18.8l-1.6 1.2a1 1 0 0 1-1.2 0L7.6 19.8 6.2 20.8A1 1 0 0 1 4.6 20 1 1 0 0 1 4 19z"></path><path d="M9 11h.01M15 11h.01"></path></svg>`; }
+
+/* ---------- the game screen ---------- */
+function gTop(g, extra = '') { return `<div class="topbar"><span class="row" style="gap:8px;justify-content:flex-start">${extra}</span><button class="icon-btn" data-game="leave" aria-label="ارجع للقعدة">→</button></div>`; }
+function gClock(g) { const left = Math.max(0, (g.talkEnds || 0) - Date.now()); return `<span class="pill orange">⏱ <span id="g-clock">${fmtClock(left)}</span></span>`; }
+function gChip(g, dev, extra = '') { const i = gIdx(g, dev); return `<span class="g-chip">${avatar(gName(g, dev), i, 'sm')}<span>${esc(gName(g, dev))}${extra}</span></span>`; }
+function gCard(g) {
+  const imp = g.imp === me.device;
+  if (!S.gShown) return `<button class="g-secret hidden" data-game="peek"><span class="g-ico" style="width:56px;height:56px">${gIcon()}</span><b style="font-size:20px">دوس عشان تشوف كارتك</b><span class="small" style="color:var(--on-ink)">خبّي الشاشة عن اللي جنبك</span></button>`;
+  return imp
+    ? `<button class="g-secret imp" data-game="peek"><span class="small" style="color:#7A6F64">كارتك</span><span class="g-word">انت الإمبوستر!</span><span>اسمع كويس، وقول كلمة توحي إنك عارف الأكلة</span><span class="small" style="color:#7A6F64">دوس تاني عشان تخبّيه</span></button>`
+    : `<button class="g-secret food" data-game="peek"><span class="small" style="opacity:.9">الأكلة السرية</span><span class="g-word">${esc(g.dish)}</span><span style="opacity:.9">قول كلمة عنها من غير ما تكشفها</span><span class="small" style="opacity:.8">دوس تاني عشان تخبّيه</span></button>`;
+}
+V.game = () => {
+  document.body.className = 'screen-ink';
+  if (!S.loaded) return loading();
+  const g = gGame();
+  if (!g) return `${gTop(null)}${hero('🎲', 'اللعبة خلصت', 'تقدر تبدأ واحدة جديدة من صفحة القعدة.')}${bottom(`<button class="btn white" data-game="leave">ارجع للقعدة</button>`)}`;
+  const c = gCalc(g); S.gPhase = g.id + c.phase;
+  const starter = gIsStarter(g);
+
+  if (c.phase === 'lobby') {
+    const joined = gRows(g).filter(r => r.join);
+    const min = g.type === 'emoji' ? 2 : G_MIN; const ok = joined.length >= min;
+    return `${gTop(g, '<span class="pill yellow">لعبة انتظار</span>')}
+    <div class="stack" style="gap:6px"><h1>${gTitle(g)}</h1><p class="muted">${g.type === 'emoji' ? `${toAr(E_N)} ألغاز أكل بالإيموجي بتظهر على كل الموبايلات في نفس الوقت. أسرع واحد يكتب الأكلة صح ياخد النقطة.` : 'الكل هيشوف نفس الأكلة على موبايله، ما عدا واحد: الإمبوستر. كل واحد يقول كلمة، وبعدين كل واحد يصوّت من موبايله.'}</p></div>
+    <div class="g-box stack" style="gap:10px"><span class="small muted">داخلين اللعبة · ${toAr(joined.length)}</span><div class="wrap">${joined.map(r => gChip(g, r.device, r.device === me.device ? ' (انت)' : '')).join('')}</div></div>
+    ${starter ? `<p class="mode-note" style="color:var(--on-ink)">الدعوة ظهرت عند كل اللي في القعدة. لما يدوسوا «هلعب» هيظهروا هنا.</p>` : `<p class="mode-note" style="color:var(--on-ink)">مستنيين ${esc(g.byName)} يبدأ اللعبة…</p>`}
+    ${bottom(starter
+      ? `<button class="btn primary" data-game="start" ${ok ? '' : 'disabled'}>${ok ? `ابدأ (${toAr(joined.length)} لاعيبة) ←` : `محتاجين ${toAr(min)} على الأقل`}</button><button class="btn white" data-game="stop">إلغي اللعبة</button>`
+      : `<button class="btn white" data-game="unjoin">مش هلعب</button>`)}`;
+  }
+  if (!gIsPlayer(g)) return `${gTop(g)}${hero('🎲', 'الشلة بتلعب دلوقتي', 'هتدخل معاهم الجولة الجاية.')}${bottom(`<button class="btn white" data-game="leave">ارجع للقعدة</button>`)}`;
+  if (g.type === 'emoji') return eView(g, starter);
+
+  const roundPill = `<span class="pill white">جولة ${toAr(g.round || 1)}</span>`;
+  if (c.phase === 'talk') {
+    return `${gTop(g, roundPill + gClock(g))}
+    <div class="stack" style="gap:6px"><h1>كل واحد يقول كلمة</h1><p class="muted">كلمة واحدة عن الأكلة بالترتيب ده، لفّتين. التصويت بيفتح لما الوقت يخلص.</p></div>
+    ${gCard(g)}
+    <div class="g-box stack" style="gap:10px"><span class="small muted">الترتيب</span><div class="wrap">${g.order.map((d, k) => gChip(g, d, k === 0 ? ' · يبدأ' : '')).join('')}</div></div>
+    ${starter ? bottom(`<button class="btn primary" data-game="votenow">خلصنا كلام، يلا نصوّت ←</button>`) : ''}`;
+  }
+  if (c.phase === 'vote') {
+    const mine = gRow(g); const my = mine && mine.vote;
+    return `${gTop(g, roundPill + `<span class="pill">صوّت ${toAr(c.nVoted)} من ${toAr(g.players.length)}</span>`)}
+    <div class="stack" style="gap:6px"><h1>مين الإمبوستر؟</h1><p class="muted">${my ? 'صوتك اتسجّل. تقدر تغيّره لحد ما الكل يصوّت.' : 'اختار من موبايلك. محدش هيعرف انت صوّت لمين غير في الآخر.'}</p></div>
+    <div class="stack" style="gap:8px">${g.players.filter(p => p.device !== me.device).map(p => `<button class="g-vote" data-gv="${esc(p.device)}" aria-pressed="${my === p.device}" style="padding:12px 14px;border-radius:18px">${my === p.device ? '<span class="pill orange">صوتك</span>' : '<span></span>'}<span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(p.name)}</b>${avatar(p.name, gIdx(g, p.device))}</span></button>`).join('')}</div>
+    <div class="wrap" aria-label="مين صوّت">${g.players.map(p => { const v = c.votes.find(x => x.from === p.device); return `<span class="pill ${v && v.to ? 'mint' : ''}">${v && v.to ? '✓ ' : ''}${esc(p.name)}</span>`; }).join('')}</div>
+    <details class="g-box" style="padding:12px 14px"><summary class="small" style="cursor:pointer;color:var(--on-ink)">افتكر كارتك</summary><div style="margin-top:10px">${g.imp === me.device ? '<b>انت الإمبوستر</b>' : `الأكلة: <b>${esc(g.dish)}</b>`}</div></details>
+    ${starter && c.nVoted > 0 ? bottom(`<button class="btn white" data-game="closevotes">اقفل التصويت دلوقتي</button>`) : ''}`;
+  }
+  const breakdown = `<div class="g-box stack" style="gap:8px"><span class="small muted">مين صوّت لمين</span>${c.votes.map(v => `<div style="display:flex;gap:6px;align-items:center"><b>${esc(gName(g, v.from))}</b><span class="muted small">صوّت لـ</span><b style="color:${v.to === g.imp ? 'var(--mint)' : 'var(--orange)'}">${v.to ? esc(gName(g, v.to)) : '—'}</b></div>`).join('')}</div>`;
+  if (c.phase === 'guess') {
+    const imp = g.imp === me.device;
+    return `${gTop(g, roundPill)}
+    <div class="g-result" style="background:var(--mint)"><span class="small">اتمسك!</span><h2>${esc(gName(g, g.imp))} كان الإمبوستر</h2><span>بس ليه فرصة أخيرة: لو عرف الأكلة يكسب هو</span></div>
+    ${imp ? `<h2 style="font-size:24px">الأكلة كانت إيه؟</h2><div class="g-grid">${g.options.map(d => `<button class="g-dish" data-gg="${esc(d)}">${esc(d)}</button>`).join('')}</div>`
+          : `<p class="center muted">مستنيين ${esc(gName(g, g.imp))} يخمّن الأكلة…</p>${breakdown}`}`;
+  }
+  // over
+  const sc = gScores(g, c);
+  const board = g.players.map(p => ({ ...p, s: sc[p.device] || 0 })).sort((a, b) => b.s - a.s);
+  const title = c.winner === 'group' ? 'الشلة كسبت!' : 'الإمبوستر كسب!';
+  const impName = esc(gName(g, g.imp));
+  const sub = c.reason === 'caught' ? `${impName} اتمسك ومعرفش الأكلة (قال ${esc(c.guess)})`
+    : c.reason === 'guessed' ? `${impName} اتمسك، بس عرف الأكلة!`
+    : c.reason === 'tie' ? `الأصوات اتعادلت، و${impName} هرب`
+    : `اتهمتوا ${esc(gName(g, c.accused))}، والإمبوستر كان ${impName}`;
+  return `${gTop(g, roundPill)}
+  <div class="g-result" style="background:${c.winner === 'group' ? 'var(--mint)' : 'var(--orange)'}"><h1>${title}</h1><span>${sub}</span><span class="pill" style="background:rgba(0,0,0,.22);color:#fff;margin-top:6px">الأكلة كانت: ${esc(g.dish)}</span></div>
+  <div class="g-box stack" style="gap:6px"><span class="small muted">النقط</span>${board.map((b, k) => `<div class="line" style="align-items:center"><span class="big" style="font-size:22px;color:${k === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(b.name)}${b.device === me.device ? ' (انت)' : ''}</b>${avatar(b.name, gIdx(g, b.device), 'sm')}</span></div>`).join('')}</div>
+  ${breakdown}
+  <p class="mode-note" style="color:var(--on-ink)">الشلة تكسب: نقطة لكل واحد · الإمبوستر يكسب: ٣ نقط</p>
+  ${bottom(starter ? `<button class="btn primary" data-game="again">جولة جديدة ←</button><button class="btn white" data-game="stop">كفاية كده</button>`
+                   : `<p class="center small" style="color:var(--on-ink)">مستنيين ${esc(g.byName)} يبدأ جولة جديدة</p><button class="btn white" data-game="leave">ارجع للقعدة</button>`)}`;
+};
+
+/* ---------- actions ---------- */
+root.addEventListener('click', e => {
+  const t = e.target.closest('[data-game],[data-gv],[data-gg]'); if (!t) return;
+  e.stopPropagation();
+  const g = gGame(); const d = t.dataset;
+  if (d.gv) { if (!g) return; return withStore(() => gSaveRow(g, { vote: d.gv })); }
+  if (d.gg) { if (!g || g.imp !== me.device) return; t.disabled = true; return withStore(() => gSaveRow(g, { guess: d.gg })); }
+  switch (d.game) {
+    case 'ans': return; // the form's submit sends it
+    case 'open': return go('game');
+    case 'leave': S.route = { name: 'home', p: {} }; return resume(S.code);
+    case 'peek': S.gShown = !S.gShown; return render();
+    case 'decline': S.gDismiss = g && g.id; return render();
+    case 'new': return withStore(async st => {
+      if (gGame()) return go('game');
+      const type = d.gtype || 'impostor'; const old = S.session.game; const same = old && (old.type || 'impostor') === type;
+      const ng = { id: uid(8), type, by: me.device, byName: gMyName(), status: 'lobby', createdAt: Date.now(), scores: same && old.scores || {}, round: same && old.round || 0 };
+      await st.patchSession(S.code, { game: ng }); S.session.game = ng; await gSaveRow(ng, { join: true }); go('game');
+    });
+    case 'join': return withStore(async () => { await gSaveRow(g, { join: true }); go('game'); });
+    case 'late': return withStore(() => gSaveRow(g, { join: true }));
+    case 'unjoin': return withStore(async () => { await gSaveRow(g, { join: false }); S.gDismiss = g.id; S.route = { name: 'home', p: {} }; resume(S.code); });
+    case 'start': return withStore(async st => {
+      const players = gRows(g).filter(r => r.join).map(r => ({ device: r.device, name: r.name }));
+      const min = g.type === 'emoji' ? 2 : G_MIN;
+      if (players.length < min) return toast('محتاجين ' + toAr(min) + ' لاعيبة على الأقل');
+      const nr = g.type === 'emoji' ? eNewRound(players, g.scores || {}, (g.round || 0) + 1) : gNewRound(players, g.scores || {}, (g.round || 0) + 1);
+      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName } });
+    });
+    case 'votenow': return withStore(st => st.patchSession(S.code, { game: { ...g, voteNow: true } }));
+    case 'closevotes': return withStore(st => st.patchSession(S.code, { game: { ...g, closeVotes: true } }));
+    case 'again': return withStore(async st => {
+      const c = gCalc(g); const scores = g.type === 'emoji' ? eScores(g, c) : gScores(g, c);
+      const late = gRows(g).filter(r => r.join && !g.players.some(p => p.device === r.device)).map(r => ({ device: r.device, name: r.name }));
+      const all = [...g.players, ...late];
+      const nr = g.type === 'emoji' ? eNewRound(all, scores, (g.round || 1) + 1) : gNewRound(all, scores, (g.round || 1) + 1);
+      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName } });
+    });
+    case 'stop': return withStore(async st => { await st.patchSession(S.code, { game: { ...g, status: 'off' } }); S.route = { name: 'home', p: {} }; resume(S.code); });
+  }
+}, true);
+
+/* the clock, and phases that change with time alone (talk → vote) */
+setInterval(() => {
+  if (S.route.name !== 'game') return;
+  const g = gGame(); if (!g || g.status !== 'play') return;
+  const el = document.getElementById('g-clock');
+  if (el && g.type === 'emoji') { const c = eCalc(g); if (c.cur) el.textContent = toAr(Math.max(0, Math.ceil((c.cur.end - Date.now()) / 1000))); }
+  else if (el) el.textContent = fmtClock(Math.max(0, (g.talkEnds || 0) - Date.now()));
+  if (S.gPhase !== g.id + gCalc(g).phase && !isTyping()) render();
+}, 1000);
+
 /* ---------- boot ---------- */
 function boot() {
   const m = (location.hash || '').match(/^#?m?(\d{4})$/);
@@ -1068,6 +1509,146 @@ function boot() {
 }
 window.addEventListener('hashchange', boot);
 boot();
+})();
+</script>
+<script>
+/* ===== Light / dark: a real rope you grab and pull ===== */
+(function () {
+  'use strict';
+  const html = document.documentElement;
+  const KEY = 'hk_theme';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const reduce = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const cur = () => html.dataset.theme === 'dark' ? 'dark' : 'light';
+
+  /* ---------- markup ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'rope'); svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(NS, 'path');
+  const ball = document.createElementNS(NS, 'circle'); ball.setAttribute('r', '6.5');
+  svg.append(path, ball);
+  const grab = document.createElement('button'); grab.type = 'button'; grab.className = 'rope-grab';
+  document.body.append(svg, grab);
+
+  function apply(t, save) {
+    html.dataset.theme = t;
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#15110E' : '#FF5B2E');
+    grab.setAttribute('aria-pressed', String(t === 'dark'));
+    grab.setAttribute('aria-label', t === 'dark' ? 'اشد الحبل للوضع النهاري' : 'اشد الحبل للوضع الليلي');
+    if (save) { try { localStorage.setItem(KEY, t); } catch (e) {} }
+  }
+  let saved = null; try { saved = localStorage.getItem(KEY); } catch (e) {}
+  apply(cur(), false);
+  if (!saved && window.matchMedia) {
+    try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => { if (!busy) apply(e.matches ? 'dark' : 'light', false); }); } catch (e) {}
+  }
+
+  /* ---------- rope physics (verlet) ---------- */
+  const N = 16, REST = 84, G = 0.42, DAMP = 0.988, ITER = 22, FIRE = 70;
+  let L = REST / N, ax = 0, ay = -4;
+  const pts = [];
+  function anchorX() { return Math.round(Math.max(16, innerWidth / 2 - 240) + 26); } // far left of the column
+  ax = anchorX();
+  for (let i = 0; i <= N; i++) { const y = ay + i * L; pts.push({ x: ax, y, px: ax, py: y }); }
+  const end = pts[N];
+
+  let dragging = false, finger = null, downAt = null, moved = false, busy = false, lastNudge = 0;
+
+  addEventListener('resize', () => { const nx = anchorX(), dx = nx - ax; ax = nx; for (const p of pts) { p.x += dx; p.px += dx; } });
+
+  function step(now) {
+    // gentle breeze so it never hangs dead still
+    if (!dragging && now - lastNudge > 2600) { lastNudge = now; end.px += (Math.random() < .5 ? -1 : 1) * (0.6 + Math.random() * 0.9); }
+    // the rope stretches with your finger, and springs back to its length when you let go
+    const target = dragging && finger ? Math.max(REST, Math.hypot(finger.x - ax, finger.y - ay) * 1.02) / N : REST / N;
+    L += (target - L) * (dragging ? 0.6 : 0.22);
+    for (let i = 1; i <= N; i++) {
+      const p = pts[i];
+      const vx = (p.x - p.px) * DAMP, vy = (p.y - p.py) * DAMP;
+      p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + G;
+    }
+    for (let k = 0; k < ITER; k++) {
+      pts[0].x = ax; pts[0].y = ay;
+      if (dragging && finger) { end.x = finger.x; end.y = finger.y; }
+      for (let i = 0; i < N; i++) {
+        const a = pts[i], b = pts[i + 1];
+        const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1e-4;
+        const diff = (d - L) / d;
+        const aFixed = i === 0, bFixed = dragging && i + 1 === N;
+        if (aFixed && bFixed) continue;
+        if (aFixed) { b.x -= dx * diff; b.y -= dy * diff; }
+        else if (bFixed) { a.x += dx * diff; a.y += dy * diff; }
+        else { a.x += dx * diff * .5; a.y += dy * diff * .5; b.x -= dx * diff * .5; b.y -= dy * diff * .5; }
+      }
+    }
+    // draw a smooth curve through the points
+    let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+    for (let i = 1; i < N; i++) { const mx = (pts[i].x + pts[i + 1].x) / 2, my = (pts[i].y + pts[i + 1].y) / 2; d += ` Q${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`; }
+    d += ` L${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+    path.setAttribute('d', d);
+    ball.setAttribute('cx', end.x.toFixed(1)); ball.setAttribute('cy', end.y.toFixed(1));
+    grab.style.transform = `translate(${end.x}px,${end.y}px)`;
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+
+  /* ---------- grabbing ---------- */
+  const clampFinger = (x, y) => ({ x: Math.max(12, Math.min(innerWidth - 12, x)), y: Math.max(ay + 8, Math.min(innerHeight * 0.55, y)) });
+  grab.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    dragging = true; moved = false; downAt = { x: e.clientX, y: e.clientY, bx: end.x, by: end.y };
+    finger = clampFinger(end.x, end.y);
+    try { grab.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  grab.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    if (Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 6) moved = true;
+    finger = clampFinger(downAt.bx + (e.clientX - downAt.x), downAt.by + (e.clientY - downAt.y));
+  });
+  function release(cancel) {
+    if (!dragging) return;
+    const stretch = Math.hypot(end.x - ax, end.y - ay) - REST;
+    dragging = false; finger = null;
+    if (cancel) return;
+    if (!moved) tug();
+    else if (stretch >= FIRE) toggle();
+  }
+  grab.addEventListener('pointerup', () => release(false));
+  grab.addEventListener('pointercancel', () => release(true));
+  grab.addEventListener('click', e => { if (e.detail === 0) tug(); }); // keyboard
+  // a tap = a quick tug: stretch it down and let it fly back up
+  function tug() { for (let i = 1; i <= N; i++) pts[i].y += (i / N) * 70; L = (REST + 70) / N; toggle(); }
+
+  /* ---------- the sky between themes ---------- */
+  function toggle() {
+    if (busy) return;
+    const next = cur() === 'dark' ? 'light' : 'dark';
+    if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+    if (reduce() || !document.body.animate) { apply(next, true); return; }
+    busy = true;
+    const toLight = next === 'light';
+    const sky = document.createElement('div'); sky.className = 'sky';
+    sky.innerHTML = '<div class="blur"></div><div class="tint dusk"></div><div class="tint dawn"></div><span class="orb moon"></span><span class="orb sun"></span>';
+    document.body.appendChild(sky);
+    const $ = s => sky.querySelector(s);
+    const W = innerWidth, H = innerHeight, D = 1900;
+    const at = (fx, fy) => `translate(${Math.round(W * fx)}px,${Math.round(H * fy)}px)`;
+    const run = (el, frames, delay, dur, easing) => el.animate(frames, { duration: dur, delay, easing: easing || 'cubic-bezier(.45,0,.3,1)', fill: 'both' });
+    run($('.blur'), [{ opacity: 0 }, { opacity: 1, offset: .3 }, { opacity: 1, offset: .65 }, { opacity: 0 }], 0, D, 'linear');
+    const first = toLight ? $('.dusk') : $('.dawn'), second = toLight ? $('.dawn') : $('.dusk');
+    run(first, [{ opacity: 0 }, { opacity: 1, offset: .45 }, { opacity: 1, offset: .6 }, { opacity: 0 }], 0, D * .62, 'linear');
+    run(second, [{ opacity: 0 }, { opacity: 1, offset: .35 }, { opacity: 1, offset: .55 }, { opacity: 0 }], D * .4, D * .6, 'linear');
+    const moonTop = [.30, .34], moonLow = [.04, 1.05], sunTop = [.78, .42], sunLow = [.94, 1.08];
+    if (toLight) {
+      run($('.moon'), [{ transform: at(...moonTop), opacity: 0 }, { opacity: 1, offset: .15 }, { transform: at(...moonLow), opacity: 1 }], 0, D * .58);
+      run($('.sun'), [{ transform: at(...sunLow), opacity: 1 }, { transform: at(...sunTop), opacity: 1, offset: .8 }, { transform: at(...sunTop), opacity: 0 }], D * .38, D * .62, 'cubic-bezier(.2,.8,.3,1)');
+    } else {
+      run($('.sun'), [{ transform: at(...sunTop), opacity: 0 }, { opacity: 1, offset: .15 }, { transform: at(...sunLow), opacity: 1 }], 0, D * .58);
+      run($('.moon'), [{ transform: at(...moonLow), opacity: 1 }, { transform: at(...moonTop), opacity: 1, offset: .8 }, { transform: at(...moonTop), opacity: 0 }], D * .38, D * .62, 'cubic-bezier(.2,.8,.3,1)');
+    }
+    setTimeout(() => apply(next, true), D * .48);
+    setTimeout(() => { sky.remove(); busy = false; }, D + 60);
+  }
 })();
 </script>
 </body>
