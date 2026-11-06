@@ -260,6 +260,29 @@ textarea.input{resize:vertical;min-height:84px}
 .g-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:8px}
 .g-tile{background:rgba(255,255,255,.07);border-radius:14px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;min-width:0}
 .g-tile .small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gav{padding:0!important;overflow:hidden;background:transparent}
+.gav svg{width:100%;height:100%;display:block}
+.gav-xl{width:120px;height:120px;border-radius:50%;display:block;overflow:hidden;box-shadow:0 6px 0 #000}
+.gp-empty{display:grid!important;place-items:center;background:rgba(255,255,255,.08);border:2px dashed rgba(255,255,255,.25);box-shadow:none;font-family:var(--display);font-size:48px;color:var(--on-ink)}
+.gp-preview{display:flex;flex-direction:column;align-items:center;gap:10px;padding:4px 0 6px}
+.gp-seg{background:rgba(255,255,255,.08)}
+.gp-seg button{color:var(--on-ink)}
+.gp-seg button[aria-pressed="true"]{background:#FFF7EA;color:#17120E}
+.gp-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.gp-av{aspect-ratio:1;border-radius:50%;padding:0;overflow:hidden;border:3px solid transparent;transition:transform .12s}
+.gp-av svg{width:100%;height:100%;display:block}
+.gp-av[aria-pressed="true"]{border-color:#FFF7EA;transform:scale(1.08)}
+.g-tile .avatar{margin-bottom:4px}
+.gav img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.gp-cap{font-size:14px;color:var(--yellow);font-weight:600;margin-top:-4px}
+.gp-seg button{padding:9px 4px;font-size:13px}
+.gp-comics{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px}
+.gp-comic{display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff;padding:0}
+.gp-comic .gp-av{width:76px;height:76px;display:block}
+.gp-comic[aria-pressed="true"] .gp-av{border-color:#FFF7EA;transform:scale(1.08)}
+.gp-comic .small{line-height:1.3;text-align:center;color:var(--on-ink)}
+.gp-comic[aria-pressed="true"] .small{color:var(--yellow);font-weight:600}
+.gp-photo{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 18px;border-radius:24px;border:2px dashed rgba(255,255,255,.25);background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
 </style>
 <script>(function(){var t;try{t=localStorage.getItem("hk_theme")}catch(e){}if(t!=="dark"&&t!=="light")t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;})();</script>
 </head>
@@ -301,7 +324,11 @@ const ORDINALS = ['الأول', 'التاني', 'التالت', 'الرابع', 
 function ordinal(i) { return ORDINALS[i] || ('رقم ' + toAr(i + 1)); }
 
 function itemsTotal(items) { return (items || []).reduce((a, it) => a + num(it.p) * Math.max(0, Math.round(num(it.q))), 0); }
-function cleanItems(items) { return (items || []).filter(it => String(it.n || '').trim() && num(it.q) > 0).map(it => ({ n: String(it.n).trim(), p: num(it.p), q: Math.round(num(it.q)) })); }
+function cleanItems(items) { return (items || []).filter(it => String(it.n || '').trim() && num(it.q) > 0).map(it => ({ n: String(it.n).trim(), p: String(it.p ?? '').trim() === '' ? null : num(it.p), q: Math.round(num(it.q)) })); }
+/* a price can be left blank and written later, when the bill comes */
+function isUnpriced(it) { return it.p == null || String(it.p).trim() === ''; }
+function unpricedCount(items) { return (items || []).filter(isUnpriced).length; }
+function lineMoney(it) { return isUnpriced(it) ? 'لسه' : money(num(it.p) * it.q); }
 
 /**
  * Split the bill.
@@ -340,8 +367,8 @@ function aggregate(orders) {
   const map = new Map();
   for (const o of orders.filter(o => o.status === 'active')) for (const it of o.items || []) {
     const key = String(it.n).trim().replace(/\s+/g, ' ').replace(/[أإآ]/g, 'ا').replace(/ة$/, 'ه');
-    const cur = map.get(key) || { n: String(it.n).trim(), q: 0, total: 0 };
-    cur.q += num(it.q); cur.total += num(it.p) * num(it.q); map.set(key, cur);
+    const cur = map.get(key) || { n: String(it.n).trim(), q: 0, total: 0, unp: 0 };
+    cur.q += num(it.q); cur.total += num(it.p) * num(it.q); if (isUnpriced(it)) cur.unp++; map.set(key, cur);
   }
   return [...map.values()].sort((a, b) => b.q - a.q);
 }
@@ -540,7 +567,7 @@ function itemsEditor(key, items, opts = {}) {
       <span class="cap">اسم الصنف</span><div class="top"><input id="${key}-n-${i}" data-f="n" data-i="${i}" value="${esc(it.n)}" placeholder="${i === 0 ? (opts.ph || 'مثلاً: نص فرخة شيش') : 'صنف تاني'}" autocomplete="off" aria-label="اسم الصنف">
         ${items.length > 1 ? `<button type="button" class="icon-btn sm" data-rm="${i}" aria-label="شيل الصنف">×</button>` : ''}</div>
       <div class="row">
-        <div class="fld"><span class="cap">سعره كام؟</span><label class="price"><input id="${key}-p-${i}" data-f="p" data-i="${i}" inputmode="decimal" value="${esc(it.p === '' ? '' : toAr(it.p))}" placeholder="اكتب السعر" aria-label="سعر الصنف"><span>ج</span></label></div>
+        <div class="fld"><span class="cap">سعره كام؟ (لو عارف)</span><label class="price"><input id="${key}-p-${i}" data-f="p" data-i="${i}" inputmode="decimal" value="${esc(it.p === '' ? '' : toAr(it.p))}" placeholder="مش عارف؟ سيبه" aria-label="سعر الصنف"><span>ج</span></label></div>
         <div class="fld"><span class="cap">العدد</span>${stepper(key + ':' + i, it.q)}</div>
       </div>
     </div>`).join('')}
@@ -659,7 +686,7 @@ function orderCard(o, opts = {}) {
       <span class="row" style="gap:6px;justify-content:flex-start">${opts.actions === false ? '' : `<button class="icon-btn sm del" data-del="${o.id}" aria-label="احذف طلب ${esc(o.name)}">🗑</button><button class="icon-btn sm" data-edit="${o.id}" aria-label="عدّل طلب ${esc(o.name)}">✎</button>`}<b class="num">${egp(total)}</b></span>
       <span class="row" style="gap:10px;justify-content:flex-end"><span class="stack" style="gap:0;text-align:right"><b>${esc(o.name)}${isHostMe ? ' (انت)' : ''}</b><span class="muted small">${o.by === 'host' ? 'كتبه الهوست' : 'كتبه بنفسه'} · الطلب ${ordinal(i)}</span></span>${avatar(o.name, i)}</span>
     </div>
-    <div class="wrap">${(o.items || []).map(it => `<span class="pill">${it.q > 1 ? toAr(it.q) + '× ' : ''}${esc(it.n)} · ${toAr(money(it.p))}</span>`).join('')}</div>
+    <div class="wrap">${(o.items || []).map(it => `<span class="pill">${it.q > 1 ? toAr(it.q) + '× ' : ''}${esc(it.n)} · ${isUnpriced(it) ? 'لسه' : toAr(money(it.p))}</span>`).join('')}</div>
   </div>`;
 }
 V.live = () => {
@@ -738,16 +765,48 @@ V.summary = () => {
   <div class="stack" style="gap:6px"><h1>الطلب المجمّع</h1><p class="muted">جمّعنا اللي اتكتب، اقرا منه وانت بتطلب.</p></div>
   <div class="receipt stack" style="gap:12px">
     <div class="line"><span class="muted small">${codeLabel(s.code)}</span><b>${esc(s.place || 'القعدة')} · ${persons(S.orders.filter(o => o.status === 'active').length)}</b></div><hr class="rule">
-    ${agg.map(a => `<div class="line"><span class="muted v">${money(a.total)}</span><span class="row" style="gap:10px;justify-content:flex-end"><span>${esc(a.n)}</span><span class="pill" style="background:var(--ink);color:#fff;border-radius:8px">×${toAr(a.q)}</span></span></div>`).join('')}
+    ${agg.map(a => `<div class="line"><span class="muted v">${a.unp ? (a.unp < a.q ? money(a.total) + ' + لسه' : 'لسه') : money(a.total)}</span><span class="row" style="gap:10px;justify-content:flex-end"><span>${esc(a.n)}</span><span class="pill" style="background:var(--ink);color:#fff;border-radius:8px">×${toAr(a.q)}</span></span></div>`).join('')}
     <hr class="rule"><div class="line"><span class="big">${egp(food)}</span><b>إجمالي الأكل</b></div>
   </div>
-  ${bottom(`<button class="btn white" data-copy="${esc(text)}">انسخ الطلب للواتساب ⧉</button><button class="btn primary" data-go="bill">الأكل وصل؟ يلا نحسب ←</button>`)}`;
+  ${bottom(`<button class="btn white" data-copy="${esc(text)}">انسخ الطلب للواتساب ⧉</button>${allUnpriced() ? `<button class="btn primary" data-go="prices">الفاتورة جت؟ اكتب الأسعار ←</button>` : `<button class="btn primary" data-go="bill">الأكل وصل؟ يلا نحسب ←</button>`}`)}`;
 };
+
+/* ---------- Prices: fill in what people ordered without knowing the price ---------- */
+function allUnpriced() { return S.orders.filter(o => o.status === 'active').reduce((a, o) => a + unpricedCount(o.items), 0); }
+function priceDraft() {
+  const d = S.draft.prices || (S.draft.prices = {});
+  for (const o of S.orders) if (o.status === 'active' && !d[o.id]) d[o.id] = (o.items || []).map(it => isUnpriced(it) ? '' : it.p);
+  return d;
+}
+function draftLeft() { const d = priceDraft(); let n = 0; for (const o of S.orders) if (o.status === 'active') (d[o.id] || []).forEach(p => { if (String(p ?? '').trim() === '') n++; }); return n; }
+V.prices = () => {
+  const s = S.session; if (!s) return loading();
+  const d = priceDraft(); const list = orderedOrders().filter(o => o.status === 'active');
+  const left = draftLeft();
+  return `<div class="topbar"><span class="pill ${left ? 'orange' : 'mint'}" id="pr-left">${left ? 'فاضل ' + toAr(left) + ' صنف' : 'كله اتسعّر ✓'}</span>${back('summary')}</div>
+  <div class="stack" style="gap:6px"><h1>اكتب الأسعار</h1><p class="muted">من الفاتورة، اكتب سعر الحاجات اللي محدش كان عارف سعرها. الأسعار اللي اتكتبت قبل كده تقدر تعدّلها برضه.</p></div>
+  ${list.map(o => { const i = orderIndex(o); const pr = d[o.id] || []; const tot = (o.items || []).reduce((a, it, k) => a + num(pr[k]) * it.q, 0);
+    return `<div class="card stack" style="gap:10px">
+      <div class="row"><b class="num" id="pr-tot-${o.id}">${egp(tot)}</b><span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(o.name)}</b>${avatar(o.name, i)}</span></div>
+      ${(o.items || []).map((it, k) => { const miss = String(pr[k] ?? '').trim() === ''; return `<div class="row"><label class="price" style="${miss ? 'background:#fff;border:1.5px solid var(--orange)' : ''}"><input id="pr-${o.id}-${k}" data-pr="${o.id}" data-k="${k}" inputmode="decimal" value="${esc(miss ? '' : toAr(pr[k]))}" placeholder="السعر" aria-label="سعر ${esc(it.n)}"><span>ج</span></label><span>${it.q > 1 ? toAr(it.q) + ' × ' : ''}${esc(it.n)}</span></div>`; }).join('')}
+    </div>`; }).join('')}
+  ${bottom(`<button class="btn primary" data-act="prices-save">احفظ الأسعار وكمّل للحساب ←</button>`)}`;
+};
+root.addEventListener('input', e => {
+  const t = e.target; if (!t.dataset.pr) return;
+  const d = priceDraft(); const arr = d[t.dataset.pr]; if (!arr) return;
+  arr[+t.dataset.k] = t.value.trim() === '' ? '' : num(t.value);
+  const o = S.orders.find(x => x.id === t.dataset.pr);
+  const el = document.getElementById('pr-tot-' + t.dataset.pr); if (o && el) el.textContent = egp((o.items || []).reduce((a, it, k) => a + num(arr[k]) * it.q, 0));
+  const left = draftLeft(); const pl = document.getElementById('pr-left'); if (pl) { pl.textContent = left ? 'فاضل ' + toAr(left) + ' صنف' : 'كله اتسعّر ✓'; pl.className = 'pill ' + (left ? 'orange' : 'mint'); }
+  const lab = t.closest('.price'); if (lab) lab.style.cssText = t.value.trim() === '' ? 'background:#fff;border:1.5px solid var(--orange)' : '';
+});
 
 /* ---------- Bill extras ---------- */
 function billDraft() { const s = S.session; return S.draft.bill || (S.draft.bill = JSON.parse(JSON.stringify((s.status === 'billed' && s.bill) || { tax: 0, service: 0, delivery: 0, discount: 0, extras: [], split: (s.bill && s.bill.split) || 'prop' }))); }
 V.bill = () => {
   const s = S.session; if (!s) return loading();
+  if (allUnpriced()) return (setTimeout(() => go('prices'), 0), loading());
   const b = billDraft(); const calc = computeBill(S.orders, b);
   const fieldRow = (label, sub, key, unit) => `<label class="card row" style="padding:10px 12px 10px 16px"><span class="price" style="background:#fff;border:1px solid var(--line)"><input id="b-${key}" data-bind="bill.${key}" data-live="1" inputmode="decimal" value="${esc(b[key] ? toAr(b[key]) : '')}" placeholder="٠"><span>${unit}</span></span><span class="stack" style="gap:0;text-align:right"><b>${label}</b><span class="muted small">${sub}</span></span></label>`;
   return `<div class="topbar"><span></span>${back('summary')}</div>
@@ -780,7 +839,7 @@ V.result = () => {
       <button class="row" style="gap:10px;justify-content:flex-end;text-align:right" data-person="${o.id}"><span class="stack" style="gap:0"><b>${esc(o.name)}</b><span class="big num" style="font-size:22px;${o.paid ? 'color:var(--muted)' : ''}">${egp(r.share)}</span></span>${avatar(o.name, i, '')}</button></div>`; };
   const detailCard = r => { const o = r.order; return `<div class="card stack" style="gap:8px">
       <div class="row"><span class="pill">الطلب ${ordinal(orderIndex(o))}</span><span class="row" style="gap:8px;justify-content:flex-end"><b>${esc(o.name)}</b>${avatar(o.name, orderIndex(o))}</span></div>
-      ${(o.items || []).map(it => `<div class="line small"><span class="muted v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
+      ${(o.items || []).map(it => `<div class="line small"><span class="muted v num">${lineMoney(it)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
       <hr class="rule"><div class="line small muted"><span class="v num">${money(r.share - r.food)}</span><span>ضريبة + خدمة + زيادات</span></div>
       <div class="line"><span class="big num" style="font-size:22px;color:var(--orange)">${egp(r.share)}</span><b>المطلوب منه</b></div></div>`; };
   const hero = `<div class="card ink stack side" style="border-radius:24px;padding:18px;gap:10px">
@@ -831,7 +890,7 @@ V.person = () => {
 function breakdown(r, s) {
   const b = s.bill || {}; const o = r.order;
   return `<div class="receipt stack" style="gap:9px;color:var(--text)">
-    ${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
+    ${(o.items || []).map(it => `<div class="line"><span class="v num">${lineMoney(it)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}
     <hr class="rule">
     ${b.split === 'equal' ? `<div class="line muted"><span class="v num">${money(r.share - r.food)}</span><span>فرق القسمة بالتساوي والزيادات</span></div>` : `
     ${r.service ? `<div class="line muted"><span class="v num">${money(r.service)}</span><span>خدمة ${toAr(b.service)}٪</span></div>` : ''}
@@ -891,18 +950,18 @@ function memberOrder(s, existing) {
   if (!S.draft[key]) S.draft[key] = existing ? existing.items.map(x => ({ ...x })) : [blankItem()];
   const items = S.draft[key]; const name = (me.sessions[S.code] || {}).name || me.name;
   return `${memberHeader(s)}
-  <div class="stack" style="gap:6px"><h1>اكتب طلبك يا ${esc(name)}</h1><p class="muted">اكتب الصنف وسعره زي ما هو في المنيو.${s.menu ? ` <a href="${esc(/^https?:/.test(s.menu) ? s.menu : 'https://' + s.menu)}" target="_blank" rel="noopener" style="color:var(--orange);font-weight:600">افتح المنيو ↗</a>` : ''}</p></div>
+  <div class="stack" style="gap:6px"><h1>اكتب طلبك يا ${esc(name)}</h1><p class="muted">اكتب الصنف، وسعره لو عارفه. لو مش عارف سيبه فاضي، وهيتكتب لما الفاتورة تيجي.${s.menu ? ` <a href="${esc(/^https?:/.test(s.menu) ? s.menu : 'https://' + s.menu)}" target="_blank" rel="noopener" style="color:var(--orange);font-weight:600">افتح المنيو ↗</a>` : ''}</p></div>
   ${itemsEditor(key, items)}
   ${suggestions(key)}
   ${bottom(`<div class="cart"><button class="btn primary" data-act="member-send">${existing ? 'احفظ التعديل' : 'ابعت طلبي'} ←</button><span class="stack" style="gap:0;text-align:right"><span class="big num" style="font-size:24px">${egp(itemsTotal(items))}</span><span class="small" style="color:var(--on-ink)">قبل الخدمة والديليفري</span></span></div>`)}`;
 }
 function suggestions(key) {
   const seen = new Map();
-  for (const o of S.orders) if (o.status === 'active') for (const it of o.items || []) if (!seen.has(it.n)) seen.set(it.n, it.p);
+  for (const o of S.orders) if (o.status === 'active') for (const it of o.items || []) if (!seen.has(it.n) && !isUnpriced(it)) seen.set(it.n, it.p);
   const list = [...seen.entries()].slice(0, 6); if (!list.length) return '';
   return `<div class="stack" style="gap:8px"><span class="muted small">من طلبات الشلة:</span><div class="wrap">${list.map(([n, p]) => `<button type="button" class="pill" style="background:#fff;border:1px solid var(--line);padding:7px 12px" data-suggest="${key}" data-n="${esc(n)}" data-p="${p}">+ ${esc(n)} · ${toAr(money(p))}</button>`).join('')}</div></div>`;
 }
-function myOrderCard(o, pill) { return `<div class="card stack" style="gap:9px"><div class="row">${pill}<b>طلبك</b></div>${(o.items || []).map(it => `<div class="line"><span class="v num">${money(it.p * it.q)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}<hr class="rule"><div class="line"><span class="big num" style="font-size:22px">${egp(itemsTotal(o.items))}</span><span class="muted small">قبل الخدمة والديليفري</span></div></div>`; }
+function myOrderCard(o, pill) { return `<div class="card stack" style="gap:9px"><div class="row">${pill}<b>طلبك</b></div>${(o.items || []).map(it => `<div class="line"><span class="v num">${lineMoney(it)}</span><span>${toAr(it.q)} × ${esc(it.n)}</span></div>`).join('')}<hr class="rule"><div class="line"><span class="big num" style="font-size:22px">${egp(itemsTotal(o.items))}</span><span class="muted small">قبل الخدمة والديليفري</span></div>${unpricedCount(o.items) ? `<span class="small muted">${toAr(unpricedCount(o.items))} صنف سعره هيتكتب لما الفاتورة تيجي</span>` : ''}</div>`; }
 function hero(emoji, title, sub) { return `<div class="stack" style="align-items:center;text-align:center;gap:8px;padding-top:10px"><span class="emoji">${emoji}</span><h1>${title}</h1><p class="muted" style="max-width:320px">${sub}</p></div>`; }
 function memberSent(s, o) { return `${memberHeader(s)}${hero('🎉', 'طلبك وصل!', `هتعرف حسابك أول ما ${esc(s.hostName)} يقفل الطلبات ويكتب الفاتورة.`)}${myOrderCard(o, '<span class="pill mint">اتبعت ✓</span>')}${gameEntry()}
   ${bottom(`<button class="btn white" data-act="member-edit">✎ عدّل طلبي</button><p class="center small muted">تقدر تعدّل لحد ما الطلبات تتقفل</p>`)}`; }
@@ -1098,7 +1157,7 @@ async function act(a, t) {
     case 'self-next': {
       const idx = +t.dataset.idx; const key = 'self-' + idx; const d = S.draft[key]; const items = cleanItems(d.items);
       if (!String(d.name || '').trim()) { toast('اكتب اسم صاحب الطلب'); return; }
-      if (!items.length) { toast('اكتب صنف واحد على الأقل بسعره'); return; }
+      if (!items.length) { toast('اكتب صنف واحد على الأقل'); return; }
       return withStore(async st => {
         const list = orderedOrders().filter(o => o.status === 'active'); const existing = list[idx];
         const o = existing ? { ...existing, name: d.name.trim(), items, updatedAt: Date.now() } : { id: uid(), name: d.name.trim(), items, status: 'active', by: 'host', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
@@ -1115,7 +1174,7 @@ async function act(a, t) {
     case 'manual': S.draft['sheet-items'] = [blankItem()]; S.draft.sheetName = ''; S.sheet = { type: 'order' }; return render();
     case 'sheet-save': {
       const name = String(S.draft.sheetName || '').trim(); const items = cleanItems(S.draft['sheet-items']);
-      if (!name) { toast('اكتب اسمه'); return; } if (!items.length) { toast('اكتب صنف بسعره'); return; }
+      if (!name) { toast('اكتب اسمه'); return; } if (!items.length) { toast('اكتب صنف واحد على الأقل'); return; }
       return withStore(async st => {
         const old = S.sheet.id && S.orders.find(x => x.id === S.sheet.id);
         const o = old ? { ...old, name, items, updatedAt: Date.now() } : { id: uid(), name, items, status: 'active', by: 'host', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
@@ -1131,12 +1190,23 @@ async function act(a, t) {
     case 'end-confirm': return withStore(async st => { S.sheet = null; await st.patchSession(S.code, { status: 'closed' }); go('summary'); });
     case 'reopen': return withStore(async st => { if (s && s.status === 'closed') { await st.patchSession(S.code, { status: 'open', deadline: s.mode === 'link' ? Date.now() + 10 * 60000 : null }); go(s.mode === 'self' ? 'selfEntry' : 'live'); } else go('home'); });
     case 'add-extra': billDraft().extras.push({ name: '', amount: 0 }); render(); { const el = document.getElementById('bx-n-' + (billDraft().extras.length - 1)); el && el.focus(); } return;
-    case 'bill-done': return withStore(async st => { const b = billDraft(); b.extras = (b.extras || []).filter(x => num(x.amount)).map(x => ({ name: x.name || 'زيادة', amount: num(x.amount) })); await st.patchSession(S.code, { bill: b, status: 'billed' }); S.draft.bill = null; S.view = { tab: 'person', filter: 'all' }; go('result'); });
+    case 'prices-save': return withStore(async st => {
+      const d = priceDraft();
+      for (const o of S.orders) {
+        if (o.status !== 'active' || !d[o.id]) continue;
+        const items = (o.items || []).map((it, k) => ({ ...it, p: String(d[o.id][k] ?? '').trim() === '' ? null : num(d[o.id][k]) }));
+        if (JSON.stringify(items) !== JSON.stringify(o.items)) { const no = { ...o, items, updatedAt: Date.now() }; await st.saveOrder(S.code, no); const ix = S.orders.findIndex(x => x.id === o.id); if (ix >= 0) S.orders[ix] = no; }
+      }
+      const left = draftLeft();
+      if (left) { toast('اتحفظ. لسه فاضل ' + toAr(left) + ' صنف من غير سعر'); return render(); }
+      S.draft.prices = null; go('bill');
+    });
+    case 'bill-done': if (allUnpriced()) { toast('لسه فيه أصناف من غير سعر'); return go('prices'); } return withStore(async st => { const b = billDraft(); b.extras = (b.extras || []).filter(x => num(x.amount)).map(x => ({ name: x.name || 'زيادة', amount: num(x.amount) })); await st.patchSession(S.code, { bill: b, status: 'billed' }); S.draft.bill = null; S.view = { tab: 'person', filter: 'all' }; go('result'); });
     case 'pay-confirm': return withStore(async st => { const o = S.orders.find(x => x.id === S.sheet.id); const m = S.sheet.method; S.sheet = null; await st.saveOrder(S.code, { ...o, paid: true, method: m, claim: null, paidAt: Date.now() }); toast(o.name + ' دفع ✓'); });
     case 'stay-result': S.route.p.stay = true; return render();
     case 'member-name': { const n = String(S.draft.mname.name || '').trim(); if (!n) { toast('اكتب اسمك'); return; } me.name = n; remember(S.code, { role: 'member', name: n, place: s.place || 'قعدة' }); return render(); }
     case 'member-send': {
-      const items = cleanItems(S.draft.mitems); if (!items.length) { toast('اكتب صنف واحد على الأقل بسعره'); return; }
+      const items = cleanItems(S.draft.mitems); if (!items.length) { toast('اكتب صنف واحد على الأقل'); return; }
       return withStore(async st => {
         const mine = myOrder(); const name = (me.sessions[S.code] || {}).name || me.name;
         const o = mine ? { ...mine, items, updatedAt: Date.now() } : { id: uid(), name, items, status: 'active', by: 'member', device: me.device, paid: false, method: null, claim: null, createdAt: Date.now() };
@@ -1151,6 +1221,191 @@ async function act(a, t) {
   }
 }
 
+
+/* ---------- Player looks: 15 boys + 15 girls, drawn here as small SVG portraits ---------- */
+const AV_SKIN = ['#F6D3B3', '#E8B48F', '#C98E66', '#A0694A', '#6E452E'];
+const AV_HAIR = { k: '#1E1410', b: '#5A3825', l: '#8A5A2B', y: '#D9A441', r: '#A33A1F', g: '#9A948C' };
+//            id     hair style  hair  skin bg         shirt      extras
+const AV_LIST = [
+  ['b1', 'short', 'k', 1, '#FF5B2E', '#17120E', ''],
+  ['b2', 'curly', 'k', 2, '#FFD43B', '#12B886', ''],
+  ['b3', 'side', 'b', 0, '#4CC3F0', '#FF5B2E', 'glasses'],
+  ['b4', 'buzz', 'k', 3, '#12B886', '#FFD43B', 'beard'],
+  ['b5', 'spiky', 'y', 0, '#8E7CFF', '#17120E', ''],
+  ['b6', 'afro', 'k', 4, '#FF5B2E', '#FFF7EA', ''],
+  ['b7', 'bald', 'k', 2, '#FFE4D9', '#8E7CFF', 'beard'],
+  ['b8', 'side', 'k', 1, '#FFD43B', '#4CC3F0', 'mustache'],
+  ['b9', 'curly', 'b', 1, '#8E7CFF', '#FFD43B', 'glasses'],
+  ['b10', 'short', 'r', 0, '#12B886', '#FF5B2E', ''],
+  ['b11', 'long', 'b', 2, '#4CC3F0', '#17120E', 'beard'],
+  ['b12', 'spiky', 'k', 3, '#FFE4D9', '#12B886', ''],
+  ['b13', 'buzz', 'g', 1, '#FF5B2E', '#4CC3F0', 'glasses mustache'],
+  ['b14', 'afro', 'b', 3, '#FFD43B', '#8E7CFF', 'beard'],
+  ['b15', 'cap', 'k', 2, '#12B886', '#FFF7EA', ''],
+  ['g1', 'longhair', 'k', 1, '#F27BB4', '#FFF7EA', ''],
+  ['g2', 'curlylong', 'k', 3, '#FFD43B', '#FF5B2E', ''],
+  ['g3', 'bob', 'b', 0, '#4CC3F0', '#F27BB4', ''],
+  ['g4', 'hijab', '#FF5B2E', 1, '#FFE4D9', '#17120E', ''],
+  ['g5', 'bun', 'b', 2, '#8E7CFF', '#FFD43B', 'glasses'],
+  ['g6', 'ponytail', 'y', 0, '#12B886', '#F27BB4', ''],
+  ['g7', 'hijab', '#12B886', 2, '#FFD43B', '#FFF7EA', ''],
+  ['g8', 'braids', 'k', 4, '#FF5B2E', '#FFD43B', ''],
+  ['g9', 'longhair', 'r', 0, '#8E7CFF', '#12B886', ''],
+  ['g10', 'hijab', '#8E7CFF', 3, '#4CC3F0', '#FFF7EA', 'glasses'],
+  ['g11', 'bob', 'k', 2, '#F27BB4', '#17120E', ''],
+  ['g12', 'curlylong', 'l', 1, '#12B886', '#FFF7EA', ''],
+  ['g13', 'hijab', '#17120E', 1, '#F27BB4', '#FFD43B', ''],
+  ['g14', 'bun', 'k', 3, '#FFE4D9', '#8E7CFF', ''],
+  ['g15', 'ponytail', 'b', 4, '#FFD43B', '#4CC3F0', 'glasses']
+];
+// comic faces: our own drawings with the expressions every Egyptian group chat knows (no real people)
+//  id     hair      hair skin bg         shirt      extras  expression  caption
+AV_LIST.push(
+  ['c1', 'short', 'k', 1, '#FFD43B', '#FF5B2E', '', 'shock', 'يا نهار أبيض!'],
+  ['c2', 'curly', 'k', 2, '#FF5B2E', '#FFD43B', '', 'lol', 'هموت من الضحك'],
+  ['c3', 'side', 'b', 0, '#4CC3F0', '#17120E', '', 'side', 'إنت متأكد؟'],
+  ['c4', 'bald', 'k', 3, '#F27BB4', '#FFF7EA', 'glasses', 'confused', 'أنا مش فاهم حاجة'],
+  ['c5', 'spiky', 'k', 2, '#12B886', '#17120E', '', 'cool', 'عادي يعني'],
+  ['c6', 'bald', 'k', 3, '#FFE4D9', '#12B886', 'beard', 'tea', 'خليها على الله'],
+  ['c7', 'buzz', 'k', 1, '#FF5B2E', '#4CC3F0', '', 'angry', 'ده كلام؟'],
+  ['c8', 'longhair', 'b', 1, '#8E7CFF', '#FFD43B', '', 'cry', 'ليه كده بس؟'],
+  ['c9', 'bun', 'k', 2, '#4CC3F0', '#F27BB4', '', 'sleepy', 'صحّوني لما الأكل ييجي'],
+  ['c10', 'bald', 'k', 2, '#FFD43B', '#17120E', 'mustache', 'tarboosh', 'أنا الكبير هنا'],
+  ['c11', 'hijab', '#12B886', 1, '#FFE4D9', '#FFF7EA', '', 'think', 'خليني أفكر'],
+  ['c12', 'bob', 'k', 0, '#F27BB4', '#12B886', '', 'hungry', 'أنا جعان']
+);
+const AV_BY = Object.fromEntries(AV_LIST.map(a => [a[0], a]));
+function avExpr(expr, ink, hair) {
+  const st = (d, w = 2.4, c = ink) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const eyeW = (x) => `<circle cx="${x}" cy="51" r="6" fill="#fff" stroke="${ink}" stroke-width="1.5"/>`;
+  switch (expr) {
+    case 'shock': return { face: eyeW(42) + eyeW(58) + `<circle cx="42" cy="52" r="2.4" fill="${ink}"/><circle cx="58" cy="52" r="2.4" fill="${ink}"/>` + st('M35 40 Q42 35 48 39') + st('M52 39 Q58 35 65 40') + `<ellipse cx="50" cy="66" rx="4.5" ry="6" fill="${ink}"/>`, over: '' };
+    case 'lol': return { face: st('M37 53 Q42 47 47 53') + st('M53 53 Q58 47 63 53') + `<path d="M40 60 Q50 76 60 60Z" fill="${ink}"/><path d="M44 67 Q50 72 56 67Z" fill="#FF6B6F"/><path d="M33 55 q-4 7 0 10 q4 -3 0 -10Z" fill="#4CC3F0"/><path d="M67 55 q-4 7 0 10 q4 -3 0 -10Z" fill="#4CC3F0"/>`, over: '' };
+    case 'side': return { face: st('M37 50 h10', 2.2) + st('M53 50 h10', 2.2) + `<circle cx="46" cy="53" r="2.5" fill="${ink}"/><circle cx="62" cy="53" r="2.5" fill="${ink}"/>` + st('M36 44 L47 45') + st('M53 42 Q58 38 64 41') + st('M44 64 L56 62'), over: '' };
+    case 'confused': return { face: eyeW(42) + `<circle cx="42" cy="52" r="2.4" fill="${ink}"/><circle cx="58" cy="52" r="2" fill="${ink}"/>` + st('M35 40 Q42 35 48 39') + st('M53 46 L64 44') + st('M42 64 q4 -3 8 0 t8 0'), over: `<text x="80" y="34" font-size="22" font-weight="700" fill="${ink}" text-anchor="middle" font-family="sans-serif">?</text>` };
+    case 'cool': return { face: st('M44 63 Q52 67 57 61'), over: `<rect x="33" y="46" width="15" height="10" rx="3.5" fill="${ink}"/><rect x="52" y="46" width="15" height="10" rx="3.5" fill="${ink}"/>` + st('M48 49h4', 2) + st('M33 49 L29 47', 2) + st('M67 49 L71 47', 2) + `<path d="M36 48 l4 0" stroke="#fff" stroke-width="1.5" opacity=".6"/>` };
+    case 'tea': return { face: st('M38 52 Q42 55 46 52') + st('M54 52 Q58 55 62 52') + st('M45 63 Q50 66 55 63', 2.2, '#FFF7EA'), over: `<path d="M30 38 Q30 22 50 22 Q70 22 70 38Z" fill="#FFF7EA" stroke="#E2D5C0" stroke-width="1.5"/><path d="M68 72 h14 l-2 19 h-10Z" fill="#FFFFFF" opacity=".9" stroke="${ink}" stroke-width="1.5"/><rect x="69.6" y="78" width="10.8" height="11" fill="#B4532A"/>` + st('M72 68 q-2 -4 0 -7', 1.6, '#fff') + st('M78 68 q-2 -4 0 -7', 1.6, '#fff') };
+    case 'angry': return { face: st('M35 44 L47 49', 3) + st('M65 44 L53 49', 3) + `<circle cx="42" cy="53" r="2.4" fill="${ink}"/><circle cx="58" cy="53" r="2.4" fill="${ink}"/>` + st('M43 67 Q50 61 57 67') + `<circle cx="36" cy="60" r="4.5" fill="#E5484D" opacity=".45"/><circle cx="64" cy="60" r="4.5" fill="#E5484D" opacity=".45"/>`, over: st('M73 24 l4 4 M81 24 l-4 4 M73 32 l4 -4 M81 32 l-4 -4', 2.6, '#E5484D'), noBlush: true };
+    case 'cry': return { face: st('M37 45 L47 42') + st('M63 45 L53 42') + st('M38 51 Q42 55 46 51') + st('M54 51 Q58 55 62 51') + `<rect x="39" y="54" width="5" height="22" rx="2.5" fill="#4CC3F0" opacity=".9"/><rect x="56" y="54" width="5" height="22" rx="2.5" fill="#4CC3F0" opacity=".9"/><path d="M43 68 Q50 60 57 68Z" fill="${ink}"/>`, over: '' };
+    case 'sleepy': return { face: st('M37 53 h9') + st('M54 53 h9') + `<ellipse cx="50" cy="65" rx="2.5" ry="3" fill="${ink}"/>`, over: `<text x="74" y="34" font-size="11" font-weight="700" fill="${ink}" font-family="sans-serif">z</text><text x="80" y="25" font-size="15" font-weight="700" fill="${ink}" font-family="sans-serif">z</text>` };
+    case 'tarboosh': return { face: st('M37 52 Q42 49 47 52') + st('M53 52 Q58 49 63 52') + `<path d="M37 61 Q44 55 50 59 Q56 55 63 61 Q56 65 50 62 Q44 65 37 61Z" fill="${hair}"/>` + st('M46 66 Q50 68 54 66', 2), over: `<path d="M34 33 L37 13 L63 13 L66 33Z" fill="#C8102E"/><path d="M34 33 L66 33" stroke="#8E0B20" stroke-width="2"/>` + st('M50 13 Q59 15 60 29', 2) + `<circle cx="60" cy="30" r="2.6" fill="${ink}"/>` };
+    case 'think': return { face: `<circle cx="43" cy="49" r="2.5" fill="${ink}"/><circle cx="59" cy="49" r="2.5" fill="${ink}"/>` + st('M37 43 Q42 40 47 42') + st('M53 41 Q58 39 63 42') + st('M46 64 h8'), over: `<circle cx="76" cy="36" r="2.5" fill="#fff"/><circle cx="81" cy="27" r="3.8" fill="#fff"/><circle cx="87" cy="16" r="5.5" fill="#fff"/>` };
+    case 'hungry': return { face: st('M37 53 Q42 47 47 53') + st('M53 53 Q58 47 63 53') + `<path d="M42 60 Q50 70 58 60Z" fill="${ink}"/><ellipse cx="53" cy="67" rx="4" ry="5" fill="#FF6B6F"/>` + st('M44 65 q-1 6 1 10', 2, '#4CC3F0'), over: '' };
+  }
+  return null;
+}
+function avSvg(id) {
+  const a = AV_BY[id]; if (!a) return '';
+  const [, style, hc, si, bg, shirt, ex, expr] = a;
+  const E = expr ? avExpr(expr, '#17120E', AV_HAIR[hc] || hc) : null;
+  const skin = AV_SKIN[si], hair = AV_HAIR[hc] || hc, ink = '#17120E';
+  const back = [], front = [];
+  const curls = (pts, r, fill) => pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`).join('');
+  switch (style) {
+    case 'short': front.push(`<path d="M28 47 Q27 21 50 21 Q73 21 72 47 Q66 33 50 32 Q35 33 28 47Z" fill="${hair}"/>`); break;
+    case 'side': front.push(`<path d="M28 49 Q25 21 52 20 Q75 21 72 47 Q64 29 44 33 Q33 37 28 49Z" fill="${hair}"/>`); break;
+    case 'buzz': front.push(`<path d="M30 43 Q31 25 50 24 Q69 25 70 43 Q61 32 50 32 Q39 32 30 43Z" fill="${hair}" opacity=".9"/>`); break;
+    case 'spiky': front.push(`<path d="M28 45 L29 28 L36 33 L39 20 L46 30 L50 17 L55 30 L61 20 L64 32 L71 27 L72 45 Q62 33 50 33 Q38 33 28 45Z" fill="${hair}"/>`); break;
+    case 'curly': front.push(curls([[31, 36], [37, 28], [45, 24], [54, 23], [62, 27], [68, 34], [40, 33], [50, 30], [59, 32]], 7.5, hair)); break;
+    case 'afro': back.push(`<circle cx="50" cy="40" r="31" fill="${hair}"/>`); front.push(curls([[34, 32], [44, 27], [56, 27], [66, 32]], 8, hair)); break;
+    case 'long': back.push(`<path d="M27 46 Q25 20 50 20 Q75 20 73 46 L74 66 L26 66Z" fill="${hair}"/>`); front.push(`<path d="M28 46 Q28 22 50 22 Q72 22 72 46 Q63 30 50 31 Q37 30 28 46Z" fill="${hair}"/>`); break;
+    case 'cap': front.push(`<path d="M27 44 Q27 19 50 19 Q73 19 73 44Z" fill="#FF5B2E"/><path d="M50 40 Q74 38 86 44 Q74 47 50 45Z" fill="#E04A20"/><circle cx="50" cy="21" r="3" fill="#FFF7EA"/>`); break;
+    case 'longhair': back.push(`<path d="M24 50 Q22 18 50 18 Q78 18 76 50 L78 88 Q64 84 60 72 L40 72 Q36 84 22 88Z" fill="${hair}"/>`); front.push(`<path d="M28 50 Q27 21 52 20 Q74 21 72 48 Q66 30 50 31 Q38 34 28 50Z" fill="${hair}"/>`); break;
+    case 'curlylong': back.push(curls([[25, 44], [24, 58], [27, 72], [33, 82], [75, 44], [76, 58], [73, 72], [67, 82], [30, 30], [70, 30]], 9, hair)); front.push(curls([[33, 33], [41, 26], [50, 23], [59, 26], [67, 33], [45, 31], [56, 31]], 7.5, hair)); break;
+    case 'bob': back.push(`<path d="M25 48 Q24 19 50 19 Q76 19 75 48 L76 70 Q68 74 64 66 L36 66 Q32 74 24 70Z" fill="${hair}"/>`); front.push(`<path d="M28 46 Q29 22 50 22 Q71 22 72 46 Q70 36 60 33 Q50 38 40 33 Q31 37 28 46Z" fill="${hair}"/>`); break;
+    case 'bun': front.push(`<circle cx="50" cy="16" r="9" fill="${hair}"/><path d="M28 47 Q27 21 50 21 Q73 21 72 47 Q66 32 50 31 Q35 32 28 47Z" fill="${hair}"/>`); break;
+    case 'ponytail': back.push(`<path d="M68 34 Q90 40 82 70 Q78 58 70 52Z" fill="${hair}"/>`); front.push(`<path d="M28 47 Q27 21 50 21 Q73 21 72 47 Q66 32 50 31 Q35 32 28 47Z" fill="${hair}"/><circle cx="71" cy="36" r="3.5" fill="#FF5B2E"/>`); break;
+    case 'braids': back.push(curls([[27, 62], [26, 70], [26, 78], [27, 86], [73, 62], [74, 70], [74, 78], [73, 86]], 4.5, hair)); front.push(`<path d="M27 50 Q26 20 50 20 Q74 20 73 50 Q68 31 50 30 Q32 31 27 50Z" fill="${hair}"/>`); break;
+    case 'hijab': back.push(`<path d="M50 17 Q80 17 80 52 Q81 80 66 90 L34 90 Q19 80 20 52 Q20 17 50 17Z" fill="${hair}"/>`); front.push(`<path d="M29 44 Q50 22 71 44 Q50 33 29 44Z" fill="${hair}"/><path d="M29 44 Q50 22 71 44" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="2"/>`); break;
+  }
+  const hijab = style === 'hijab';
+  const parts = [
+    `<circle cx="50" cy="50" r="50" fill="${bg}"/>`,
+    ...back,
+    `<path d="M16 102 Q18 75 50 73 Q82 75 84 102Z" fill="${hijab ? hair : shirt}"/>`,
+    hijab ? '' : `<rect x="44" y="64" width="12" height="13" rx="5" fill="${skin}"/>`,
+    hijab ? '' : `<circle cx="29" cy="52" r="4.5" fill="${skin}"/><circle cx="71" cy="52" r="4.5" fill="${skin}"/>`,
+    `<ellipse cx="50" cy="50" rx="${hijab ? 19 : 21}" ry="${hijab ? 22 : 24}" fill="${skin}"/>`,
+    E ? E.face : `<circle cx="42" cy="52" r="2.7" fill="${ink}"/><circle cx="58" cy="52" r="2.7" fill="${ink}"/>`,
+    E && E.noBlush ? '' : `<circle cx="37" cy="59" r="3.5" fill="#FF8A8A" opacity=".35"/><circle cx="63" cy="59" r="3.5" fill="#FF8A8A" opacity=".35"/>`,
+    ex.includes('beard') ? `<path d="M29 54 Q31 78 50 80 Q69 78 71 54 Q67 66 50 67 Q33 66 29 54Z" fill="${hair}"/>` : '',
+    E ? '' : `<path d="M44 ${ex.includes('beard') ? 63 : 62} Q50 ${ex.includes('beard') ? 67 : 67} 56 ${ex.includes('beard') ? 63 : 62}" fill="none" stroke="${ex.includes('beard') ? '#FFF7EA' : ink}" stroke-width="2.4" stroke-linecap="round"/>`,
+    ex.includes('mustache') ? `<path d="M41 60 Q50 55 59 60 Q50 59 41 60Z" fill="${hair}"/>` : '',
+    ...front,
+    E ? E.over : '',
+    ex.includes('glasses') ? `<g fill="none" stroke="${ink}" stroke-width="2"><circle cx="42" cy="52" r="6.5"/><circle cx="58" cy="52" r="6.5"/><path d="M48.5 52h3"/></g>` : ''
+  ];
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="avc-${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs><g clip-path="url(#avc-${id})">${parts.join('')}</g></svg>`;
+}
+/** A player's face: their chosen look, or the coloured initial as before. */
+function gPhotoOk(p) { return typeof p === 'string' && /^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+/=]+$/.test(p) && p.length < 60000; }
+function gFace(av, name, i, cls = '', photo) {
+  if (av === 'photo' && gPhotoOk(photo)) return `<span class="avatar gav ${cls}"><img src="${photo}" alt=""></span>`;
+  if (av && AV_BY[av]) return `<span class="avatar gav ${cls}">${avSvg(av)}</span>`;
+  return avatar(name, i, cls);
+}
+function gProfile() { const p = me.profile; return p && p.name && p.av && (p.av !== 'photo' || gPhotoOk(p.photo)) ? p : null; }
+function gPlayerName() { const p = gProfile(); return p ? p.name : gMyName(); }
+
+/* the "pick your look" screen, shown before someone's first game */
+V.gprofile = () => {
+  document.body.className = 'screen-ink';
+  const d = S.gpDraft || (S.gpDraft = { name: (me.profile && me.profile.name) || gMyName() || me.name || '', av: (me.profile && me.profile.av) || '', photo: (me.profile && me.profile.photo) || '', tab: (me.profile && me.profile.av || 'b').charAt(0) });
+  const list = AV_LIST.filter(a => a[0].charAt(0) === d.tab);
+  const ok = d.name.trim() && d.av && (d.av !== 'photo' || gPhotoOk(d.photo));
+  return `<div class="topbar"><span class="pill yellow">قبل ما نلعب</span><button class="icon-btn" data-gp="cancel" aria-label="رجوع">→</button></div>
+  <div class="stack" style="gap:6px"><h1>اختار شكلك واسمك</h1><p class="muted">ده اللي الشلة هتشوفه في الألعاب.</p></div>
+  <div class="gp-preview">${d.av === 'photo' && gPhotoOk(d.photo) ? `<span class="gav gav-xl"><img src="${d.photo}" alt="صورتك"></span>` : d.av && AV_BY[d.av] ? `<span class="gav gav-xl">${avSvg(d.av)}</span>` : `<span class="gav gav-xl gp-empty">؟</span>`}<b class="big" style="font-size:28px">${esc(d.name.trim() || 'اسمك')}</b>${AV_BY[d.av] && AV_BY[d.av][8] ? `<span class="gp-cap">«${esc(AV_BY[d.av][8])}»</span>` : ''}</div>
+  <label class="f"><span style="color:var(--on-ink)">اسمك في اللعبة</span><input class="input g-ans" id="gp-name" data-live="1" value="${esc(d.name)}" maxlength="14" placeholder="اكتب اسمك" autocomplete="nickname"></label>
+  <div class="seg gp-seg">${[['b', 'ولاد'], ['g', 'بنات'], ['c', 'كوميكس'], ['p', 'صورتك']].map(([k, l]) => `<button data-gp-tab="${k}" aria-pressed="${d.tab === k}">${l}</button>`).join('')}</div>
+  ${d.tab === 'p'
+    ? `<label class="gp-photo"><input type="file" id="gp-file" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px"><span class="g-ico" style="width:52px;height:52px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><b>${d.av === 'photo' && d.photo ? 'غيّر الصورة' : 'صوّر نفسك أو اختار صورة'}</b><span class="small" style="color:var(--on-ink)">هتتقص دايرة وتتصغّر، ومش هتتشاف غير في ألعاب القعدة دي</span></label>`
+    : d.tab === 'c'
+      ? `<div class="gp-grid gp-comics">${list.map(a => `<button class="gp-comic" data-gp-av="${a[0]}" aria-pressed="${d.av === a[0]}"><span class="gp-av">${avSvg(a[0])}</span><span class="small">${esc(a[8])}</span></button>`).join('')}</div>`
+      : `<div class="gp-grid">${list.map(a => `<button class="gp-av" data-gp-av="${a[0]}" aria-pressed="${d.av === a[0]}" aria-label="شكل ${a[0]}">${avSvg(a[0])}</button>`).join('')}</div>`}
+  ${bottom(`<button class="btn primary" data-gp="save" ${ok ? '' : 'disabled'}>${ok ? 'يلا نلعب ←' : 'اختار شكل واكتب اسمك'}</button>`)}`;
+};
+/** Run `next` once the player has a look; ask for one first if they don't. */
+function gNeedProfile(next) {
+  if (gProfile()) return next();
+  S.gpNext = next; S.gpBack = S.route; S.gpDraft = null; go('gprofile');
+}
+root.addEventListener('input', e => { if (e.target.id === 'gp-name' && S.gpDraft) { S.gpDraft.name = e.target.value; const b = root.querySelector('[data-gp="save"]'); const ok = e.target.value.trim() && S.gpDraft.av; if (b) { b.disabled = !ok; b.textContent = ok ? 'يلا نلعب ←' : 'اختار شكل واكتب اسمك'; } const pv = root.querySelector('.gp-preview b'); if (pv) pv.textContent = e.target.value.trim() || 'اسمك'; } });
+root.addEventListener('click', e => {
+  const t = e.target.closest('[data-gp],[data-gp-tab],[data-gp-av]'); if (!t) return;
+  e.stopPropagation(); const d = t.dataset; const dr = S.gpDraft;
+  if (d.gpTab) { dr.tab = d.gpTab; return render(); }
+  if (d.gpAv) { dr.av = d.gpAv; return render(); }
+  if (d.gp === 'cancel') { const back = S.gpBack; S.gpNext = null; S.route = back && back.name !== 'gprofile' ? back : { name: 'home', p: {} }; return S.route.name === 'home' ? resume(S.code) : render(); }
+  if (d.gp === 'save') {
+    if (!dr.name.trim() || !dr.av) return;
+    me.profile = { name: dr.name.trim().slice(0, 14), av: dr.av, photo: dr.av === 'photo' ? dr.photo : '' }; saveMe();
+    const next = S.gpNext; S.gpNext = null; S.route = S.gpBack && S.gpBack.name !== 'gprofile' ? S.gpBack : { name: 'game', p: {} };
+    // already in a game: update this player's look everywhere
+    const g = gGame(); if (g && gRow(g)) withStore(() => gSaveRow(g, {}));
+    if (next) return next();
+    return render();
+  }
+}, true);
+
+/* a photo from the camera or gallery: centre-cropped, 112px, small JPEG */
+root.addEventListener('change', e => {
+  if (e.target.id !== 'gp-file' || !S.gpDraft) return;
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  const url = URL.createObjectURL(f); const img = new Image();
+  img.onload = () => {
+    const n = 112, c = document.createElement('canvas'); c.width = c.height = n;
+    const side = Math.min(img.naturalWidth, img.naturalHeight);
+    c.getContext('2d').drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, n, n);
+    URL.revokeObjectURL(url);
+    let data = c.toDataURL('image/jpeg', 0.72);
+    if (!gPhotoOk(data)) data = c.toDataURL('image/jpeg', 0.5);
+    if (!gPhotoOk(data)) return toast('الصورة دي مش نافعة، جرّب صورة تانية');
+    S.gpDraft.photo = data; S.gpDraft.av = 'photo'; render();
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast('الصورة دي مش نافعة، جرّب صورة تانية'); };
+  img.src = url;
+});
 /* =====================================================================
    IMPOSTOR — a waiting game every phone plays on its own.
    session.game  : the round (written only by whoever started it)
@@ -1169,6 +1424,8 @@ function gRows(g) { return (S.gameRows || []).filter(r => r.game === g.id); }
 function gRow(g, dev = me.device) { return gRows(g).find(r => r.device === dev); }
 function gIsPlayer(g) { return !!(g.players && g.players.some(p => p.device === me.device)); }
 function gIdx(g, dev) { const i = (g.players || []).findIndex(p => p.device === dev); return i < 0 ? 0 : i; }
+function gAvOf(g, dev) { const p = (g.players || []).find(p => p.device === dev); if (p && p.av) return p.av; const r = gRow(g, dev); return r ? r.av : null; }
+function gPhotoOf(g, dev) { const p = (g.players || []).find(p => p.device === dev); if (p && p.photo) return p.photo; const r = gRow(g, dev); return r ? r.photo : null; }
 function gName(g, dev) { const p = (g.players || []).find(p => p.device === dev); if (p) return p.name; const r = gRow(g, dev); return r ? r.name : '؟'; }
 function gIsStarter(g) { return g.by === me.device; }
 
@@ -1277,7 +1534,7 @@ function eCalc(g) {
 function eScores(g, c) { const sc = { ...(g.scores || {}) }; for (const d in c.wins) sc[d] = (sc[d] || 0) + c.wins[d]; return sc; }
 function eTiles(g, sc) {
   const board = g.players.map(p => ({ ...p, s: sc[p.device] || 0 })).sort((a, b) => b.s - a.s);
-  return `<div class="g-tiles">${board.map((b, i) => `<div class="g-tile"><span class="big" style="font-size:26px;color:${i === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="small">${esc(b.name)}</span></div>`).join('')}</div>`;
+  return `<div class="g-tiles">${board.map((b, i) => `<div class="g-tile">${gFace(b.av, b.name, gIdx(g, b.device), 'sm', b.photo)}<span class="big" style="font-size:26px;color:${i === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="small">${esc(b.name)}</span></div>`).join('')}</div>`;
 }
 function eView(g, starter) {
   const c = eCalc(g); S.gPhase = g.id + c.phase;
@@ -1340,7 +1597,7 @@ function gNewRound(players, scores, n) {
 }
 async function gSaveRow(g, patch) {
   const st = await storeP; const cur = gRow(g) || {};
-  await st.saveOrder(S.code, { ...cur, id: 'g_' + g.id + '_' + me.device, kind: 'game', game: g.id, device: me.device, name: gMyName(), at: Date.now(), ...patch });
+  await st.saveOrder(S.code, { ...cur, id: 'g_' + g.id + '_' + me.device, kind: 'game', game: g.id, device: me.device, name: gPlayerName(), av: gProfile() ? gProfile().av : null, photo: gProfile() && gProfile().av === 'photo' ? gProfile().photo : null, at: Date.now(), ...patch });
 }
 
 /* jump into the round as soon as it starts on any phone that joined */
@@ -1362,7 +1619,7 @@ function gameInvite() {
   const g = gGame();
   if (!g || g.status !== 'lobby' || S.route.name === 'game' || !gMyName() || gRow(g) || S.gDismiss === g.id) return '';
   return `<div class="g-invite" role="dialog" aria-label="دعوة للعب">
-    <div class="row" style="justify-content:flex-start;gap:10px">${avatar(g.byName, 0)}<span class="stack" style="gap:0;text-align:right"><b>${esc(g.byName)}: يلا يا جماعة نلعب ${gTitle(g)}!</b><span class="small" style="color:var(--on-ink)">لعبة لحد ما الأكل يوصل · ${toAr(gRows(g).filter(r => r.join).length)} داخلين</span></span></div>
+    <div class="row" style="justify-content:flex-start;gap:10px">${gFace(g.byAv, g.byName, 0, '', g.byPhoto)}<span class="stack" style="gap:0;text-align:right"><b>${esc(g.byName)}: يلا يا جماعة نلعب ${gTitle(g)}!</b><span class="small" style="color:var(--on-ink)">لعبة لحد ما الأكل يوصل · ${toAr(gRows(g).filter(r => r.join).length)} داخلين</span></span></div>
     <div class="row" style="gap:8px"><button class="btn sm" style="flex:1;border-radius:14px;background:rgba(255,255,255,.12);color:#fff" data-game="decline">مش دلوقتي</button><button class="btn sm primary" style="flex:2;border-radius:14px" data-game="join">هلعب</button></div>
   </div>`;
 }
@@ -1382,7 +1639,7 @@ function gIcon() { return `<svg width="22" height="22" viewBox="0 0 24 24" fill=
 /* ---------- the game screen ---------- */
 function gTop(g, extra = '') { return `<div class="topbar"><span class="row" style="gap:8px;justify-content:flex-start">${extra}</span><button class="icon-btn" data-game="leave" aria-label="ارجع للقعدة">→</button></div>`; }
 function gClock(g) { const left = Math.max(0, (g.talkEnds || 0) - Date.now()); return `<span class="pill orange">⏱ <span id="g-clock">${fmtClock(left)}</span></span>`; }
-function gChip(g, dev, extra = '') { const i = gIdx(g, dev); return `<span class="g-chip">${avatar(gName(g, dev), i, 'sm')}<span>${esc(gName(g, dev))}${extra}</span></span>`; }
+function gChip(g, dev, extra = '') { const i = gIdx(g, dev); return `<span class="g-chip">${gFace(gAvOf(g, dev), gName(g, dev), i, 'sm', gPhotoOf(g, dev))}<span>${esc(gName(g, dev))}${extra}</span></span>`; }
 function gCard(g) {
   const imp = g.imp === me.device;
   if (!S.gShown) return `<button class="g-secret hidden" data-game="peek"><span class="g-ico" style="width:56px;height:56px">${gIcon()}</span><b style="font-size:20px">دوس عشان تشوف كارتك</b><span class="small" style="color:var(--on-ink)">خبّي الشاشة عن اللي جنبك</span></button>`;
@@ -1403,7 +1660,7 @@ V.game = () => {
     const min = g.type === 'emoji' ? 2 : G_MIN; const ok = joined.length >= min;
     return `${gTop(g, '<span class="pill yellow">لعبة انتظار</span>')}
     <div class="stack" style="gap:6px"><h1>${gTitle(g)}</h1><p class="muted">${g.type === 'emoji' ? `${toAr(E_N)} ألغاز أكل بالإيموجي بتظهر على كل الموبايلات في نفس الوقت. أسرع واحد يكتب الأكلة صح ياخد النقطة.` : 'الكل هيشوف نفس الأكلة على موبايله، ما عدا واحد: الإمبوستر. كل واحد يقول كلمة، وبعدين كل واحد يصوّت من موبايله.'}</p></div>
-    <div class="g-box stack" style="gap:10px"><span class="small muted">داخلين اللعبة · ${toAr(joined.length)}</span><div class="wrap">${joined.map(r => gChip(g, r.device, r.device === me.device ? ' (انت)' : '')).join('')}</div></div>
+    <div class="g-box stack" style="gap:10px"><span class="small muted">داخلين اللعبة · ${toAr(joined.length)}</span><div class="wrap">${joined.map(r => gChip(g, r.device, r.device === me.device ? ' (انت)' : '')).join('')}</div>${gRow(g) && gRow(g).join ? `<button class="btn xs" style="align-self:flex-start;background:rgba(255,255,255,.1);color:#fff" data-game="look">غيّر شكلك أو اسمك</button>` : ''}</div>
     ${starter ? `<p class="mode-note" style="color:var(--on-ink)">الدعوة ظهرت عند كل اللي في القعدة. لما يدوسوا «هلعب» هيظهروا هنا.</p>` : `<p class="mode-note" style="color:var(--on-ink)">مستنيين ${esc(g.byName)} يبدأ اللعبة…</p>`}
     ${bottom(starter
       ? `<button class="btn primary" data-game="start" ${ok ? '' : 'disabled'}>${ok ? `ابدأ (${toAr(joined.length)} لاعيبة) ←` : `محتاجين ${toAr(min)} على الأقل`}</button><button class="btn white" data-game="stop">إلغي اللعبة</button>`
@@ -1424,7 +1681,7 @@ V.game = () => {
     const mine = gRow(g); const my = mine && mine.vote;
     return `${gTop(g, roundPill + `<span class="pill">صوّت ${toAr(c.nVoted)} من ${toAr(g.players.length)}</span>`)}
     <div class="stack" style="gap:6px"><h1>مين الإمبوستر؟</h1><p class="muted">${my ? 'صوتك اتسجّل. تقدر تغيّره لحد ما الكل يصوّت.' : 'اختار من موبايلك. محدش هيعرف انت صوّت لمين غير في الآخر.'}</p></div>
-    <div class="stack" style="gap:8px">${g.players.filter(p => p.device !== me.device).map(p => `<button class="g-vote" data-gv="${esc(p.device)}" aria-pressed="${my === p.device}" style="padding:12px 14px;border-radius:18px">${my === p.device ? '<span class="pill orange">صوتك</span>' : '<span></span>'}<span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(p.name)}</b>${avatar(p.name, gIdx(g, p.device))}</span></button>`).join('')}</div>
+    <div class="stack" style="gap:8px">${g.players.filter(p => p.device !== me.device).map(p => `<button class="g-vote" data-gv="${esc(p.device)}" aria-pressed="${my === p.device}" style="padding:12px 14px;border-radius:18px">${my === p.device ? '<span class="pill orange">صوتك</span>' : '<span></span>'}<span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(p.name)}</b>${gFace(p.av, p.name, gIdx(g, p.device), '', p.photo)}</span></button>`).join('')}</div>
     <div class="wrap" aria-label="مين صوّت">${g.players.map(p => { const v = c.votes.find(x => x.from === p.device); return `<span class="pill ${v && v.to ? 'mint' : ''}">${v && v.to ? '✓ ' : ''}${esc(p.name)}</span>`; }).join('')}</div>
     <details class="g-box" style="padding:12px 14px"><summary class="small" style="cursor:pointer;color:var(--on-ink)">افتكر كارتك</summary><div style="margin-top:10px">${g.imp === me.device ? '<b>انت الإمبوستر</b>' : `الأكلة: <b>${esc(g.dish)}</b>`}</div></details>
     ${starter && c.nVoted > 0 ? bottom(`<button class="btn white" data-game="closevotes">اقفل التصويت دلوقتي</button>`) : ''}`;
@@ -1448,7 +1705,7 @@ V.game = () => {
     : `اتهمتوا ${esc(gName(g, c.accused))}، والإمبوستر كان ${impName}`;
   return `${gTop(g, roundPill)}
   <div class="g-result" style="background:${c.winner === 'group' ? 'var(--mint)' : 'var(--orange)'}"><h1>${title}</h1><span>${sub}</span><span class="pill" style="background:rgba(0,0,0,.22);color:#fff;margin-top:6px">الأكلة كانت: ${esc(g.dish)}</span></div>
-  <div class="g-box stack" style="gap:6px"><span class="small muted">النقط</span>${board.map((b, k) => `<div class="line" style="align-items:center"><span class="big" style="font-size:22px;color:${k === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(b.name)}${b.device === me.device ? ' (انت)' : ''}</b>${avatar(b.name, gIdx(g, b.device), 'sm')}</span></div>`).join('')}</div>
+  <div class="g-box stack" style="gap:6px"><span class="small muted">النقط</span>${board.map((b, k) => `<div class="line" style="align-items:center"><span class="big" style="font-size:22px;color:${k === 0 && b.s > 0 ? 'var(--yellow)' : '#fff'}">${toAr(b.s)}</span><span class="row" style="gap:10px;justify-content:flex-end"><b>${esc(b.name)}${b.device === me.device ? ' (انت)' : ''}</b>${gFace(b.av, b.name, gIdx(g, b.device), 'sm', b.photo)}</span></div>`).join('')}</div>
   ${breakdown}
   <p class="mode-note" style="color:var(--on-ink)">الشلة تكسب: نقطة لكل واحد · الإمبوستر يكسب: ٣ نقط</p>
   ${bottom(starter ? `<button class="btn primary" data-game="again">جولة جديدة ←</button><button class="btn white" data-game="stop">كفاية كده</button>`
@@ -1468,30 +1725,31 @@ root.addEventListener('click', e => {
     case 'leave': S.route = { name: 'home', p: {} }; return resume(S.code);
     case 'peek': S.gShown = !S.gShown; return render();
     case 'decline': S.gDismiss = g && g.id; return render();
-    case 'new': return withStore(async st => {
+    case 'look': S.gpNext = null; S.gpBack = S.route; S.gpDraft = null; return go('gprofile');
+    case 'new': return gNeedProfile(() => withStore(async st => {
       if (gGame()) return go('game');
       const type = d.gtype || 'impostor'; const old = S.session.game; const same = old && (old.type || 'impostor') === type;
-      const ng = { id: uid(8), type, by: me.device, byName: gMyName(), status: 'lobby', createdAt: Date.now(), scores: same && old.scores || {}, round: same && old.round || 0 };
+      const ng = { id: uid(8), type, by: me.device, byName: gPlayerName(), byAv: gProfile() && gProfile().av, byPhoto: gProfile() && gProfile().av === 'photo' ? gProfile().photo : null, status: 'lobby', createdAt: Date.now(), scores: same && old.scores || {}, round: same && old.round || 0 };
       await st.patchSession(S.code, { game: ng }); S.session.game = ng; await gSaveRow(ng, { join: true }); go('game');
-    });
-    case 'join': return withStore(async () => { await gSaveRow(g, { join: true }); go('game'); });
-    case 'late': return withStore(() => gSaveRow(g, { join: true }));
+    }));
+    case 'join': return gNeedProfile(() => withStore(async () => { await gSaveRow(g, { join: true }); go('game'); }));
+    case 'late': return gNeedProfile(() => withStore(async () => { await gSaveRow(g, { join: true }); render(); }));
     case 'unjoin': return withStore(async () => { await gSaveRow(g, { join: false }); S.gDismiss = g.id; S.route = { name: 'home', p: {} }; resume(S.code); });
     case 'start': return withStore(async st => {
-      const players = gRows(g).filter(r => r.join).map(r => ({ device: r.device, name: r.name }));
+      const players = gRows(g).filter(r => r.join).map(r => ({ device: r.device, name: r.name, av: r.av || null, photo: r.photo || null }));
       const min = g.type === 'emoji' ? 2 : G_MIN;
       if (players.length < min) return toast('محتاجين ' + toAr(min) + ' لاعيبة على الأقل');
       const nr = g.type === 'emoji' ? eNewRound(players, g.scores || {}, (g.round || 0) + 1) : gNewRound(players, g.scores || {}, (g.round || 0) + 1);
-      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName } });
+      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName, byAv: g.byAv, byPhoto: g.byPhoto || null } });
     });
     case 'votenow': return withStore(st => st.patchSession(S.code, { game: { ...g, voteNow: true } }));
     case 'closevotes': return withStore(st => st.patchSession(S.code, { game: { ...g, closeVotes: true } }));
     case 'again': return withStore(async st => {
       const c = gCalc(g); const scores = g.type === 'emoji' ? eScores(g, c) : gScores(g, c);
-      const late = gRows(g).filter(r => r.join && !g.players.some(p => p.device === r.device)).map(r => ({ device: r.device, name: r.name }));
+      const late = gRows(g).filter(r => r.join && !g.players.some(p => p.device === r.device)).map(r => ({ device: r.device, name: r.name, av: r.av || null, photo: r.photo || null }));
       const all = [...g.players, ...late];
       const nr = g.type === 'emoji' ? eNewRound(all, scores, (g.round || 1) + 1) : gNewRound(all, scores, (g.round || 1) + 1);
-      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName } });
+      await st.patchSession(S.code, { game: { ...nr, type: g.type || 'impostor', by: g.by, byName: g.byName, byAv: g.byAv, byPhoto: g.byPhoto || null } });
     });
     case 'stop': return withStore(async st => { await st.patchSession(S.code, { game: { ...g, status: 'off' } }); S.route = { name: 'home', p: {} }; resume(S.code); });
   }
